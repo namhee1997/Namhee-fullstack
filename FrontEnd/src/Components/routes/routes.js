@@ -12,11 +12,21 @@ import ListPhone from "../ListPhone/ListPhone";
 import DashBoard from "../DashBoard/DashBoard";
 import HeaderDashBoard from "../DashBoard/Header/Header";
 import Users from "../DashBoard/Users/Users";
+import CreateUser from '../DashBoard/Users/AddUsers';
+import EditUser from '../DashBoard/Users/EditUser';
 import ProductDashBoard from "../DashBoard/Product/Product";
+import ProductDashBoardCreate from "../DashBoard/Product/AddProduct";
+import ProductDashBoardEdit from "../DashBoard/Product/EditProduct";
 import SlidesMain from "../DashBoard/SlidesMain/SlidesMain";
 import Company from '../DashBoard/Company/Company';
+import CompanyCreate from '../DashBoard/Company/AddCompany';
+import CompanyEdit from '../DashBoard/Company/EditCompany';
 import News from '../DashBoard/News/News';
+import NewsCreate from '../DashBoard/News/AddNews';
+import NewsEdit from '../DashBoard/News/EditNews';
 import Oder from '../DashBoard/Order/Order';
+import OderCreate from '../DashBoard/Order/AddOrder';
+import OderEdit from '../DashBoard/Order/EditOrder';
 
 export default function router() {
     let location = window.location.pathname.split('/');
@@ -46,11 +56,21 @@ export default function router() {
                                 <Route path="/dashboard" element={<DashBoard />} />
                                 <Route path="/dashboard/dashboard" element={<DashBoard />} />
                                 <Route path="/dashboard/user" element={<Users />} />
+                                <Route path="/dashboard/user/edit/:id" element={<EditUser />} />
+                                <Route path="/dashboard/user/create" element={<CreateUser />} />
                                 <Route path="/dashboard/product" element={<ProductDashBoard />} />
+                                <Route path="/dashboard/product/create" element={<ProductDashBoardCreate />} />
+                                <Route path="/dashboard/product/edit/:id" element={<ProductDashBoardEdit />} />
                                 <Route path="/dashboard/company" element={<Company />} />
+                                <Route path="/dashboard/company/create" element={<CompanyCreate />} />
+                                <Route path="/dashboard/company/edit/:id" element={<CompanyEdit />} />
                                 <Route path="/dashboard/slides" element={<SlidesMain />} />
                                 <Route path="/dashboard/news" element={<News />} />
+                                <Route path="/dashboard/news/create" element={<NewsCreate />} />
+                                <Route path="/dashboard/news/edit/:id" element={<NewsEdit />} />
                                 <Route path="/dashboard/order" element={<Oder />} />
+                                <Route path="/dashboard/order/create" element={<OderCreate />} />
+                                <Route path="/dashboard/order/edit/:id" element={<OderEdit />} />
                             </Routes>
                         </div>
                         <Footer />

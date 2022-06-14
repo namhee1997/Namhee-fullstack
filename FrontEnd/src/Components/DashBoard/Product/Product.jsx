@@ -12,7 +12,10 @@ export default function Product() {
 
     return (
         <div className="container_user_dashboard">
-            <Table dataTitle={titleCurrent} dataCurrent={dataCurrent} thisPage='Product' title='Product' />
+            <Table dataTitle={titleCurrent} dataCurrent={dataCurrent} thisPage='Product'
+                title='Product'
+                linkCreate="/dashboard/product/create"
+            />
         </div>
     );
 }

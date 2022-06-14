@@ -1,8 +1,4 @@
 import * as ActionTypes from '../ActionTypes';
-import Apple from '../assets/img/apple.png';
-import Samsung from '../assets/img/samsung.png';
-import Vivo from '../assets/img/vivo.png';
-import Nokia from '../assets/img/nokia.png';
 
 const init = {
     list: [

@@ -11,7 +11,9 @@ export default function News() {
     }, [])
     return (
         <div className="container_user_dashboard">
-            <Table dataTitle={titleCurrent} dataCurrent={dataCurrent} thisPage='News' title='News' />
+            <Table dataTitle={titleCurrent} dataCurrent={dataCurrent} thisPage='News' title='News'
+                linkCreate="/dashboard/news/create"
+            />
         </div>
     );
 }

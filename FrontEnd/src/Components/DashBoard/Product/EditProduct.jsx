@@ -6,5 +6,5 @@ export default function EditProduct() {
         <div className="container_user_dashboard">
             <EditForm />
         </div>
-    ); s
+    );
 }

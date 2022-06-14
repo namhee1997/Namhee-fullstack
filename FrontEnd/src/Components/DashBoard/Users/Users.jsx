@@ -14,7 +14,9 @@ export default function Users() {
     ]);
     return (
         <div className="container_user_dashboard">
-            <Table dataTitle={titleCurrent} dataCurrent={dataCurrent} thisPage='User' title='User' />
+            <Table dataTitle={titleCurrent} dataCurrent={dataCurrent} thisPage='User'
+                title='User' linkCreate="/dashboard/user/create"
+            />
         </div>
     );
 }

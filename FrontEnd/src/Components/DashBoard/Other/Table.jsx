@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 
-export default function Table({ title = '', dataCurrent = [], dataTitle = [], thisPage = '' }) {
+export default function Table({ title = '', dataCurrent = [], dataTitle = [], thisPage = '', linkCreate = '', dataHandle }) {
 
     return (
         <div className="card mb-4 table_">
@@ -12,7 +12,7 @@ export default function Table({ title = '', dataCurrent = [], dataTitle = [], th
                 </div>
 
                 <button type="button" className="btn btn-primary ms-auto">
-                    <Link to="/dashboard/users/create" className="text-white text-decoration-none">
+                    <Link to={linkCreate} className="text-white text-decoration-none">
                         <i className="fa-solid fa-plus"></i> Create
                     </Link>
                 </button>
@@ -28,7 +28,7 @@ export default function Table({ title = '', dataCurrent = [], dataTitle = [], th
                                     <th key={i}>{e}</th>
                                 )
                             }
-                            <th width="100px"></th>
+                            <th width={thisPage == 'Order' ? '150px' : '100px'}></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -65,12 +65,12 @@ export default function Table({ title = '', dataCurrent = [], dataTitle = [], th
                                         <td>
                                             <div className="btn-group" role="group" aria-label="Basic example">
                                                 <button type="button" className="btn btn-danger">
-                                                    <Link to={`/dashboard/users/delete/${e.userId}`}>
+                                                    <Link to={`/dashboard/user/delete/${e.userId}`}>
                                                         <i className="fa-solid fa-trash-can text-white"></i>
                                                     </Link>
                                                 </button>
                                                 <button type="button" className="btn btn-primary">
-                                                    <Link to={`/dashboard/users/edit/${e.userId}`}>
+                                                    <Link to={`/dashboard/user/edit/${e.userId}`}>
                                                         <i className="fa-solid fa-pen-to-square text-white"></i>
                                                     </Link>
                                                 </button>
@@ -238,7 +238,7 @@ export default function Table({ title = '', dataCurrent = [], dataTitle = [], th
                                                         </td>
 
                                                         <td>
-                                                            <div className="btn-group" role="group" aria-label="Basic example">
+                                                            <div className={`btn-group this_order`} role="group" aria-label="Basic example">
                                                                 <button type="button" className="btn btn-danger">
                                                                     <Link to={`/dashboard/order/delete/${e.idOrder}`}>
                                                                         <i className="fa-solid fa-trash-can text-white"></i>
@@ -248,6 +248,15 @@ export default function Table({ title = '', dataCurrent = [], dataTitle = [], th
                                                                     <Link to={`/dashboard/order/edit/${e.idOrder}`}>
                                                                         <i className="fa-solid fa-pen-to-square text-white"></i>
                                                                     </Link>
+                                                                </button>
+                                                                <button className="btn btn-success" onClick={() => dataHandle.setViewBox(m => {
+                                                                    let data = {};
+                                                                    data.userID = e.userID;
+                                                                    data.view = !m.view;
+                                                                    data.idOrder = e.idOrder;
+                                                                    return data;
+                                                                })}>
+                                                                    <i className="fa-solid fa-eye"></i>
                                                                 </button>
                                                             </div>
                                                         </td>

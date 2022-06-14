@@ -43,7 +43,7 @@ export default function HeaderDashBoard() {
                     </li>
                     <li>
                         <Link to={`/dashboard/order`}>
-                            Tổng đơn hàng đã đặt
+                            Oder
                         </Link>
                     </li>
                 </ul>

@@ -11,7 +11,9 @@ export default function Company() {
     }, [])
     return (
         <div className="container_user_dashboard">
-            <Table dataTitle={titleCurrent} dataCurrent={dataCurrent} thisPage='Company' title='Company' />
+            <Table dataTitle={titleCurrent} dataCurrent={dataCurrent} thisPage='Company' title='Company'
+                linkCreate="/dashboard/company/create"
+            />
         </div>
     );
 }
