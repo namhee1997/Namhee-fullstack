@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 
-export default function Table({ title = '', dataCurrent = [], dataTitle = [], thisPage = '', linkCreate = '', dataHandle }) {
+export default function Table({ title = '', dataCurrent = [], dataTitle = [], thisPage = '', linkCreate = '', dataHandle, create = 'true' }) {
 
     return (
         <div className="card mb-4 table_">
@@ -11,11 +11,15 @@ export default function Table({ title = '', dataCurrent = [], dataTitle = [], th
                     <p>{title}</p>
                 </div>
 
-                <button type="button" className="btn btn-primary ms-auto">
-                    <Link to={linkCreate} className="text-white text-decoration-none">
-                        <i className="fa-solid fa-plus"></i> Create
-                    </Link>
-                </button>
+                {
+                    create == 'true' ?
+                        <button type="button" className="btn btn-primary ms-auto">
+                            <Link to={linkCreate} className="text-white text-decoration-none">
+                                <i className="fa-solid fa-plus"></i> Create
+                            </Link>
+                        </button>
+                        : ""
+                }
 
             </div>
             <div className="card-body">
@@ -244,25 +248,83 @@ export default function Table({ title = '', dataCurrent = [], dataTitle = [], th
                                                                         <i className="fa-solid fa-trash-can text-white"></i>
                                                                     </Link>
                                                                 </button>
-                                                                <button type="button" className="btn btn-primary">
-                                                                    <Link to={`/dashboard/order/edit/${e.idOrder}`}>
-                                                                        <i className="fa-solid fa-pen-to-square text-white"></i>
-                                                                    </Link>
-                                                                </button>
-                                                                <button className="btn btn-success" onClick={() => dataHandle.setViewBox(m => {
-                                                                    let data = {};
-                                                                    data.userID = e.userID;
-                                                                    data.view = !m.view;
-                                                                    data.idOrder = e.idOrder;
-                                                                    return data;
-                                                                })}>
-                                                                    <i className="fa-solid fa-eye"></i>
-                                                                </button>
+                                                                {
+                                                                    create == 'true' ?
+                                                                        <button type="button" className="btn btn-primary">
+                                                                            <Link to={`/dashboard/order/edit/${e.idOrder}`}>
+                                                                                <i className="fa-solid fa-pen-to-square text-white"></i>
+                                                                            </Link>
+                                                                        </button>
+                                                                        : ''
+                                                                }
+                                                                {
+                                                                    create == 'false' ?
+                                                                        <button className="btn btn-success" onClick={() => dataHandle.setViewBox(m => {
+                                                                            let data = {};
+                                                                            data.userID = e.userID;
+                                                                            data.view = !m.view;
+                                                                            data.idOrder = e.idOrder;
+                                                                            return data;
+                                                                        })}>
+                                                                            <i className="fa-solid fa-eye"></i>
+                                                                        </button>
+                                                                        : ''
+                                                                }
+
                                                             </div>
                                                         </td>
                                                     </tr>
                                                 )
-                                                : ''
+                                                : thisPage == 'Order-Custom' ?
+                                                    dataCurrent.map((e, i) =>
+                                                        <tr key={i}>
+                                                            <td>
+                                                                {i + 1}
+                                                            </td>
+                                                            <td>
+                                                                {e.title}
+                                                            </td>
+                                                            <td>
+                                                                {e.name}
+                                                            </td>
+                                                            <td>
+                                                                {e.fullname}
+                                                            </td>
+                                                            <td>
+                                                                {e.price}
+                                                            </td>
+                                                            <td>
+                                                                {e.address}
+                                                            </td>
+                                                            <td>
+                                                                {e.promotion}
+                                                            </td>
+                                                            <td>
+                                                                {e.company}
+                                                            </td>
+
+                                                            <td>
+                                                                <div className={`btn-group this_order`} role="group" aria-label="Basic example">
+                                                                    <button type="button" className="btn btn-danger">
+                                                                        <Link to={`/dashboard/order/delete/${e.idOrder}`}>
+                                                                            <i className="fa-solid fa-trash-can text-white"></i>
+                                                                        </Link>
+                                                                    </button>
+                                                                    {
+                                                                        create == 'true' ?
+                                                                            <button type="button" className="btn btn-primary">
+                                                                                <Link to={`/dashboard/order/edit/${e.idOrder}`}>
+                                                                                    <i className="fa-solid fa-pen-to-square text-white"></i>
+                                                                                </Link>
+                                                                            </button>
+                                                                            : ''
+                                                                    }
+
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                    : ''
                         }
 
 

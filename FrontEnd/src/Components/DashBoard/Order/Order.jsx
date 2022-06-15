@@ -5,8 +5,10 @@ import ViewBox from "./ViewBox/ViewBox";
 
 export default function Order() {
     const store = useStore();
-    const [titleCurrent, setTilteCurrent] = useState(['Id Order', 'Slug Product', 'Title Product', 'Price', 'Sale', 'Cost', 'User Buy', 'Paid']);
+    const [titleCurrent, setTitleCurrent] = useState(['Id Order', 'Slug Product', 'Title Product', 'Price', 'Sale', 'Cost', 'User Buy', 'Paid']);
+    const [titleCustoms, setTitleCustoms] = useState(['title', 'name', 'fullname', 'price', 'address', 'promotion', 'company']);
     const [dataCurrent, setDataCurrent] = useState([]);
+    const [dataCustoms, setDataCustoms] = useState([]);
     const [dataUserCurrent, setDataUserCurrent] = useState(
         {
             username: 'ct', role: 'user',
@@ -23,6 +25,7 @@ export default function Order() {
     });
     useEffect(() => {
         setDataCurrent(store.getState().orderList.list);
+        setDataCustoms(store.getState().orderList.dataAdd);
     }, [])
     let dataHandle = {
         setViewBox
@@ -30,7 +33,10 @@ export default function Order() {
     console.log(viewBox, 'viewBox');
     return (
         <div className="container_user_dashboard">
-            <Table dataTitle={titleCurrent} dataCurrent={dataCurrent} thisPage='Order' title='Order'
+            <Table dataTitle={titleCurrent} dataCurrent={dataCurrent} thisPage='Order' create='false' title='Order'
+                linkCreate="/dashboard/order/create" dataHandle={dataHandle}
+            />
+            <Table dataTitle={titleCustoms} dataCurrent={dataCustoms} thisPage='Order-Custom' title='Orders Placed'
                 linkCreate="/dashboard/order/create" dataHandle={dataHandle}
             />
             <ViewBox viewBox={viewBox} dataHandle={dataHandle} dataUserCurrent={dataUserCurrent} />

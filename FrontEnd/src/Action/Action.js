@@ -6,3 +6,10 @@ export const bannerMain = (hobby) => {
         payload: hobby
     }
 }
+
+export const addOrder = (hobby) => {
+    return {
+        type: ActionTypes.ORDER_ADD,
+        payload: hobby
+    }
+}

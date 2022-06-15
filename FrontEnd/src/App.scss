@@ -2293,6 +2293,32 @@ body .input-group>.form-control {
   background-color: #fff;
 }
 
+.flex-100 {
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: unset;
+}
+
+.add_variable {
+  margin-bottom: 20px;
+}
+
+ul.list_img_product {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 10px;
+}
+
+ul.list_img_product li {
+  position: relative;
+}
+
+.btn_remove_imgs {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
 .container_view_order h2 {
   font-size: 38px;
   font-weight: 500;

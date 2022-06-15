@@ -1,29 +1,43 @@
 import { useState, useEffect } from 'react';
 import CreateForm from '../Other/CreateForm';
-import { useStore, useSelector } from 'react-redux';
+import { useStore, useSelector, useDispatch } from 'react-redux';
+import { addOrder } from '../../../Action/Action';
 
 export default function AddOrder() {
     const data = useSelector(e => e.companyPhone.list)
+    const dataPromotion = useSelector(e => e.promotionList.data)
+    const dispatch = useDispatch();
 
     const [stateForm, setStateForm] = useState([
         { name: 'title', type: 'text', placeholder: 'Enter your title' },
-        { name: 'slug', type: 'text', placeholder: 'Enter your slug' },
-        { name: 'sale', type: 'text', placeholder: 'Enter your sale' },
+        { name: 'name', type: 'text', placeholder: 'Enter your name' },
+        { name: 'fullname', type: 'text', placeholder: 'Enter your fullname' },
         { name: 'price', type: 'text', placeholder: 'Enter your price' },
-        { name: 'Avatar', type: 'file' },
-        { name: 'const', type: 'text', placeholder: 'Enter your const' },
-        { name: 'promotion', type: 'select', list: [{ title: 'true', slug: 'true' }, { title: 'false', val: 'false' }] },
+        { name: 'address', type: 'text', placeholder: 'Enter your address' },
+        { name: 'promotion', type: 'select', list: dataPromotion },
         { name: 'company', type: 'select', list: data },
     ]);
 
 
     const [dataForm, setDataForm] = useState({});
     const [dataAvatar, setDataAvatar] = useState('');
+    const [checkFirsRerender, setCheckFirsRerender] = useState(false);
 
     let dataHandle = {
         setDataForm,
         setDataAvatar,
     }
+
+    useEffect(() => {
+        if (checkFirsRerender) {
+            let dataAction = addOrder(dataForm);
+            dispatch(dataAction);
+        } else {
+            setCheckFirsRerender(true);
+        }
+    }, [dataForm])
+
+
     console.log(dataForm, 'dataForm', dataAvatar);
 
     return (

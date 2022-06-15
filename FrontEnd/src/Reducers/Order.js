@@ -9,7 +9,7 @@ const init = {
         },
 
     ],
-    data: [
+    dataAdd: [
     ]
 }
 
@@ -21,7 +21,14 @@ const Order = (state = init, action) => {
                 ...state,
                 list: action.payload
             }
-
+        case ActionTypes.ORDER_ADD:
+            return {
+                ...state,
+                dataAdd: [
+                    ...state.dataAdd,
+                    action.payload
+                ]
+            }
         default:
             return state;
     }
