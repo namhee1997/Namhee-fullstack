@@ -60,7 +60,7 @@ export default function router() {
                                 <Route path="/dashboard/user/create" element={<CreateUser />} />
                                 <Route path="/dashboard/product" element={<ProductDashBoard />} />
                                 <Route path="/dashboard/product/create" element={<ProductDashBoardCreate />} />
-                                <Route path="/dashboard/product/edit/:id" element={<ProductDashBoardEdit />} />
+                                <Route path="/dashboard/product/edit/:slug" element={<ProductDashBoardEdit />} />
                                 <Route path="/dashboard/company" element={<Company />} />
                                 <Route path="/dashboard/company/create" element={<CompanyCreate />} />
                                 <Route path="/dashboard/company/edit/:id" element={<CompanyEdit />} />

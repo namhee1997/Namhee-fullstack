@@ -70,7 +70,7 @@ export default function DashBoard() {
                         <div className="transaction_total">
                             <h2>Tổng số giao dịch người dùng</h2>
                             <div className="select_time">
-                                <select name="" id="">
+                                <select name="" id="" onChange={() => { }}>
                                     <option value="day">Theo ngày</option>
                                     <option value="month">Theo tháng</option>
                                     <option value="year">Theo năm</option>

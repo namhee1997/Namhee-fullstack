@@ -135,7 +135,7 @@ export default function CreateFormProduct({ listCompany = [], dataHandle }) {
                     </div>
                     <div className="col-md-6 mb-4 ">
                         <div className="form-floating mb-3 mb-md-0 form_input">
-                            <select className="form-select promotion" id="" name="role">
+                            <select className="form-select promotion" id="" name="role" onChange={() => { }}>
                                 <option value="true">true</option>
                                 <option value='false'>false</option>
                             </select>
@@ -144,7 +144,7 @@ export default function CreateFormProduct({ listCompany = [], dataHandle }) {
                     </div>
                     <div className="col-md-6 mb-4 ">
                         <div className="form-floating mb-3 mb-md-0 form_input">
-                            <select className="form-select company" id="" name="role">
+                            <select className="form-select company" id="" name="role" onChange={() => { }}>
                                 {
                                     listCompany.map((e, i) =>
                                         <option key={i} value={e.slug}>{e.title}</option>
