@@ -1,23 +1,43 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import $ from 'jquery';
 
 export default function EditForm({ titleForm = '', thisPage = '', stateForm = {}, dataHandle }) {
     const navigate = useNavigate();
     const [dataChangeNew, setDataChangeNew] = useState({});
     const [checkSubmit, setCheckSubmit] = useState(false);
+    const listAcceptTypeImg = ['image/png', 'image/jpeg'];
 
-    const handleChangeNew = (e, name) => {
-        setDataChangeNew(m => {
-            let data = { ...m };
-            data[name] = e.target.value;
-            return data;
-        });
+    const handleChangeNew = (e, name, file = '') => {
+        if (file == 'file') {
+            let files = e.target.files;
+            let fileType = (files[0]?.type);
+            let fileReader = new FileReader();
+            fileReader.addEventListener('load', () => {
+
+                if (listAcceptTypeImg.includes(fileType)) {
+                    setDataChangeNew(m => {
+                        let data = { ...m };
+                        data[name] = fileReader.result;
+                        return data;
+                    });
+                } else {
+                    alert('not type support!');
+                }
+            })
+            fileReader.readAsDataURL(files[0])
+        } else {
+            setDataChangeNew(m => {
+                let data = { ...m };
+                data[name] = e.target.value;
+                return data;
+            });
+        }
     }
 
     useEffect(() => {
         setDataChangeNew(stateForm);
-    }, [])
+    }, [stateForm])
 
     useEffect(() => {
         if (checkSubmit) {
@@ -32,6 +52,8 @@ export default function EditForm({ titleForm = '', thisPage = '', stateForm = {}
         e.preventDefault();
         setCheckSubmit(true);
     }
+
+    console.log(dataChangeNew, 'dataChangeNew');
 
 
 
@@ -55,100 +77,150 @@ export default function EditForm({ titleForm = '', thisPage = '', stateForm = {}
                     </button>
                 </div>
                 <div className="card-body">
-                    <form method="">
-                        {
-                            thisPage == 'User' ?
+                    {
+                        thisPage == 'User' ?
+                            <div className="row mb-3">
+                                <div className="col-md-6 mb-4">
+                                    <div className="form-floating mb-3 mb-md-0 flex_column_re">
+                                        <input className="form-control  get_value" id="username"
+                                            name="username" type="text"
+                                            placeholder="Enter your username"
+                                            value={dataChangeNew?.username ? dataChangeNew?.username : stateForm?.username ? stateForm?.username : ''}
+                                            onChange={(e) => handleChangeNew(e, 'username')} />
+                                        <label htmlFor="username">username</label>
+                                    </div>
+                                </div>
+
+                                <div className="col-md-6 mb-4">
+                                    <div className="form-floating mb-3 mb-md-0 flex_column_re">
+                                        <input className="form-control  get_value" id="password" name="password"
+                                            type="text" placeholder="Enter your password"
+                                            onChange={(e) => handleChangeNew(e, 'password')}
+                                            value={dataChangeNew?.password ? dataChangeNew?.password : stateForm?.password ? stateForm?.password : ''} />
+                                        <label htmlFor="password">password</label>
+                                    </div>
+                                </div>
+
+                                <div className="col-md-6 mb-4">
+                                    <div className="form-floating mb-3 mb-md-0 flex_column_re">
+                                        <select className="form-select  get_value" name="role"
+                                            value={dataChangeNew?.role ? dataChangeNew?.role : stateForm?.role ? stateForm?.role : ''}
+                                            onChange={(e) => handleChangeNew(e, 'role')}
+                                        >
+                                            <option value="admin">admin
+                                            </option>
+                                            <option value="user" >user
+                                            </option>
+                                        </select>
+                                        <label >role</label>
+                                    </div>
+                                </div>
+
+                                <div className="col-md-6 mb-4">
+                                    <div className="form-floating mb-3 mb-md-0 flex_column_re">
+                                        <input className="form-control  get_value" id="fullname"
+                                            name="fullname" type="text" onChange={(e) => handleChangeNew(e, 'fullname')}
+                                            placeholder="Enter your firstname"
+                                            value={dataChangeNew?.fullname ? dataChangeNew?.fullname : stateForm?.fullname ? stateForm?.fullname : ''} />
+                                        <label htmlFor="fullname">fullname</label>
+                                    </div>
+                                </div>
+
+                                <div className="col-md-6 mb-4">
+                                    <div className="form-floating mb-3 mb-md-0 flex_column_re">
+                                        <input className="form-control  get_value" name="address" id="address"
+                                            type="text" onChange={(e) => handleChangeNew(e, 'address')}
+                                            placeholder="Enter your address"
+                                            value={dataChangeNew?.address ? dataChangeNew?.address : stateForm?.address ? stateForm?.address : ''} />
+                                        <label htmlFor="address">address</label>
+                                    </div>
+                                </div>
+
+                                <div className="col-md-6 mb-4">
+                                    <div className="form-floating mb-3 mb-md-0 flex_column_re">
+                                        <input className="form-control  get_value" id="email"
+                                            name="email" type="text" onChange={(e) => handleChangeNew(e, 'email')}
+                                            placeholder="Enter your email"
+                                            value={dataChangeNew?.email ? dataChangeNew?.email : stateForm?.email ? stateForm?.email : ''} />
+                                        <label htmlFor="email">email</label>
+                                    </div>
+                                </div>
+
+                                <div className="col-md-6 mb-4">
+                                    <div className="form-floating mb-3 mb-md-0 flex_column_re">
+                                        <input className="form-control get_value" id="phone"
+                                            name="phone" type="text"
+                                            onChange={(e) => handleChangeNew(e, 'phone')} placeholder="Enter your phone"
+                                            value={dataChangeNew?.phone ? dataChangeNew?.phone : stateForm?.phone ? stateForm?.phone : ''} />
+                                        <label htmlFor="phone">phone</label>
+                                    </div>
+                                </div>
+
+                                <div className="col-md-6 mb-4">
+                                    <div className="preview mb-4">
+                                        <img width="100%" height="400px" className=" get_value" name="avatar"
+                                            src={dataChangeNew?.avatar ? dataChangeNew?.avatar : stateForm?.avatar ? stateForm?.avatar : ''} alt="" id="img" />
+                                    </div>
+                                    <div className="input-group">
+                                        <input type="file" className="form-control" id="file"
+                                            onChange={(e) => handleChangeNew(e, 'avatar')}
+                                            aria-describedby="image_button" aria-label="Upload" />
+                                    </div>
+                                </div>
+
+                            </div>
+                            : thisPage == 'News' ?
                                 <div className="row mb-3">
                                     <div className="col-md-6 mb-4">
-                                        <div className="form-floating mb-3 mb-md-0">
-                                            <input className="form-control" id="username"
-                                                name="username" type="text"
-                                                placeholder="Enter your username" value={dataChangeNew.username ? dataChangeNew.username : stateForm.username} onChange={(e) => handleChangeNew(e, 'username')} />
-                                            <label htmlFor="username">username</label>
+                                        <div className="form-floating mb-3 mb-md-0 flex_column_re">
+                                            <input className="form-control get_value" id="title12"
+                                                name="title12" type="text"
+                                                placeholder="Enter your title"
+                                                value={dataChangeNew?.title ? dataChangeNew?.title : stateForm?.title ? stateForm?.title : ''}
+                                                onChange={(e) => handleChangeNew(e, 'title12')} />
+                                            <label htmlFor="title12">title</label>
                                         </div>
                                     </div>
 
                                     <div className="col-md-6 mb-4">
-                                        <div className="form-floating mb-3 mb-md-0">
-                                            <input className="form-control" id="password" name="password"
-                                                type="text" placeholder="Enter your password"
-                                                onChange={(e) => handleChangeNew(e, 'password')} value={dataChangeNew.password ? dataChangeNew.password : stateForm.password} />
-                                            <label htmlFor="password">password</label>
+                                        <div className="form-floating mb-3 mb-md-0 flex_column_re">
+                                            <input className="form-control get_value" id="slug" name="slug"
+                                                type="text" placeholder="Enter your slug"
+                                                onChange={(e) => handleChangeNew(e, 'slug')}
+                                                value={dataChangeNew?.slug ? dataChangeNew?.slug : stateForm?.slug ? stateForm?.slug : ''} />
+                                            <label htmlFor="slug">slug</label>
                                         </div>
                                     </div>
 
                                     <div className="col-md-6 mb-4">
-                                        <div className="form-floating mb-3 mb-md-0">
-                                            <select className="form-select" name="role" value={dataChangeNew.role ? dataChangeNew.role : stateForm.role}
-                                                onChange={(e) => handleChangeNew(e, 'role')}
-                                            >
-                                                <option value="admin">admin
-                                                </option>
-                                                <option value="user" >user
-                                                </option>
-                                            </select>
-                                            <label >role</label>
+                                        <div className="form-floating mb-3 mb-md-0 flex_column_re">
+                                            <input className="form-control get_value" id="urlTo" name="urlTo"
+                                                type="text" placeholder="Enter your urlTo"
+                                                onChange={(e) => handleChangeNew(e, 'urlTo')}
+                                                value={dataChangeNew?.urlTo ? dataChangeNew?.urlTo : stateForm?.urlTo ? stateForm?.urlTo : ''} />
+                                            <label htmlFor="urlTo">urlTo</label>
                                         </div>
                                     </div>
 
                                     <div className="col-md-6 mb-4">
-                                        <div className="form-floating mb-3 mb-md-0">
-                                            <input className="form-control" id="fullname"
-                                                name="fullname" type="text" onChange={(e) => handleChangeNew(e, 'fullname')}
-                                                placeholder="Enter your firstname" value={dataChangeNew.fullname ? dataChangeNew.fullname : stateForm.fullname} />
-                                            <label htmlFor="fullname">fullname</label>
-                                        </div>
-                                    </div>
-
-                                    <div className="col-md-6 mb-4">
-                                        <div className="form-floating mb-3 mb-md-0">
-                                            <input className="form-control" name="address" id="address"
-                                                type="text" onChange={(e) => handleChangeNew(e, 'address')}
-                                                placeholder="Enter your address" value={dataChangeNew.address ? dataChangeNew.address : stateForm.address} />
-                                            <label htmlFor="address">address</label>
-                                        </div>
-                                    </div>
-
-                                    <div className="col-md-6 mb-4">
-                                        <div className="form-floating mb-3 mb-md-0">
-                                            <input className="form-control" id="email"
-                                                name="email" type="text" onChange={(e) => handleChangeNew(e, 'email')}
-                                                placeholder="Enter your email" value={dataChangeNew.email ? dataChangeNew.email : stateForm.email} />
-                                            <label htmlFor="email">email</label>
-                                        </div>
-                                    </div>
-
-                                    <div className="col-md-6 mb-4">
-                                        <div className="form-floating mb-3 mb-md-0">
-                                            <input className="form-control" id="phone"
-                                                name="phone" type="text"
-                                                onChange={(e) => handleChangeNew(e, 'phone')} placeholder="Enter your phone" value={dataChangeNew.phone ? dataChangeNew.phone : stateForm.phone} />
-                                            <label htmlFor="phone">phone</label>
-                                        </div>
-                                    </div>
-
-                                    <div className="col-md-6 mb-4">
-                                        <div className="preview mb-4">
-                                            <img width="100%" height="400px"
-                                                src={dataChangeNew.avatar ? dataChangeNew.avatar : stateForm.avatar} alt="" id="img" />
-                                        </div>
-                                        <div className="input-group">
-                                            <input type="file" className="form-control" id="file"
-                                                onChange={(e) => handleChangeNew(e, 'avatar')}
-                                                aria-describedby="image_button" aria-label="Upload" />
+                                        <div className="form-floating mb-3 mb-md-0 flex_column_re">
+                                            <input className="form-control get_value" id="content" name="content"
+                                                type="text" placeholder="Enter your content"
+                                                onChange={(e) => handleChangeNew(e, 'content')}
+                                                value={dataChangeNew?.content ? dataChangeNew?.content : stateForm?.content ? stateForm?.content : ''} />
+                                            <label htmlFor="content">content</label>
                                         </div>
                                     </div>
 
                                 </div>
                                 : ""
-                        }
+                    }
 
-                        <div className="mt-4 mb-0">
-                            <div className="d-grid justify-content-end">
-                                <button className="btn btn-primary" onClick={(e) => handleSubmit(e)}>Update</button>
-                            </div>
+                    <div className="mt-4 mb-0">
+                        <div className="d-grid justify-content-end">
+                            <button className="btn btn-primary" onClick={(e) => handleSubmit(e)}>Update</button>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>

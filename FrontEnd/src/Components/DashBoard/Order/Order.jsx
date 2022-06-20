@@ -1,10 +1,12 @@
-import { useStore } from "react-redux";
+import { useStore, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import Table from "../Other/Table";
 import ViewBox from "./ViewBox/ViewBox";
+import { removeOrder, removeOrderCustom } from "../../../Action/Action";
 
 export default function Order() {
     const store = useStore();
+    const dispatch = useDispatch();
     const [titleCurrent, setTitleCurrent] = useState(['Id Order', 'Slug Product', 'Title Product', 'Price', 'Sale', 'Cost', 'User Buy', 'Paid']);
     const [titleCustoms, setTitleCustoms] = useState(['title', 'name', 'fullname', 'price', 'address', 'promotion', 'company']);
     const [dataCurrent, setDataCurrent] = useState([]);
@@ -23,14 +25,32 @@ export default function Order() {
         userID: 0,
         idOrder: 0
     });
+    const [stateRF, setstateRF] = useState(true)
+
     useEffect(() => {
         setDataCurrent(store.getState().orderList.list);
         setDataCustoms(store.getState().orderList.dataAdd);
-    }, [])
+    }, [stateRF])
+
+    const handleRemoveTable = (id) => {
+        let data = removeOrder(id);
+        dispatch(data);
+        setstateRF(!stateRF);
+    }
+
+    const handleRemoveTableCustom = (id) => {
+        let data = removeOrderCustom(id);
+        dispatch(data);
+        setstateRF(!stateRF);
+    }
+
     let dataHandle = {
-        setViewBox
+        setViewBox,
+        handleRemoveTable,
+        handleRemoveTableCustom
     };
-    console.log(viewBox, 'viewBox');
+
+
     return (
         <div className="container_user_dashboard">
             <Table dataTitle={titleCurrent} dataCurrent={dataCurrent} thisPage='Order' create='false' title='Order'

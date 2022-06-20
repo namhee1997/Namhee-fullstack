@@ -1,21 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import EditForm from '../Other/EditForm';
 import { useParams } from 'react-router-dom';
 
 export default function EditUser() {
     const param = useParams();
-    const [dataCurrent, setDataCurrent] = useState(
-        {
+    const [dataCurrent, setDataCurrent] = useState({});
+    const [dataChangeNew, setDataChangeNew] = useState({});
+    let dataHandle = { setDataChangeNew };
+    useEffect(() => {
+        setDataCurrent({
             username: 'vivannam', role: 'user',
             fullname: 'vi van nam',
             password: '123456',
             avatar: 'https://res.cloudinary.com/dungdv/image/upload/v1652753864/ccohkl7gwrnajs8qgtfi.png',
             address: 'vinh nghe an', email: 'nunal0889@gmail.com',
             phone: '0968796293', userId: 1
-        }
-    );
-    const [dataChangeNew, setDataChangeNew] = useState({});
-    let dataHandle = { setDataChangeNew };
+        });
+    }, [])
     console.log(dataChangeNew, 'dataChangeNew');
 
 

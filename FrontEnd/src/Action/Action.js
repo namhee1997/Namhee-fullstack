@@ -13,3 +13,17 @@ export const addOrder = (hobby) => {
         payload: hobby
     }
 }
+
+export const removeOrder = (hobby) => {
+    return {
+        type: ActionTypes.REMOVE_ODER,
+        payload: hobby
+    }
+}
+
+export const removeOrderCustom = (hobby) => {
+    return {
+        type: ActionTypes.REMOVE_ODER_CUSTOM,
+        payload: hobby
+    }
+}

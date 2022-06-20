@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 
 
-export default function Table({ title = '', dataCurrent = [], dataTitle = [], thisPage = '', linkCreate = '', dataHandle, create = 'true' }) {
+export default function Table({ title = '', dataCurrent = [],
+    dataTitle = [], thisPage = '',
+    linkCreate = '', dataHandle, create = 'true' }) {
 
     return (
         <div className="card mb-4 table_">
@@ -244,7 +246,12 @@ export default function Table({ title = '', dataCurrent = [], dataTitle = [], th
                                                         <td>
                                                             <div className={`btn-group this_order`} role="group" aria-label="Basic example">
                                                                 <button type="button" className="btn btn-danger">
-                                                                    <Link to={`/dashboard/order/delete/${e.idOrder}`}>
+                                                                    <Link to={``}
+                                                                        onClick={(z) => {
+                                                                            z.preventDefault();
+                                                                            dataHandle.handleRemoveTable(e.idOrder)
+                                                                        }}
+                                                                    >
                                                                         <i className="fa-solid fa-trash-can text-white"></i>
                                                                     </Link>
                                                                 </button>
@@ -306,7 +313,12 @@ export default function Table({ title = '', dataCurrent = [], dataTitle = [], th
                                                             <td>
                                                                 <div className={`btn-group this_order`} role="group" aria-label="Basic example">
                                                                     <button type="button" className="btn btn-danger">
-                                                                        <Link to={`/dashboard/order/delete/${e.idOrder}`}>
+                                                                        <Link to={`/dashboard/order/delete/${e.idOrder}`}
+                                                                            onClick={(z) => {
+                                                                                z.preventDefault();
+                                                                                dataHandle.handleRemoveTableCustom(e.idOderCustom)
+                                                                            }}
+                                                                        >
                                                                             <i className="fa-solid fa-trash-can text-white"></i>
                                                                         </Link>
                                                                     </button>

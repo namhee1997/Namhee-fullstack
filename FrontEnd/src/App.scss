@@ -2401,3 +2401,8 @@ ul.list_img_product li {
 .col-md-6.mb-4.img_list>div {
   flex-direction: column;
 }
+
+.flex_column_re {
+  display: flex;
+  flex-direction: column-reverse;
+}

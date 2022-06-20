@@ -8,8 +8,8 @@ export default function CreateForm({ titleForm = '', thisPage = '', stateForm = 
     const listAcceptTypeImg = ['image/png', 'image/jpeg'];
     const [fileImg, setFileImg] = useState('');
     const [dataTotal, setDataTotal] = useState({});
-    const [dataTotal1, setDataTotal1] = useState({});
     const [checkSubmit, setCheckSubmit] = useState(false);
+    const [number, setNumber] = useState(1);
     // let data = {};
 
     useEffect(() => {
@@ -46,14 +46,15 @@ export default function CreateForm({ titleForm = '', thisPage = '', stateForm = 
     }
     const handleSubmit = (e) => {
         e.preventDefault();
+        setNumber(e => e + 1);
         let data = {};
         for (let i = 0; i < stateForm.length; i++) {
             data[stateForm[i].name] = stateForm[i].type == 'select' ? $(`#${stateForm[i].name} option:selected`).val() : $(`#${stateForm[i].name}`).val();
         }
+        data.idOderCustom = number;
         setDataTotal(data);
         setCheckSubmit(true);
     }
-
 
 
     return (

@@ -7,3 +7,5 @@ export const NEWS_LIST = 'NEWS_LIST';
 export const ORDER_LIST = 'ORDER_LIST';
 export const ORDER_ADD = 'ORDER_ADD';
 export const PROMOTION_LIST = 'PROMOTION_LIST';
+export const REMOVE_ODER = 'REMOVE_ODER';
+export const REMOVE_ODER_CUSTOM = 'REMOVE_ODER_CUSTOM';

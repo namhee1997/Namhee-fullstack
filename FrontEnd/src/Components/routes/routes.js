@@ -26,7 +26,6 @@ import NewsCreate from '../DashBoard/News/AddNews';
 import NewsEdit from '../DashBoard/News/EditNews';
 import Oder from '../DashBoard/Order/Order';
 import OderCreate from '../DashBoard/Order/AddOrder';
-import OderEdit from '../DashBoard/Order/EditOrder';
 
 export default function router() {
     let location = window.location.pathname.split('/');
@@ -63,14 +62,13 @@ export default function router() {
                                 <Route path="/dashboard/product/edit/:slug" element={<ProductDashBoardEdit />} />
                                 <Route path="/dashboard/company" element={<Company />} />
                                 <Route path="/dashboard/company/create" element={<CompanyCreate />} />
-                                <Route path="/dashboard/company/edit/:id" element={<CompanyEdit />} />
+                                <Route path="/dashboard/company/edit/:slug" element={<CompanyEdit />} />
                                 <Route path="/dashboard/slides" element={<SlidesMain />} />
                                 <Route path="/dashboard/news" element={<News />} />
                                 <Route path="/dashboard/news/create" element={<NewsCreate />} />
-                                <Route path="/dashboard/news/edit/:id" element={<NewsEdit />} />
+                                <Route path="/dashboard/news/edit/:slug" element={<NewsEdit />} />
                                 <Route path="/dashboard/order" element={<Oder />} />
                                 <Route path="/dashboard/order/create" element={<OderCreate />} />
-                                <Route path="/dashboard/order/edit/:id" element={<OderEdit />} />
                             </Routes>
                         </div>
                         <Footer />
