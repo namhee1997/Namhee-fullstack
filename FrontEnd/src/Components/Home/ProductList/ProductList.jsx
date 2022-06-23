@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 
-export default function ProductList({ list, company = true }) {
+export default function ProductList({ list, company = true, layout = 'grid' }) {
 
     return (
 
-        <div className="list_hot_promotion product product_selling">
+        <div className={`list_hot_promotion product product_selling ${layout == 'grid' ? `grid-d` : `list-d`}`}>
             {
                 list.map((e, i) => {
                     if (company == e.company || company == true)

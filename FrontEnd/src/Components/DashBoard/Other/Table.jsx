@@ -127,6 +127,13 @@ export default function Table({ title = '', dataCurrent = [],
                                                 }
                                             </td>
                                             <td>
+                                                <p>{e.infophone.chip}</p>
+                                                <p>{e.infophone.screen}</p>
+                                                <p>{e.infophone.ram}</p>
+                                                <p>{e.infophone.memory}</p>
+
+                                            </td>
+                                            <td>
                                                 <div className="btn-group" role="group" aria-label="Basic example">
                                                     <button type="button" className="btn btn-danger">
                                                         <Link to={`/dashboard/product/delete/${e.slug}`}>

@@ -126,6 +126,10 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
             let data = [...m];
             if (name == 'variable') {
                 data[nPosition].variable = e.target.value;
+            } else if (name == 'chip' || name == 'screen' || name == 'ram' || name == 'memory') {
+                let obj = { ...data[nPosition].data[`infophone`] };
+                obj[name] = e.target.value;
+                data[nPosition].data[`infophone`] = obj;
             } else {
                 data[nPosition].data[name] = e.target.value;
             }
@@ -292,6 +296,48 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
                                                     <label htmlFor="cost">cost</label>
                                                 </div>
                                             </div>
+                                            <div className="col-md-6 mb-4">
+                                                <div className="form-floating mb-3 mb-md-0">
+                                                    <input className="form-control" id="cost"
+                                                        name="cost" type="text"
+                                                        onChange={(e) => handleChangeNew(e, 'cost', x)} placeholder="Enter your cost" value={z.data.cost ? z.data.cost : stateForm.cost} />
+                                                    <label htmlFor="cost">cost</label>
+                                                </div>
+                                            </div>
+                                            {/*  */}
+                                            <div className="col-md-6 mb-4">
+                                                <div className="form-floating mb-3 mb-md-0">
+                                                    <input className="form-control" id="chip"
+                                                        name="chip" type="text"
+                                                        onChange={(e) => handleChangeNew(e, 'chip', x)} placeholder="Enter your chip" value={z.data.infophone.chip ? z.data.infophone.chip : stateForm.chip} />
+                                                    <label htmlFor="chip">chip</label>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-6 mb-4">
+                                                <div className="form-floating mb-3 mb-md-0">
+                                                    <input className="form-control" id="screen"
+                                                        name="screen" type="text"
+                                                        onChange={(e) => handleChangeNew(e, 'screen', x)} placeholder="Enter your screen" value={z.data.infophone.screen ? z.data.infophone.screen : stateForm.screen} />
+                                                    <label htmlFor="screen">screen</label>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-6 mb-4">
+                                                <div className="form-floating mb-3 mb-md-0">
+                                                    <input className="form-control" id="ram"
+                                                        name="ram" type="text"
+                                                        onChange={(e) => handleChangeNew(e, 'ram', x)} placeholder="Enter your ram" value={z.data.infophone.ram ? z.data.infophone.ram : stateForm.ram} />
+                                                    <label htmlFor="ram">ram</label>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-6 mb-4">
+                                                <div className="form-floating mb-3 mb-md-0">
+                                                    <input className="form-control" id="memory"
+                                                        name="memory" type="text"
+                                                        onChange={(e) => handleChangeNew(e, 'memory', x)} placeholder="Enter your memory" value={z.data.infophone.memory ? z.data.infophone.memory : stateForm.memory} />
+                                                    <label htmlFor="memory">memory</label>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 );

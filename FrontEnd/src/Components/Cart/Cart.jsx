@@ -68,6 +68,7 @@ export default function Cart() {
 
     }, [listProduct])
 
+
     //SUM PRICE
     const [sumPrice, setSumPrice] = useState({
         cost: 0,
@@ -77,8 +78,12 @@ export default function Cart() {
 
     useEffect(() => {
 
+        setSumPrice({
+            cost: 0,
+            sale: 0,
+            price: 0,
+        });
         for (let i = 0; i < productPrice.length; i++) {
-
             setSumPrice(z => {
                 let data = { ...z };
                 data.cost = data.cost + productPrice[i].cost;

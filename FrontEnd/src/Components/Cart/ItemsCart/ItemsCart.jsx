@@ -46,7 +46,7 @@ export default function ItemsCart({ e, i, productPrice, handleNumber }) {
         cost: 0,
         price: 0
     });
-    const [totalProduct, setTotalProduct] = useState(e.totalCurrent);
+    const [totalProduct, setTotalProduct] = useState(e.totalCurrent || 1);
 
     useEffect(() => {
         setProductPrices({
@@ -57,8 +57,8 @@ export default function ItemsCart({ e, i, productPrice, handleNumber }) {
             handleNumber.setProductPrice(z => {
                 let data = [...z];
                 let objIndex = data.findIndex((obj => obj.title == `p${i + 1}`));
-                data[objIndex].cost = e?.dataTotal?.totalSelect[+handleNumber?.numberVariable || 0]?.data?.cost * totalProduct || 0
-                data[objIndex].price = e?.dataTotal?.totalSelect[+handleNumber?.numberVariable || 0]?.data?.price * totalProduct || 0
+                data[objIndex].cost = e?.dataTotal?.totalSelect[+handleNumber?.numberVariable || 0]?.data?.cost * totalProduct || 0;
+                data[objIndex].price = e?.dataTotal?.totalSelect[+handleNumber?.numberVariable || 0]?.data?.price * totalProduct || 0;
 
                 return data;
             });

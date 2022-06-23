@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useState, useEffect } from 'react'
+import { useSelector, useDispatch, useStore } from 'react-redux'
 import ReactPaginate from 'react-paginate';
 import Banner from "../Other/Banner";
 import Banner1 from '../../assets/img/banner1.webp';
@@ -10,12 +10,13 @@ import Apple from '../../assets/img/apple.png';
 import Samsung from '../../assets/img/samsung.png';
 import Vivo from '../../assets/img/vivo.png';
 import Nokia from '../../assets/img/nokia.png';
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import ProductList from "../Home/ProductList/ProductList";
 
 
 export default function ListPhone() {
-
+    const params = useParams();
+    const store = useStore();
     const [listBanner, setListBanner] = useState([{ thumb: Banner1, link: '' }, { thumb: Banner2, link: '' }, { thumb: Banner2, link: '' }]);
 
     const [company, setCompany] = useState([
@@ -54,8 +55,50 @@ export default function ListPhone() {
         { src: Nokia, title: 'Nokia', url: 'nokia' }
     ]);
     const [totalProduct, setTotalProduct] = useState(0);
+    const [dataPhone, setDataPhone] = useState([]);
+    const [sort, setSort] = useState('min');
+    const [layout, setLayout] = useState('grid');
 
-    const dataPhone = useSelector(e => e.dataState.data);
+    useEffect(() => {
+        setDataPhone(store.getState().dataState.data);
+    }, [])
+
+    useEffect(() => {
+        dataPhone.sort(function (a, b) {
+            if (sort == 'max') {
+                return a.price - b.price;
+            }
+            if (sort == 'min') {
+                return b.price - a.price;
+            }
+        });
+    }, [dataPhone, sort])
+
+    useEffect(() => {
+        setChange({
+            ...change,
+            company: params.slug
+        });
+    }, [params])
+
+
+
+    //CHANGE ONE 
+    const [change, setChange] = useState({
+        company: 'allcompany',
+        price: 'allprice',
+        ram: 'allram',
+        memory: 'allmemory',
+    });
+
+    //END CHANGE ONE
+
+    //GET DATA SEND API
+    useEffect(() => {
+        console.log(change, 'change');
+    }, [change])
+
+    //END GET DATA SEND API
 
     return (
         <div className="container_phone">
@@ -73,7 +116,14 @@ export default function ListPhone() {
                                         return (
                                             <li key={i}>
                                                 <div className="content_search">
-                                                    <input type="checkbox" id={e.slug} />
+                                                    <input type="checkbox" id={e.slug}
+                                                        checked={change.company == e.slug}
+                                                        name='company'
+                                                        onChange={() => setChange({
+                                                            ...change,
+                                                            company: e.slug
+                                                        })}
+                                                    />
                                                     <label htmlFor={e.slug}>{e.name}</label>
                                                 </div>
                                             </li>
@@ -92,7 +142,13 @@ export default function ListPhone() {
                                         return (
                                             <li key={i}>
                                                 <div className="content_search">
-                                                    <input type="checkbox" id={e.slug} />
+                                                    <input type="checkbox" id={e.slug}
+                                                        checked={change.price == e.slug}
+                                                        onChange={() => setChange({
+                                                            ...change,
+                                                            price: e.slug
+                                                        })}
+                                                    />
                                                     <label htmlFor={e.slug}>{e.name}</label>
                                                 </div>
                                             </li>
@@ -111,7 +167,13 @@ export default function ListPhone() {
                                         return (
                                             <li key={i}>
                                                 <div className="content_search">
-                                                    <input type="checkbox" id={e.slug} />
+                                                    <input type="checkbox" id={e.slug}
+                                                        checked={change.ram == e.slug}
+                                                        onChange={() => setChange({
+                                                            ...change,
+                                                            ram: e.slug
+                                                        })}
+                                                    />
                                                     <label htmlFor={e.slug}>{e.name}</label>
                                                 </div>
                                             </li>
@@ -130,7 +192,13 @@ export default function ListPhone() {
                                         return (
                                             <li key={i}>
                                                 <div className="content_search">
-                                                    <input type="checkbox" id={e.slug} />
+                                                    <input type="checkbox" id={e.slug}
+                                                        checked={change.memory == e.slug}
+                                                        onChange={() => setChange({
+                                                            ...change,
+                                                            memory: e.slug
+                                                        })}
+                                                    />
                                                     <label htmlFor={e.slug}>{e.name}</label>
                                                 </div>
                                             </li>
@@ -156,24 +224,28 @@ export default function ListPhone() {
                                     <span>
                                         Ưu tiên xem:
                                     </span>
-                                    <p className="active">
+                                    <p className={sort == 'min' ? 'active' : ''} onClick={() => setSort('min')}>
                                         Giá thấp
                                     </p>
-                                    <p>
+                                    <p className={sort == 'max' ? 'active' : ''} onClick={() => setSort('max')}>
                                         Giá cao
                                     </p>
                                 </div>
                                 <div className="box_right_sort">
-                                    <div className="layout_views active">
+                                    <div className={`layout_views ${layout == 'grid' ? `active` : ``}`}
+                                        onClick={() => setLayout('grid')}
+                                    >
                                         <i className="fa-solid fa-table-cells"></i>
                                     </div>
-                                    <div className="list_views">
+                                    <div className={`list_views ${layout == 'list' ? `active` : ``}`}
+                                        onClick={() => setLayout('list')}
+                                    >
                                         <i className="fa-solid fa-list"></i>
                                     </div>
                                 </div>
                             </div>
                             <div className="items_result layout">
-                                <ProductList list={dataPhone} />
+                                <ProductList list={dataPhone} layout={layout} />
                             </div>
                         </div>
                         <div className="list_pagination">
