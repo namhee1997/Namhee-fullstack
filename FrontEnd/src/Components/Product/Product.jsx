@@ -266,6 +266,7 @@ export default function Product() {
     const [dataTotal, setDataTotal] = useState({
         selected: {},
         dataTotal: {},
+        totalCurrent: 1,
         idPhone: ''
     });
     const [clickAddCart, setClickAddCart] = useState(true);
@@ -307,7 +308,6 @@ export default function Product() {
         setTimeout(() => {
             let addToCartRedux = addToCart(dataTotal);
             dispatch(addToCartRedux);
-            console.log(infoSinglePhone[variableProduct], 'infoSinglePhone[variableProduct]');
         }, 800);
     }
 

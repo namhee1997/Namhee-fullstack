@@ -94,8 +94,6 @@ export default function Cart() {
 
     //END SUM PRICE
 
-    console.log(productPrice, 'productPrice');
-
     //ORDER API
     const [orderApi, setOrderApi] = useState([
 
@@ -121,9 +119,9 @@ export default function Cart() {
         }
 
     }
+    console.log(orderApi, 'orderApi');
     //END ORDER API
 
-    console.log(orderApi, 'orderApi');
 
     return (
         <div className="cart_box">

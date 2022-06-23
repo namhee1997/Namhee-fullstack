@@ -46,7 +46,7 @@ export default function ItemsCart({ e, i, productPrice, handleNumber }) {
         cost: 0,
         price: 0
     });
-    const [totalProduct, setTotalProduct] = useState(1);
+    const [totalProduct, setTotalProduct] = useState(e.totalCurrent);
 
     useEffect(() => {
         setProductPrices({
@@ -70,18 +70,18 @@ export default function ItemsCart({ e, i, productPrice, handleNumber }) {
     return (
         <div key={i} className='box_list_cart' >
             <div className="thumb_cart_product">
-                <img src={e.selected.img[0]} alt="" />
+                <img src={e?.selected?.img[0]} alt="" />
             </div>
             <div className="content_product_cart">
                 <div className="head_cart_product">
                     <div className="cart_head_left">
-                        <h3>{e.selected.title}</h3>
-                        <select name="variable" className={`select_variable_cart select_variable_${i}`} value={onChangeOption ? handleNumber.valueSendPayment.variable : e.selected.variable}
+                        <h3>{e?.selected?.title}</h3>
+                        <select name="variable" className={`select_variable_cart select_variable_${i}`} value={onChangeOption ? handleNumber.valueSendPayment.variable : e?.selected?.variable}
                             onChange={(m) => { multilpeFunc(i, m) }}
                             ref={selectVariable}
                         >
                             {
-                                e.dataTotal.totalSelect.map((z, x) => {
+                                e?.dataTotal?.totalSelect?.map((z, x) => {
                                     return (
                                         <option key={x} value={z.variable} number={x}>
                                             {z.variable}
@@ -92,7 +92,7 @@ export default function ItemsCart({ e, i, productPrice, handleNumber }) {
                         </select>
 
                         {
-                            e.dataTotal.promotionChoose.map((z, x) => {
+                            e?.dataTotal?.promotionChoose?.map((z, x) => {
                                 let data = '';
                                 if (e.selected.promotionChoose == z.slug) {
                                     data = z.title;
@@ -132,7 +132,7 @@ export default function ItemsCart({ e, i, productPrice, handleNumber }) {
                 </div>
                 <div className="payment_cart">
                     {
-                        e.selected.paymentCart == 'vpn' ?
+                        e?.selected?.paymentCart == 'vpn' ?
                             <div className="container_payment_cart">
                                 <img src="https://fptshop.com.vn/Uploads/Originals/2021/3/15/637513980986241445_Logo-VNPAYQR-(1).jpg" alt="" />
                                 <p>

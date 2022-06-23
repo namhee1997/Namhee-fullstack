@@ -4,6 +4,7 @@ const init = {
     data: [
         {
             idPhone: 1,
+            totalCurrent: 1,
             selected: {
                 variable: 'Đen',
                 img: [
@@ -64,13 +65,27 @@ const cart = (state = init, action) => {
 
     switch (action.type) {
         case ActionTypes.ADD_TO_CART:
-            return {
-                ...state,
-                checkChange: !state.checkChange,
-                data: [
-                    ...state.data,
-                    action.payload
-                ],
+            let dataStateAdd = state.data;
+            let dataAction = action.payload;
+            let indexPosition = dataStateAdd.findIndex(e => e.idPhone === dataAction.idPhone);
+            let indexState = dataStateAdd.some(e => e.idPhone === dataAction.idPhone);
+
+            if (indexState) {
+                dataStateAdd[indexPosition].totalCurrent = dataStateAdd[indexPosition].totalCurrent + 1;
+                return {
+                    ...state,
+                    checkChange: !state.checkChange,
+                    data: dataStateAdd,
+                }
+            } else {
+                return {
+                    ...state,
+                    checkChange: !state.checkChange,
+                    data: [
+                        ...state.data,
+                        action.payload
+                    ],
+                }
             }
 
         case ActionTypes.REMOVE_TO_CART:
