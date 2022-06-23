@@ -9,3 +9,5 @@ export const ORDER_ADD = 'ORDER_ADD';
 export const PROMOTION_LIST = 'PROMOTION_LIST';
 export const REMOVE_ODER = 'REMOVE_ODER';
 export const REMOVE_ODER_CUSTOM = 'REMOVE_ODER_CUSTOM';
+export const ADD_TO_CART = 'ADD_TO_CART';
+export const REMOVE_TO_CART = 'REMOVE_TO_CART';

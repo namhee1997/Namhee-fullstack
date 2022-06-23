@@ -6,6 +6,7 @@ import companyPhone from "./Company";
 import newsList from "./News";
 import orderList from "./Order";
 import promotionList from "./PromotionList";
+import cart from "./Cart";
 
 const rootReducerFunction = combineReducers({
     dataState: dataState,
@@ -15,6 +16,7 @@ const rootReducerFunction = combineReducers({
     newsList: newsList,
     orderList: orderList,
     promotionList: promotionList,
+    cart: cart,
 })
 
 export default rootReducerFunction;

@@ -1,14 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import Banner from "../Other/Banner";
+import { useStore, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import ReactPaginate from 'react-paginate';
 import RelaterProduct from "../Home/RelaterProduct/RelaterProduct";
+import { addToCart } from "../../Action/Action";
 import $ from 'jquery';
+import moment from 'moment';
+moment().format();
 
 export default function Product() {
 
+    const store = useStore();
+    const dispatch = useDispatch();
     const [infoSinglePhone, setInfoSinglePhone] = useState([
         {
+            idPhone: 2,
             variable: 'Đen',
             data: {
                 img: [
@@ -18,10 +25,10 @@ export default function Product() {
                 title: 'OPPO Reno7 8GB-128GB',
                 slug: 'oppo-reno-78gb-128gb',
                 installment: '0',
-                sale: '500.000',
-                price: '8.490.000',
+                sale: 500000,
+                price: 8490000,
                 company: 'oppo',
-                cost: '8.990.000',
+                cost: 8990000,
                 promotion: true,
                 infophone: {
                     chip: 'Snapdragon 680',
@@ -32,6 +39,7 @@ export default function Product() {
             }
         },
         {
+            idPhone: 2,
             variable: 'Bạc',
             data: {
                 img: [
@@ -41,10 +49,10 @@ export default function Product() {
                 title: 'OPPO Reno7 8GB-128GB',
                 slug: 'oppo-reno-78gb-128gb',
                 installment: '0',
-                sale: '500.000',
-                price: '9.590.000',
+                sale: 500000,
+                price: 9590000,
                 company: 'oppo',
-                cost: '10.190.000',
+                cost: 10190000,
                 promotion: true,
                 infophone: {
                     chip: 'Snapdragon 680',
@@ -63,7 +71,7 @@ export default function Product() {
             title: 'Vivo Y15s 3GB - 32GB',
             slug: 'vivo-y15s-3gb-32gb',
             installment: '0',
-            price: '3.490.000',
+            price: 3490000,
             company: 'oppo',
             promotion: true,
         },
@@ -74,7 +82,7 @@ export default function Product() {
             title: 'OPPO Reno7 8GB-128GB',
             slug: 'oppo-reno78gb-128gb',
             installment: '0',
-            price: '8.990.000',
+            price: 8990000,
             company: 'oppo',
             promotion: true,
         }
@@ -87,19 +95,95 @@ export default function Product() {
     ]);
 
     const [variableProduct, setVariableProduct] = useState(0);
-    const [choosePromotion, setChoosePromotion] = useState({
-        promotion1: false,
-        promotion2: false,
-    });
+    //PROMOTION
+    const [listPromotion, setListPromotion] = useState([]);
+    const [choosePromotion, setChoosePromotion] = useState(1);
+
+    useEffect(() => {
+        setListPromotion(store.getState().promotionList.data);
+    }, [listPromotion])
+
+    //END PROMOTION
+
+    //PAYMENT
     const [paymentMethods, setPaymentMethods] = useState({
         vnp: true,
         moca: false,
     });
+    //END PAYMENT
+
+    //RATE
+
     const [boxSendRate, setBoxSendRate] = useState({
         status: false,
         start: 0,
         content: '',
     });
+
+    const [totalRate, setTotalRate] = useState([]);
+    const [startRate, setStartRate] = useState({
+        averageRating: '',
+        listRow: {}
+    });
+
+    useEffect(() => {
+        setTotalRate({
+            totalStart: {
+                start5: 47,
+                start4: 5,
+                start3: 1,
+                start2: 0,
+                start1: 0,
+            },
+            listCommentRate: [
+                {
+                    start: 4,
+                    avt: 'NVT',
+                    user: 'Nguyễn Vũ Thịnh',
+                    title: 'Máy xài rất tốt',
+                    createdAt: '2022-06-21T12:09:50.706+00:00'
+                },
+            ]
+        });
+    }, [])
+
+    useEffect(() => {
+        if (totalRate.length != 0) {
+
+            setStartRate(e => {
+                let data = { ...e };
+                let totalStart = totalRate.totalStart ? totalRate.totalStart : {};
+                let arrKey = Object.keys(totalStart);
+                let arrValue = Object.values(totalStart);
+                //averageRating
+                let max = Math.max(...arrValue);
+                let position = arrValue.indexOf(max);
+                data.averageRating = arrKey[position];
+                //end averageRating
+                //listRow
+                let sum = arrValue.reduce((a, b) => a + b, 0);
+
+                data.listRow['start5'] = +(((totalStart.start5) / sum) * 100).toFixed(1);
+                data.listRow['start4'] = +(((totalStart.start4) / sum) * 100).toFixed(1);
+                data.listRow['start3'] = +(((totalStart.start3) / sum) * 100).toFixed(1);
+                data.listRow['start2'] = +(((totalStart.start2) / sum) * 100).toFixed(1);
+                data.listRow['start1'] = +(((totalStart.start1) / sum) * 100).toFixed(1);
+
+                //end listRow
+
+                return data;
+            });
+        }
+    }, [totalRate])
+
+    const handleSendRate = () => {
+        console.log(boxSendRate, 'boxSendRate');//send api ~ User //api
+    }
+
+    //END RATE
+
+    //COMMENT
+
     const [handleReply, setHandleReply] = useState({
         status: false,
         content: '',
@@ -107,6 +191,40 @@ export default function Product() {
     const [handleComment, setHandleComment] = useState({
         content: '',
     })
+    const [dataComment, setDataComment] = useState([]);
+
+    useEffect(() => {
+        setDataComment([
+            {
+                id_comment: 1,
+                idUser: 34,
+                avt: 'NVT',
+                user: 'Nguyễn Vũ Thịnh',
+                isAdmin: false,
+                title: 'Máy xài rất tốt',
+                createdAt: '2022-06-21T13:09:50.706+00:00',
+                listReply: [
+                    {
+                        idUser: 1,
+                        avt: 'ADM',
+                        user: 'Admin',
+                        isAdmin: true,
+                        title: 'Cảm ơn bạn',
+                        createdAt: '2022-06-21T13:50:50.706+00:00',
+                    }
+                ]
+            },
+        ]);
+    }, [])
+
+
+    const handleSendComment = () => {
+        console.log('handleSendComment', handleComment); //api
+    }
+    const handleReplyComment = (id_comment, idUser) => {
+        console.log('handleReply', handleReply, id_comment, idUser);//api
+    }
+    //END COMMENT
 
 
     let textRateStart = ['', 'Không ổn', 'Tạm được', 'Bình thường', 'Hài lòng', 'Tuyệt vời'];
@@ -142,25 +260,58 @@ export default function Product() {
 
     }, [])
 
-    const handleSendComment = (e) => {
-        setBoxSendRate({
-            ...boxSendRate,
-            content: e.target.value
+
+    // DATA SEND
+
+    const [dataTotal, setDataTotal] = useState({
+        selected: {},
+        dataTotal: {},
+        idPhone: ''
+    });
+    const [clickAddCart, setClickAddCart] = useState(true);
+
+    useEffect(() => {
+        setDataTotal(e => {
+            let data = { ...e };
+            data.idPhone = infoSinglePhone[variableProduct].idPhone;
+            //selected
+            data.selected['variable'] = infoSinglePhone[variableProduct].variable;
+            data.selected['img'] = infoSinglePhone[variableProduct].data.img;
+            data.selected['title'] = infoSinglePhone[variableProduct].data.title;
+            data.selected['slug'] = infoSinglePhone[variableProduct].data.slug;
+            data.selected['installment'] = infoSinglePhone[variableProduct].data.installment;
+            data.selected['sale'] = infoSinglePhone[variableProduct].data.sale;
+            data.selected['price'] = infoSinglePhone[variableProduct].data.price;
+            data.selected['cost'] = infoSinglePhone[variableProduct].data.cost;
+            data.selected['company'] = infoSinglePhone[variableProduct].data.company;
+            data.selected['promotion'] = infoSinglePhone[variableProduct].data.promotion;
+            data.selected['promotionChoose'] = choosePromotion;
+            if (paymentMethods.moca) {
+                data.selected['paymentCart'] = 'moca';
+            }
+            if (paymentMethods.vnp) {
+                data.selected['paymentCart'] = 'vnp';
+            }
+            //end selected
+            //dataTotal
+            data.dataTotal['promotionChoose'] = listPromotion;
+            data.dataTotal['totalSelect'] = infoSinglePhone;
+            //end dataTotal
+
+            return data;
         })
+    }, [variableProduct, choosePromotion, paymentMethods, clickAddCart])
+
+    const handleAddToCard = () => {
+        setClickAddCart(!clickAddCart);
+        setTimeout(() => {
+            let addToCartRedux = addToCart(dataTotal);
+            dispatch(addToCartRedux);
+            console.log(infoSinglePhone[variableProduct], 'infoSinglePhone[variableProduct]');
+        }, 800);
     }
 
-    const handleTextReplyComment = (e) => {
-        setHandleReply({
-            ...handleReply,
-            content: e.target.value,
-        });
-    }
-
-    const handleTextComment = (e) => {
-        setHandleComment({
-            content: e.target.value,
-        });
-    }
+    //END DATA SEND
 
     return (
         <div className="product_phone">
@@ -241,34 +392,23 @@ export default function Product() {
                     <div className="box_promotion_product">
                         <h4>Chọn 1 trong 2 khuyến mãi sau</h4>
                         <div className="container_promotion">
-                            <div className="checkbox_box">
-                                <input checked={choosePromotion.promotion1 ? true : false}
-                                    type="checkbox" name="promotion_choose"
-                                    id="checkbox1"
-                                    onClick={() => {
-                                        setChoosePromotion({
-                                            promotion1: true,
-                                            promotion2: false,
-                                        })
-                                    }}
-                                    onChange={e => { }}
-                                />
-                                <label htmlFor="checkbox1">Tặng SDP 300.000đ</label>
-                            </div>
-                            <div className="checkbox_box">
-                                <input checked={choosePromotion.promotion2 ? true : false}
-                                    type="checkbox" name="promotion_choose"
-                                    id="checkbox2"
-                                    onClick={() => {
-                                        setChoosePromotion({
-                                            promotion1: false,
-                                            promotion2: true,
-                                        })
-                                    }}
-                                    onChange={e => { }}
-                                />
-                                <label htmlFor="checkbox2">Tặng mã giảm giá 300.000đ khi mua hàng tại website</label>
-                            </div>
+                            {
+                                listPromotion.map((e, i) => {
+                                    return (
+                                        <div className="checkbox_box" key={i}>
+                                            <input checked={choosePromotion == e.slug ? true : false}
+                                                type="checkbox" name="promotion_choose"
+                                                id={e.slug}
+                                                onClick={() => {
+                                                    setChoosePromotion(e.slug)
+                                                }}
+                                                onChange={e => { }}
+                                            />
+                                            <label htmlFor={e.slug}>{e.title}</label>
+                                        </div>
+                                    );
+                                })
+                            }
 
                             <h3>Ưu đãi thêm</h3>
                             <div className="box_promotion_more">
@@ -323,13 +463,13 @@ export default function Product() {
                         </ul>
                     </div>
                     <div className="buying_product">
-                        <Link to='/'>
+                        <Link to='/buy'>
                             <h4>Mua Ngay</h4>
                             <p>
                                 Giao hàng miễn phí hoặc nhận tại shop
                             </p>
                         </Link>
-                        <div className="add_to_cart">
+                        <div className="add_to_cart" onClick={() => handleAddToCard()}>
                             <h4>Thêm vào giỏ hàng</h4>
                         </div>
                     </div>
@@ -450,7 +590,7 @@ export default function Product() {
                             <div className="rate_1">
                                 <h4>Đánh giá trung bình</h4>
                                 <div className="number_rate_1">
-                                    <span>5</span>/<span>5</span>
+                                    <span>{startRate.averageRating == 'start5' ? 5 : startRate.averageRating == 'start4' ? 4 : startRate.averageRating == 'start3' ? 3 : startRate.averageRating == 'start2' ? 2 : startRate.averageRating == 'start1' ? 1 : ''}</span>/<span>5</span>
                                 </div>
                                 <div className="start_1">
                                     <i className="fa-solid fa-star"></i>
@@ -460,7 +600,7 @@ export default function Product() {
                                     <i className="fa-solid fa-star"></i>
                                 </div>
                                 <div className="text_1">
-                                    <span>53</span> đánh giá & <span>52</span> nhận xét
+                                    <span>{totalRate?.listCommentRate?.length}</span> đánh giá & nhận xét
                                 </div>
                             </div>
                             <div className="rate_2">
@@ -468,50 +608,50 @@ export default function Product() {
                                     <span>5</span>
                                     <i className="fa-solid fa-star"></i>
                                     <div className="row_2">
-                                        <span className="child_row_2" style={{ width: '80%' }}></span>
+                                        <span className="child_row_2" style={{ 'width': `${startRate?.listRow?.start5}%` }}></span>
                                     </div>
                                     <div className="total_comment">
-                                        <p>47</p>
+                                        <p>{totalRate?.totalStart?.start5}</p>
                                     </div>
                                 </div>
                                 <div className="progress_item">
                                     <span>4</span>
                                     <i className="fa-solid fa-star"></i>
                                     <div className="row_2">
-                                        <span className="child_row_2" style={{ width: '18%' }}></span>
+                                        <span className="child_row_2" style={{ 'width': `${startRate?.listRow?.start4}%` }}></span>
                                     </div>
                                     <div className="total_comment">
-                                        <p>5</p>
+                                        <p>{totalRate?.totalStart?.start4}</p>
                                     </div>
                                 </div>
                                 <div className="progress_item">
                                     <span>3</span>
                                     <i className="fa-solid fa-star"></i>
                                     <div className="row_2">
-                                        <span className="child_row_2" style={{ width: '2%' }}></span>
+                                        <span className="child_row_2" style={{ 'width': `${startRate?.listRow?.start3}%` }}></span>
                                     </div>
                                     <div className="total_comment">
-                                        <p>1</p>
+                                        <p>{totalRate?.totalStart?.start3}</p>
                                     </div>
                                 </div>
                                 <div className="progress_item">
                                     <span>2</span>
                                     <i className="fa-solid fa-star"></i>
                                     <div className="row_2">
-                                        <span className="child_row_2" style={{ width: '0%' }}></span>
+                                        <span className="child_row_2" style={{ 'width': `${startRate?.listRow?.start2}%` }}></span>
                                     </div>
                                     <div className="total_comment">
-                                        <p>0</p>
+                                        <p>{totalRate?.totalStart?.start2}</p>
                                     </div>
                                 </div>
                                 <div className="progress_item">
                                     <span>1</span>
                                     <i className="fa-solid fa-star"></i>
                                     <div className="row_2">
-                                        <span className="child_row_2" style={{ width: '0%' }}></span>
+                                        <span className="child_row_2" style={{ 'width': `${startRate?.listRow?.start1}%` }}></span>
                                     </div>
                                     <div className="total_comment">
-                                        <p>0</p>
+                                        <p>{totalRate?.totalStart?.start1}</p>
                                     </div>
                                 </div>
                             </div>
@@ -570,11 +710,14 @@ export default function Product() {
                         </div>
                         <div className="send_comment">
                             <textarea name="send_rate" id="" cols="30" rows="10"
-                                onChange={(e) => handleSendComment(e)}
+                                onChange={(e) => setBoxSendRate({
+                                    ...boxSendRate,
+                                    content: e.target.value
+                                })}
                             >
 
                             </textarea>
-                            <p className="btn_send_rate">
+                            <p className="btn_send_rate" onClick={() => handleSendRate()}>
                                 Gửi đánh giá
                             </p>
                         </div>
@@ -582,28 +725,33 @@ export default function Product() {
 
                     <div className="list_rate_user">
                         <ul>
-                            <li>
-                                <div className="thumb_user_rate">
-                                    <div className="box_avata">NVT</div>
-                                </div>
-                                <div className="info_user_rate">
-                                    <h4>Nguyễn Vũ Thịnh</h4>
-                                    <div className="box_rate_">
-                                        <div className="rate_star">
-                                            <i className="fa-solid star-checked fa-star"></i>
-                                            <i className="fa-solid star-checked fa-star"></i>
-                                            <i className="fa-solid star-checked fa-star"></i>
-                                            <i className="fa-solid star-checked fa-star"></i>
-                                            <i className="fa-solid fa-star"></i>
+                            {
+                                totalRate?.listCommentRate?.map((e, i) =>
+                                    <li key={i}>
+                                        <div className="thumb_user_rate">
+                                            <div className="box_avata">{e.avt}</div>
                                         </div>
-                                        <p className="time_rate">18 giờ trước</p>
-                                    </div>
-                                    <div className="content_rate_text">
-                                        Máy xài rất tốt
-                                    </div>
+                                        <div className="info_user_rate">
+                                            <h4>{e.user}</h4>
+                                            <div className="box_rate_">
+                                                <div className="rate_star">
+                                                    <i className={`fa-solid ${e.start >= 1 ? `star-checked` : ``} fa-star`}></i>
+                                                    <i className={`fa-solid ${e.start >= 2 ? `star-checked` : ``} fa-star`}></i>
+                                                    <i className={`fa-solid ${e.start >= 3 ? `star-checked` : ``} fa-star`}></i>
+                                                    <i className={`fa-solid ${e.start >= 4 ? `star-checked` : ``} fa-star`}></i>
+                                                    <i className={`fa-solid ${e.start == 5 ? `star-checked` : ``} fa-star`}></i>
+                                                </div>
+                                                <p className="time_rate">{moment(e.createdAt).fromNow()}</p>
+                                            </div>
+                                            <div className="content_rate_text">
+                                                {e.title}
+                                            </div>
 
-                                </div>
-                            </li>
+                                        </div>
+                                    </li>
+                                )
+                            }
+
                         </ul>
                         <div className="list_pagination">
                             <ReactPaginate
@@ -624,52 +772,68 @@ export default function Product() {
                         <div className="box_send_comment">
                             <textarea name="send_comment" id="send_comment" cols="30" rows="10"
                                 placeholder="Viết câu hỏi của bạn"
-                                onChange={(e) => handleTextComment(e)}
+                                onChange={(e) => setHandleComment({
+                                    content: e.target.value,
+                                })}
                             ></textarea>
-                            <p className="send_comment">Gửi câu hỏi</p>
+                            <p className="send_comment" onClick={() => handleSendComment()}>Gửi câu hỏi</p>
                         </div>
                         <div className="list_comment">
                             <ul>
-                                <li>
-                                    <div className="thumb_user_rate">
-                                        <div className="box_avata">NVT</div>
-                                    </div>
-                                    <div className="info_user_comment">
-                                        <div className="name_comment">
-                                            <h4>Nguyễn Vũ Thịnh <span>Quản trị viên</span></h4>
-                                            <p className="time_comment">1 ngày trước</p>
-                                        </div>
-                                        <div className="content_rate_text">
-                                            Máy xài rất tốt
-                                        </div>
-                                        <div className="reply_box_title" onClick={() => { setHandleReply({ ...handleReply, status: true }); }}>
-                                            <p>Trả lời</p>
-                                        </div>
-                                        <ul className="reply_comment">
-                                            <li>
-                                                <div className="thumb_user_rate">
-                                                    <div className="box_avata">AD</div>
+                                {
+                                    dataComment.map((e, i) =>
+                                        <li key={i}>
+                                            <div className="thumb_user_rate">
+                                                <div className="box_avata">{e.avt}</div>
+                                            </div>
+                                            <div className="info_user_comment">
+                                                <div className="name_comment">
+                                                    <h4>{e.user} {e.isAdmin ? <span>Quản trị viên</span> : ''}</h4>
+                                                    <p className="time_comment">{moment(e.createdAt).fromNow()}</p>
                                                 </div>
-                                                <div className="info_user_comment">
-                                                    <div className="name_comment">
-                                                        <h4>Admin <span>Quản trị viên</span></h4>
-                                                        <p className="time_comment">1 ngày trước</p>
-                                                    </div>
-                                                    <div className="content_rate_text">
-                                                        Cảm ơn bạn
-                                                    </div>
+                                                <div className="content_rate_text">
+                                                    {e.title}
+                                                </div>
+                                                <div className="reply_box_title" onClick={() => { setHandleReply({ ...handleReply, status: true }); }}>
+                                                    <p>Trả lời</p>
+                                                </div>
+                                                <ul className="reply_comment">
+                                                    {
+                                                        e.listReply.map((z, x) =>
+                                                            <li key={x}>
+                                                                <div className="thumb_user_rate">
+                                                                    <div className="box_avata">{z.avt}</div>
+                                                                </div>
+                                                                <div className="info_user_comment">
+                                                                    <div className="name_comment">
+                                                                        <h4>{z.user} {z.isAdmin ? <span>Quản trị viên</span> : ''}</h4>
+                                                                        <p className="time_comment">{moment(z.createdAt).fromNow()}</p>
+                                                                    </div>
+                                                                    <div className="content_rate_text">
+                                                                        {z.title}
+                                                                    </div>
 
+                                                                </div>
+                                                            </li>
+                                                        )
+                                                    }
+
+                                                </ul>
+                                                <div className={`send_reply ${handleReply.status ? `` : `none`}`}>
+                                                    <textarea name="send_reply" id="" cols="30" rows="10"
+                                                        onChange={(m) => setHandleReply({
+                                                            ...handleReply,
+                                                            content: m.target.value,
+                                                        })}
+                                                    ></textarea>
+                                                    <p className="send_reply_btn"
+                                                        onClick={() => handleReplyComment(e.id_comment, e.idUser)}>Gửi câu trả lời</p>
                                                 </div>
-                                            </li>
-                                        </ul>
-                                        <div className={`send_reply ${handleReply.status ? `` : `none`}`}>
-                                            <textarea name="send_reply" id="" cols="30" rows="10"
-                                                onChange={(e) => handleTextReplyComment(e)}
-                                            ></textarea>
-                                            <p className="send_reply_btn">Gửi câu trả lời</p>
-                                        </div>
-                                    </div>
-                                </li>
+                                            </div>
+                                        </li>
+                                    )
+                                }
+
                             </ul>
                             <div className="list_pagination">
                                 <ReactPaginate

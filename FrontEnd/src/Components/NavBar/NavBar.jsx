@@ -1,12 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useStore, useSelector } from "react-redux";
 import "./navbar.css";
 import avatar from '../../assets/img/chelseadfhzdfzhzdrha_vomy.jpg'
 
-
 const NavBar = () => {
+  const store = useStore();
+  const isChangeCart = useSelector(e => e.cart.checkChange)
   const [user, setUSer] = useState(null);
   const [showItem, setShowItem] = useState(false);
+  const [totalCart, setTotalCart] = useState(0);
+  useEffect(() => {
+    setTotalCart((store.getState().cart.data).length);
+  }, [isChangeCart])
 
 
   return (
@@ -45,7 +51,7 @@ const NavBar = () => {
         <div className="cart">
           <Link to="/cart">
             <i className="fa-solid fa-cart-shopping"></i>
-            <span className="count_cart">0</span>
+            <span className="count_cart">{totalCart}</span>
           </Link>
         </div>
 

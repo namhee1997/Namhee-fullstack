@@ -631,6 +631,7 @@ ul.list_info_phone li p {
 
 .checkbox_box label {
   font-size: 14px;
+  margin: 0;
 }
 
 .container_promotion h3 {
@@ -733,7 +734,7 @@ p.send_reply_btn,
 }
 
 .add_to_cart {
-  background-color: #0168fa;
+  background-color: #cb1c22;
 }
 
 .buying_product a h4,
@@ -781,6 +782,7 @@ p.send_reply_btn,
 
 .product_phone .info_phone li p {
   font-size: 16px;
+  margin: 0;
 }
 
 .product_phone i:before {
@@ -808,10 +810,15 @@ p.send_reply_btn,
 
 .info_more_free p {
   font-size: 14px;
+  margin: 0;
 }
 
 .info_more_free i:before {
   color: #bf1f1f;
+}
+
+.payment_methods p {
+  margin: 0;
 }
 
 .box_more_info h3 {
@@ -901,6 +908,7 @@ table.st-pd-table {
   font-size: 18px;
   line-height: 24px;
   font-weight: 500;
+  margin: 0;
 }
 
 .container_ask ul li {
@@ -1043,6 +1051,7 @@ i.fa-solid.fa-question {
 
 .total_comment p {
   font-size: 14px;
+  margin: 0;
 }
 
 .row_2 {
@@ -1091,6 +1100,7 @@ span.child_row_2 {
 
 .rate_choose p {
   font-size: 18px;
+  margin: 0;
   font-weight: 500;
 }
 
@@ -1128,6 +1138,7 @@ p.btn_send_rate {
   background: #cb1c22;
   padding: 10px 20px;
   border-radius: 5px;
+  margin: 0;
 }
 
 .send_comment textarea {
@@ -1198,6 +1209,7 @@ p.btn_send_rate {
 p.time_rate {
   font-size: 14px;
   margin-top: 3px;
+  margin-bottom: 0;
 }
 
 .list_pagination {
@@ -1273,6 +1285,7 @@ p.time_rate {
   align-items: center;
   justify-content: center;
   width: auto;
+  margin: 0 auto;
 }
 
 .list_comment {
@@ -1317,6 +1330,7 @@ p.time_rate {
 
 p.time_comment {
   font-size: 14px;
+  margin: 0;
 }
 
 ul.reply_comment {
@@ -1369,6 +1383,7 @@ p.send_reply_btn {
   justify-content: center;
   width: auto;
   position: absolute;
+  margin: 0;
   right: 20px;
 }
 
@@ -1487,6 +1502,16 @@ ul.list_product_cart {
   color: #32373d;
 }
 
+.cart_head_center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content_search label {
+  margin: 0;
+}
+
 select.select_variable_cart,
 .select_promotion_cart {
   padding: 5px 5px;
@@ -1539,6 +1564,7 @@ select.select_variable_cart,
 .remove_product p {
   font-size: 13px;
   line-height: 13px;
+  margin: 0;
 }
 
 .cart_head_right p {
@@ -1843,6 +1869,7 @@ select.select_variable_cart,
   border-radius: 5px;
   padding: 0 20px;
   margin-right: 10px;
+  margin-bottom: 0;
   border: 1px solid #8b8b8b;
   font-size: 14px;
 }

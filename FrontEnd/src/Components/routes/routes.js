@@ -44,6 +44,7 @@ export default function router() {
                                 <Route path="/login" element={<Login />} />
                                 <Route path="/cart" element={<Cart />} />
                                 <Route path="/register" element={<Register />} />
+                                <Route path="/buy" element={`buy`} />
                             </Routes>
                         </div>
                         <Footer />

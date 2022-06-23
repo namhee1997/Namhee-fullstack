@@ -4,18 +4,18 @@ const init = {
     list: [
         {
             idOrder: 1, slugProduct: 'oppo-reno-78gb-128gb',
-            title: 'OPPO Reno7 8GB-128GB', price: '9.590.000',
-            sale: '500.000', cost: '10.190.000', userID: '1', paid: 'false'
+            title: 'OPPO Reno7 8GB-128GB', price: 9590000,
+            sale: 500000, cost: 10190000, userID: '1', paid: 'false'
         },
         {
             idOrder: 2, slugProduct: 'oppo-reno-78gb-128gb',
-            title: 'OPPO Reno7 8GB-128GB', price: '9.590.000',
-            sale: '500.000', cost: '10.190.000', userID: '1', paid: 'false'
+            title: 'OPPO Reno7 8GB-128GB', price: 9590000,
+            sale: 500000, cost: 10190000, userID: '1', paid: 'false'
         },
         {
             idOrder: 3, slugProduct: 'oppo-reno-78gb-128gb',
-            title: 'OPPO Reno7 8GB-128GB', price: '9.590.000',
-            sale: '500.000', cost: '10.190.000', userID: '1', paid: 'false'
+            title: 'OPPO Reno7 8GB-128GB', price: 9590000,
+            sale: 500000, cost: 10190000, userID: '1', paid: 'false'
         },
 
     ],
