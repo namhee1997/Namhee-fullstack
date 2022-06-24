@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import HomePage from "../Home/HomePage";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "../Login/Login";
+import LoginDashBoard from "../Login/LoginDashBoard";
 import Register from "../Register/Register";
 import NavBar from "../NavBar/NavBar";
 import Footer from '../Footer';
@@ -27,54 +29,69 @@ import NewsEdit from '../DashBoard/News/EditNews';
 import Oder from '../DashBoard/Order/Order';
 import OderCreate from '../DashBoard/Order/AddOrder';
 
-export default function router() {
+export default function Router() {
     let location = window.location.pathname.split('/');
-
+    const navigate = useNavigate();
+    const userCurrent = useSelector(e => e.loginUser);
+    const [checkDirect, setCheckDirect] = useState({
+        user: true,
+        dashBoard: true,
+    });
+    useEffect(() => {
+        if (!userCurrent?.isLoggedIn && checkDirect.user) {
+            setCheckDirect({ ...checkDirect, user: false });
+            navigate('/login');
+        }
+    }, [checkDirect])
+    let handleRedirect = {
+        setCheckDirect
+    };
     return (
         <>
             {
                 location[1] != 'dashboard' ?
-                    <Router>
+                    <>
                         <NavBar />
                         <div className="App">
                             <Routes>
-                                <Route path="/product/:slug" element={<Product />} />
-                                <Route path="/phone/:slug" element={<ListPhone />} />
-                                <Route path="/" element={<HomePage />} />
+                                <Route path="/product/:slug" element={<Product handleRedirect={handleRedirect} />} />
+                                <Route path="/phone/:slug" element={<ListPhone handleRedirect={handleRedirect} />} />
+                                <Route path="/" element={<HomePage handleRedirect={handleRedirect} />} />
                                 <Route path="/login" element={<Login />} />
-                                <Route path="/cart" element={<Cart />} />
+                                <Route path="/cart" element={<Cart handleRedirect={handleRedirect} />} />
                                 <Route path="/register" element={<Register />} />
-                                <Route path="/buy" element={`buy`} />
                             </Routes>
                         </div>
                         <Footer />
-                    </Router>
-                    : <Router>
+                    </>
+
+                    : <>
                         <div className="DashBoard">
                             <HeaderDashBoard />
                             <Routes>
-                                <Route path="/dashboard" element={<DashBoard />} />
-                                <Route path="/dashboard/dashboard" element={<DashBoard />} />
-                                <Route path="/dashboard/user" element={<Users />} />
-                                <Route path="/dashboard/user/edit/:id" element={<EditUser />} />
-                                <Route path="/dashboard/user/create" element={<CreateUser />} />
-                                <Route path="/dashboard/product" element={<ProductDashBoard />} />
-                                <Route path="/dashboard/product/create" element={<ProductDashBoardCreate />} />
-                                <Route path="/dashboard/product/edit/:slug" element={<ProductDashBoardEdit />} />
-                                <Route path="/dashboard/company" element={<Company />} />
-                                <Route path="/dashboard/company/create" element={<CompanyCreate />} />
-                                <Route path="/dashboard/company/edit/:slug" element={<CompanyEdit />} />
-                                <Route path="/dashboard/slides" element={<SlidesMain />} />
-                                <Route path="/dashboard/news" element={<News />} />
-                                <Route path="/dashboard/news/create" element={<NewsCreate />} />
-                                <Route path="/dashboard/news/edit/:slug" element={<NewsEdit />} />
-                                <Route path="/dashboard/order" element={<Oder />} />
-                                <Route path="/dashboard/order/create" element={<OderCreate />} />
+                                <Route path="/dashboard" element={<DashBoard handleRedirect={handleRedirect} />} />
+                                <Route path="/dashboard/login" element={<LoginDashBoard />} />
+                                <Route path="/dashboard/dashboard" element={<DashBoard handleRedirect={handleRedirect} />} />
+                                <Route path="/dashboard/user" element={<Users handleRedirect={handleRedirect} />} />
+                                <Route path="/dashboard/user/edit/:id" element={<EditUser handleRedirect={handleRedirect} />} />
+                                <Route path="/dashboard/user/create" element={<CreateUser handleRedirect={handleRedirect} />} />
+                                <Route path="/dashboard/product" element={<ProductDashBoard handleRedirect={handleRedirect} />} />
+                                <Route path="/dashboard/product/create" element={<ProductDashBoardCreate handleRedirect={handleRedirect} />} />
+                                <Route path="/dashboard/product/edit/:slug" element={<ProductDashBoardEdit handleRedirect={handleRedirect} />} />
+                                <Route path="/dashboard/company" element={<Company handleRedirect={handleRedirect} />} />
+                                <Route path="/dashboard/company/create" element={<CompanyCreate handleRedirect={handleRedirect} />} />
+                                <Route path="/dashboard/company/edit/:slug" element={<CompanyEdit handleRedirect={handleRedirect} />} />
+                                <Route path="/dashboard/slides" element={<SlidesMain handleRedirect={handleRedirect} />} />
+                                <Route path="/dashboard/news" element={<News handleRedirect={handleRedirect} />} />
+                                <Route path="/dashboard/news/create" element={<NewsCreate handleRedirect={handleRedirect} />} />
+                                <Route path="/dashboard/news/edit/:slug" element={<NewsEdit handleRedirect={handleRedirect} />} />
+                                <Route path="/dashboard/order" element={<Oder handleRedirect={handleRedirect} />} />
+                                <Route path="/dashboard/order/create" element={<OderCreate handleRedirect={handleRedirect} />} />
                             </Routes>
                         </div>
                         <Footer />
+                    </>
 
-                    </Router>
             }
 
         </>
