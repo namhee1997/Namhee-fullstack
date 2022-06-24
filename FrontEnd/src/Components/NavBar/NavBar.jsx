@@ -1,18 +1,33 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useStore, useSelector } from "react-redux";
+import { useStore, useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logOutApi } from "../api/ApiLoginUser";
 import "./navbar.css";
 import avatar from '../../assets/img/chelseadfhzdfzhzdrha_vomy.jpg'
 
-const NavBar = () => {
+const NavBar = ({ userCurrent, refresh }) => {
   const store = useStore();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const isChangeCart = useSelector(e => e.cart.checkChange)
   const [user, setUSer] = useState(null);
   const [showItem, setShowItem] = useState(false);
   const [totalCart, setTotalCart] = useState(0);
   useEffect(() => {
+    if (userCurrent.role !== undefined) {
+      setUSer(true);
+    }
+  }, [userCurrent])
+  useEffect(() => {
     setTotalCart((store.getState().cart.data).length);
   }, [isChangeCart])
+
+  const handleLogOut = (e) => {
+    e.preventDefault();
+    logOutApi(dispatch, 1, navigate);
+    refresh.setCheckLogOut(true);
+  }
 
 
   return (
@@ -40,9 +55,19 @@ const NavBar = () => {
         {user ? (
           <>
             <p className="name_login">
-              <img src={`${avatar}`} alt="" />
+              {
+                refresh.checkLogOut ?
+                  ``
+                  : <img src={`${avatar}`} alt="" />
+              }
+
               <span>
-                Hi! Admin
+                {
+                  refresh.checkLogOut ?
+                    ``
+                    : `Hi! ${userCurrent.username || ''}`
+                }
+
               </span>
             </p>
           </>
@@ -60,8 +85,8 @@ const NavBar = () => {
           <ul className={`list_select_user ${showItem ? `show` : ``}`}>
             {user ? (
               <>
-                <li>
-                  <Link to="/logout" className="navbar-logout"> Log out</Link>
+                <li >
+                  <Link to="/logout" className="navbar-logout" onClick={(e) => handleLogOut(e)}> Log out</Link>
                 </li>
               </>
             ) : (

@@ -10,6 +10,24 @@
   background-color: rgb(218, 218, 218);
 }
 
+section.login-container input,
+.register-container input {
+  outline: none;
+  border: 1px solid #939393;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+.box_login.n1 {
+  margin-bottom: 20px;
+}
+
+.box_login {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .login-title {
   font-weight: 700;
   font-size: 1.5rem;

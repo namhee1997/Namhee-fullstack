@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 
-export default function HeaderDashBoard() {
+export default function HeaderDashBoard({ userCurrent }) {
     let location = window.location.pathname.split('/');
-    console.log(location);
+    console.log(userCurrent);
 
     return (
         <header>
@@ -48,7 +48,7 @@ export default function HeaderDashBoard() {
                     </li>
                 </ul>
                 <div className="user_login">
-                    <h2>Wellcome: Admin</h2>
+                    <h2>Wellcome: {userCurrent?.username || ''}</h2>
                 </div>
             </div>
         </header>

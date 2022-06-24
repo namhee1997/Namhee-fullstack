@@ -27,31 +27,56 @@ import News from '../DashBoard/News/News';
 import NewsCreate from '../DashBoard/News/AddNews';
 import NewsEdit from '../DashBoard/News/EditNews';
 import Oder from '../DashBoard/Order/Order';
+import jwtDecode from 'jwt-decode';
 import OderCreate from '../DashBoard/Order/AddOrder';
 
 export default function Router() {
     let location = window.location.pathname.split('/');
     const navigate = useNavigate();
-    const userCurrent = useSelector(e => e.loginUser);
+    const tokenUserCurrent = (localStorage.getItem('token') || '');
+    const [userCurrentByToken, setUserCurrentByToken] = useState({});
+    const [checkLogOut, setCheckLogOut] = useState(false);
     const [checkDirect, setCheckDirect] = useState({
         user: true,
         dashBoard: true,
     });
     useEffect(() => {
-        if (!userCurrent?.isLoggedIn && checkDirect.user) {
-            setCheckDirect({ ...checkDirect, user: false });
-            navigate('/login');
+        if (location[1] != 'dashboard') {
+            if (tokenUserCurrent == '' && checkDirect.user) {
+                setCheckDirect({ ...checkDirect, user: false });
+                navigate('/login');
+            } else if (tokenUserCurrent != '') {
+                setCheckLogOut(false);
+                setUserCurrentByToken(jwtDecode(tokenUserCurrent));
+            }
+        } else {
+            if (tokenUserCurrent == '' && checkDirect.dashBoard) {
+                setCheckDirect({ ...checkDirect, dashBoard: false });
+                navigate('/dashboard/login');
+            } else if (tokenUserCurrent != '') {
+                setUserCurrentByToken(jwtDecode(tokenUserCurrent));
+                let data = jwtDecode(tokenUserCurrent);
+                if (data?.isDashBoard && data?.role == 'admin') {
+                    setCheckLogOut(false);
+                } else {
+                    setCheckLogOut(false);
+                    navigate('/');
+                }
+            }
         }
+
     }, [checkDirect])
+
     let handleRedirect = {
         setCheckDirect
     };
+    let handleRefresh = { setCheckLogOut, checkLogOut };
     return (
         <>
             {
                 location[1] != 'dashboard' ?
                     <>
-                        <NavBar />
+                        <NavBar userCurrent={userCurrentByToken} refresh={handleRefresh} />
                         <div className="App">
                             <Routes>
                                 <Route path="/product/:slug" element={<Product handleRedirect={handleRedirect} />} />
@@ -67,7 +92,7 @@ export default function Router() {
 
                     : <>
                         <div className="DashBoard">
-                            <HeaderDashBoard />
+                            <HeaderDashBoard userCurrent={userCurrentByToken} />
                             <Routes>
                                 <Route path="/dashboard" element={<DashBoard handleRedirect={handleRedirect} />} />
                                 <Route path="/dashboard/login" element={<LoginDashBoard />} />

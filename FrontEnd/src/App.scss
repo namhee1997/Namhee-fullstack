@@ -119,10 +119,11 @@ ul.list_select_user {
   position: absolute;
   width: 90px;
   right: 0;
-  top: 20px;
-  background: #f7f7f7;
+  top: 19px;
+  background: #4a4a4a;
   border-radius: 5px;
   padding: 5px 10px;
+  z-index: 9;
 }
 
 .list_menu a {
@@ -2454,4 +2455,9 @@ ul.list_img_product li {
 .list_hot_promotion.product.product_selling.list-d {
   display: flex;
   flex-direction: column;
+}
+
+.list_select_user a {
+  font-size: 14px;
+  color: #fff;
 }
