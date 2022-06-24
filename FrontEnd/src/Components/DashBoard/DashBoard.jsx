@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -11,7 +12,16 @@ import {
 import { Bar } from 'react-chartjs-2';
 
 
-export default function DashBoard() {
+export default function DashBoard({ handleRedirect }) {
+
+    useEffect(() => {
+        handleRedirect.setCheckDirect(e => {
+            let data = { ...e }
+            data.dashBoard = true;
+            return data;
+        })
+    }, [])
+
     const options = {
         responsive: true,
         plugins: {

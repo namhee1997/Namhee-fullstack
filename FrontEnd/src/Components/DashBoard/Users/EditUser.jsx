@@ -2,7 +2,14 @@ import { useState, useEffect } from 'react';
 import EditForm from '../Other/EditForm';
 import { useParams } from 'react-router-dom';
 
-export default function EditUser() {
+export default function EditUser({ handleRedirect }) {
+    useEffect(() => {
+        handleRedirect.setCheckDirect(e => {
+            let data = { ...e }
+            data.dashBoard = true;
+            return data;
+        })
+    }, [])
     const param = useParams();
     const [dataCurrent, setDataCurrent] = useState({});
     const [dataChangeNew, setDataChangeNew] = useState({});

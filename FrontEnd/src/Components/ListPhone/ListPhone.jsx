@@ -14,11 +14,17 @@ import { Link, useParams } from "react-router-dom";
 import ProductList from "../Home/ProductList/ProductList";
 
 
-export default function ListPhone() {
+export default function ListPhone({ handleRedirect }) {
     const params = useParams();
     const store = useStore();
     const [listBanner, setListBanner] = useState([{ thumb: Banner1, link: '' }, { thumb: Banner2, link: '' }, { thumb: Banner2, link: '' }]);
-
+    useEffect(() => {
+        handleRedirect.setCheckDirect(e => {
+            let data = { ...e }
+            data.user = true;
+            return data;
+        })
+    }, [])
     const [company, setCompany] = useState([
         { name: 'Tất cả', slug: 'allcompany' },
         { name: 'Apple', slug: 'apple' },

@@ -2,7 +2,14 @@ import { useStore } from "react-redux";
 import { useEffect, useState } from "react";
 import Table from "../Other/Table";
 
-export default function News() {
+export default function News({ handleRedirect }) {
+    useEffect(() => {
+        handleRedirect.setCheckDirect(e => {
+            let data = { ...e }
+            data.dashBoard = true;
+            return data;
+        })
+    }, [])
     const store = useStore();
     const [titleCurrent, setTilteCurrent] = useState(['title', 'slug', 'content', 'url to']);
     const [dataCurrent, setDataCurrent] = useState([]);

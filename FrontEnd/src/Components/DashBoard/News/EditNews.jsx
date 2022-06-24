@@ -3,7 +3,14 @@ import { useParams } from 'react-router-dom';
 import EditForm from './EditFormNews';
 import { useStore } from 'react-redux';
 
-export default function EditNews() {
+export default function EditNews({ handleRedirect }) {
+    useEffect(() => {
+        handleRedirect.setCheckDirect(e => {
+            let data = { ...e }
+            data.dashBoard = true;
+            return data;
+        })
+    }, [])
     const param = useParams();
     const store = useStore();
     const [dataCurrent, setDataCurrent] = useState({});

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useSelector, useDispatch } from 'react-redux'
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import "./home.scss";
 import Banner from "../Other/Banner";
 import Banner1 from '../../assets/img/banner1.webp';
@@ -13,7 +13,8 @@ import { Link } from "react-router-dom";
 import ListHotPromotion from "./ListHotPromotion/ListHotPromotion";
 import ProductList from "./ProductList/ProductList";
 
-const HomePage = () => {
+const HomePage = ({ handleRedirect }) => {
+
   const [listBanner, setListBanner] = useState([{ thumb: Banner1, link: '' }, { thumb: Banner2, link: '' }, { thumb: Banner2, link: '' }]);
   const [listPromotion, setListPromotion] = useState([
     { src: Samsung, title: 'Samsung', url: 'samsung' },
@@ -31,8 +32,15 @@ const HomePage = () => {
       title: 'Nhận ngay Voucher 50.000Đ'
     }
   ]);
-
   const listHotPromotion = useSelector(e => e.dataState.data);
+  const userCurrent = useSelector(e => e.loginUser);
+  useEffect(() => {
+    handleRedirect.setCheckDirect(e => {
+      let data = { ...e }
+      data.user = true;
+      return data;
+    })
+  }, [])
 
 
 

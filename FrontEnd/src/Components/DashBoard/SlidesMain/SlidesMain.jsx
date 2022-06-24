@@ -2,7 +2,14 @@ import { useEffect, useState } from "react";
 import ChangeFileImages from "./ChangeFileImages/ChangeFileImages";
 import { useDispatch, useSelector, useStore } from "react-redux";
 
-export default function SlidesMain() {
+export default function SlidesMain({ handleRedirect }) {
+    useEffect(() => {
+        handleRedirect.setCheckDirect(e => {
+            let data = { ...e }
+            data.dashBoard = true;
+            return data;
+        })
+    }, [])
     const store = useStore()
 
     const [totalSlidesMain, setTotalSlidesMain] = useState([]);

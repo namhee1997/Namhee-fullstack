@@ -1,6 +1,5 @@
-import { Link } from "react-router-dom";
 import "./login.css";
-const Login = () => {
+const LoginDashBoard = () => {
     return (
         <section className="login-container">
             <div className="login-title"> Log in</div>
@@ -11,10 +10,8 @@ const Login = () => {
                 <input type="password" placeholder="Enter your password" />
                 <button type="submit"> Continue </button>
             </form>
-            <div className="login-register"> Don't have an account yet? </div>
-            <Link className="login-register-link" to="/register">Register one for free </Link>
         </section>
     );
 }
 
-export default Login;
+export default LoginDashBoard;

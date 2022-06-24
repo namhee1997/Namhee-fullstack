@@ -4,8 +4,14 @@ import { useStore, useSelector } from 'react-redux';
 import { Link, useNavigate } from "react-router-dom";
 import $ from 'jquery'
 
-export default function AddProduct() {
-
+export default function AddProduct({ handleRedirect }) {
+    useEffect(() => {
+        handleRedirect.setCheckDirect(e => {
+            let data = { ...e }
+            data.dashBoard = true;
+            return data;
+        })
+    }, [])
     const data = useSelector(e => e.companyPhone.list)
     const navigate = useNavigate();
 

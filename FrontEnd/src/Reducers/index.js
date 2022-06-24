@@ -7,6 +7,8 @@ import newsList from "./News";
 import orderList from "./Order";
 import promotionList from "./PromotionList";
 import cart from "./Cart";
+import loginUser from "./userReducerLogin";
+
 
 const rootReducerFunction = combineReducers({
     dataState: dataState,
@@ -17,6 +19,8 @@ const rootReducerFunction = combineReducers({
     orderList: orderList,
     promotionList: promotionList,
     cart: cart,
+    loginUser: loginUser,
 })
+
 
 export default rootReducerFunction;

@@ -2,8 +2,14 @@ import { useState, useEffect } from 'react';
 import CreateForm from '../Other/CreateForm';
 import { useStore, useSelector } from 'react-redux';
 
-export default function AddNews() {
-
+export default function AddNews({ handleRedirect }) {
+    useEffect(() => {
+        handleRedirect.setCheckDirect(e => {
+            let data = { ...e }
+            data.dashBoard = true;
+            return data;
+        })
+    }, [])
     const [stateForm, setStateForm] = useState([
         { name: 'title', type: 'text', placeholder: 'Enter your title' },
         { name: 'slug', type: 'text', placeholder: 'Enter your slug' },

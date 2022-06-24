@@ -1,7 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Table from "../Other/Table";
 
-export default function Users() {
+export default function Users({ handleRedirect }) {
+    useEffect(() => {
+        handleRedirect.setCheckDirect(e => {
+            let data = { ...e }
+            data.dashBoard = true;
+            return data;
+        })
+    }, [])
     const [titleCurrent, setTilteCurrent] = useState(['username', 'role', 'fullname', 'avatar', 'address', 'email', 'phone']);
     const [dataCurrent, setDataCurrent] = useState([
         {

@@ -3,7 +3,14 @@ import CreateForm from '../Other/CreateForm';
 import { useStore, useSelector, useDispatch } from 'react-redux';
 import { addOrder } from '../../../Action/Action';
 
-export default function AddOrder() {
+export default function AddOrder({ handleRedirect }) {
+    useEffect(() => {
+        handleRedirect.setCheckDirect(e => {
+            let data = { ...e }
+            data.dashBoard = true;
+            return data;
+        })
+    }, [])
     const data = useSelector(e => e.companyPhone.list)
     const dataPromotion = useSelector(e => e.promotionList.data)
     const dispatch = useDispatch();

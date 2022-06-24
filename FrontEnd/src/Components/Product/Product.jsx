@@ -9,10 +9,17 @@ import $ from 'jquery';
 import moment from 'moment';
 moment().format();
 
-export default function Product() {
+export default function Product({ handleRedirect }) {
 
     const store = useStore();
     const dispatch = useDispatch();
+    useEffect(() => {
+        handleRedirect.setCheckDirect(e => {
+            let data = { ...e }
+            data.user = true;
+            return data;
+        })
+    }, [])
     const [infoSinglePhone, setInfoSinglePhone] = useState([
         {
             idPhone: 2,

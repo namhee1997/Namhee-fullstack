@@ -4,9 +4,16 @@ import { useStore, useDispatch } from "react-redux";
 import { removeProductCart } from "../../Action/Action";
 import $ from 'jquery';
 
-export default function Cart() {
+export default function Cart({ handleRedirect }) {
     const store = useStore();
     const dispatch = useDispatch();
+    useEffect(() => {
+        handleRedirect.setCheckDirect(e => {
+            let data = { ...e }
+            data.user = true;
+            return data;
+        })
+    }, [])
     const [listProduct, setListProduct] = useState([]);
     const [checkRemove, setCheckRemove] = useState(false);
 

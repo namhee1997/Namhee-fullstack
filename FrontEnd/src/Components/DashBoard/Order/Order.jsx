@@ -4,7 +4,14 @@ import Table from "../Other/Table";
 import ViewBox from "./ViewBox/ViewBox";
 import { removeOrder, removeOrderCustom } from "../../../Action/Action";
 
-export default function Order() {
+export default function Order({ handleRedirect }) {
+    useEffect(() => {
+        handleRedirect.setCheckDirect(e => {
+            let data = { ...e }
+            data.dashBoard = true;
+            return data;
+        })
+    }, [])
     const store = useStore();
     const dispatch = useDispatch();
     const [titleCurrent, setTitleCurrent] = useState(['Id Order', 'Slug Product', 'Title Product', 'Price', 'Sale', 'Cost', 'User Buy', 'Paid']);

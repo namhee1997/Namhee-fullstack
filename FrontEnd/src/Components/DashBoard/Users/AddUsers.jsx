@@ -1,10 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CreateForm from '../Other/CreateForm';
 import { useStore, useSelector } from 'react-redux';
-import { useEffect } from 'react';
 
-export default function AddUsers() {
-
+export default function AddUsers({ handleRedirect }) {
+    useEffect(() => {
+        handleRedirect.setCheckDirect(e => {
+            let data = { ...e }
+            data.dashBoard = true;
+            return data;
+        })
+    }, [])
     const [stateForm, setStateForm] = useState([
         { name: 'username', type: 'text', placeholder: 'Enter your username' },
         { name: 'password', type: 'password', placeholder: 'Enter your password' },
