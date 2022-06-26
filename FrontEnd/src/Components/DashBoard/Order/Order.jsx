@@ -15,7 +15,7 @@ export default function Order({ handleRedirect }) {
     const store = useStore();
     const dispatch = useDispatch();
     const [titleCurrent, setTitleCurrent] = useState(['Id Order', 'Slug Product', 'Title Product', 'Price', 'Sale', 'Cost', 'User Buy', 'Paid']);
-    const [titleCustoms, setTitleCustoms] = useState(['title', 'name', 'fullname', 'price', 'address', 'promotion', 'company']);
+    const [titleCustoms, setTitleCustoms] = useState(['title', 'name', 'fullname', 'price', 'address', 'promotion', 'company', 'phone']);
     const [dataCurrent, setDataCurrent] = useState([]);
     const [dataCustoms, setDataCustoms] = useState([]);
     const [dataUserCurrent, setDataUserCurrent] = useState(

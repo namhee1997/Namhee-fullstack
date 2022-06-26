@@ -20,6 +20,7 @@ export default function AddOrder({ handleRedirect }) {
         { name: 'name', type: 'text', placeholder: 'Enter your name' },
         { name: 'fullname', type: 'text', placeholder: 'Enter your fullname' },
         { name: 'price', type: 'text', placeholder: 'Enter your price' },
+        { name: 'phone', type: 'text', placeholder: 'Enter your phone' },
         { name: 'address', type: 'text', placeholder: 'Enter your address' },
         { name: 'promotion', type: 'select', list: dataPromotion },
         { name: 'company', type: 'select', list: data },

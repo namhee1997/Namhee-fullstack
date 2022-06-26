@@ -15,6 +15,7 @@ export default function AddNews({ handleRedirect }) {
         { name: 'slug', type: 'text', placeholder: 'Enter your slug' },
         { name: 'content', type: 'text', placeholder: 'Enter your content' },
         { name: 'urlto', type: 'text', placeholder: 'Enter your urlto' },
+        { name: 'avatar', type: 'file' },
     ]);
 
     const [dataForm, setDataForm] = useState({});

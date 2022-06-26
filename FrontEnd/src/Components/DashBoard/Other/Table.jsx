@@ -202,6 +202,10 @@ export default function Table({ title = '', dataCurrent = [],
                                                     <td>
                                                         {e.urlTo}
                                                     </td>
+                                                    <td>
+                                                        {e.avatar}
+                                                    </td>
+
 
                                                     <td>
                                                         <div className="btn-group" role="group" aria-label="Basic example">

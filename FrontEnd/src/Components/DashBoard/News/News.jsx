@@ -11,7 +11,7 @@ export default function News({ handleRedirect }) {
         })
     }, [])
     const store = useStore();
-    const [titleCurrent, setTilteCurrent] = useState(['title', 'slug', 'content', 'url to']);
+    const [titleCurrent, setTilteCurrent] = useState(['title', 'slug', 'content', 'url to', 'avatar']);
     const [dataCurrent, setDataCurrent] = useState([]);
     useEffect(() => {
         setDataCurrent(store.getState().newsList.list);

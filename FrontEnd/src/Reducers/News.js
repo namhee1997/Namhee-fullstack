@@ -6,7 +6,7 @@ import Nokia from '../assets/img/nokia.png';
 
 const init = {
     list: [
-        { content: '', title: 'OPPO Reno7 8GB-128GB', slug: 'oppo-reno-78gb-128gb', urlTo: '/product/oppo-reno-78gb-128gb' },
+        { content: '', title: 'OPPO Reno7 8GB-128GB', slug: 'oppo-reno-78gb-128gb', urlTo: '/product/oppo-reno-78gb-128gb', avatar: '' },
 
     ],
     data: [
