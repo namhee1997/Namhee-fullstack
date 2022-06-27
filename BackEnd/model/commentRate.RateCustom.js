@@ -29,9 +29,9 @@ const commentRateSchema = new mongoose.Schema(
 );
 
 commentRateSchema.statics.checkFound = async function (id) {
-    let check = await commentRateSchema.findOne({ _id: mongoose.Types.ObjectId(id) })
+    let check = await ListCommentRate.findOne({ _id: mongoose.Types.ObjectId(id) })
     if (!check) {
-        throw new Error(`commentRateSchema not found`);
+        throw new Error(`ListCommentRate not found`);
     }
     return check;
 };

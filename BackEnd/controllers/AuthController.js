@@ -11,8 +11,6 @@ const authController = {
         try {
             const salt = await bcrypt.genSalt(10);
             const hashed = await bcrypt.hash(req.body.password, salt);
-
-
             //create new user
             const newUser = await new User({
                 username: req.body.username,
@@ -31,15 +29,22 @@ const authController = {
         }
     },
     //accesstoken
-    generateAccessToken: (user) => {
+    generateAccessToken: (user, isDashBoard = false) => {
         return (
             jwt.sign(
                 {
-                    id: user.id,
-                    admin: user.admin
+                    userId: user.userId,
+                    username: user.username,
+                    role: user.role,
+                    fullname: user.fullname,
+                    avatar: user.avatar,
+                    address: user.address,
+                    email: user.email,
+                    phone: user.phone,
+                    isDashBoard: isDashBoard ? true : false,
                 },
                 process.env.JWT_ACCESS_KEY,
-                { expiresIn: '30d' }
+                { expiresIn: '2d' }
             ))
     },
     //refreshToken
@@ -47,8 +52,8 @@ const authController = {
         return (
             jwt.sign(
                 {
-                    id: user.id,
-                    admin: user.admin
+                    userId: user.userId,
+                    role: user.role
                 },
                 process.env.JWT_REFRESH_KEY,
                 { expiresIn: '365d' }
@@ -80,7 +85,13 @@ const authController = {
             }
 
             if (validPassword && user) {
-                let accessToken = authController.generateAccessToken(user);
+                let isDashBoard = req.body.isDashBoard;
+                let accessToken;
+                if (isDashBoard) {
+                    accessToken = authController.generateAccessToken(user, true);
+                } else {
+                    accessToken = authController.generateAccessToken(user);
+                }
                 let refreshToken = authController.generateRefreshToken(user);
                 refreshTokens.push(refreshToken);
                 res.cookie("refreshToken", refreshToken, {
@@ -114,13 +125,20 @@ const authController = {
         if (!refreshTokens.includes(refreshToken)) {
             return res.status(401).json("refreshToken is not valid");
         }
+        let isDashBoard = req.body.isDashBoard;
+
         jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY, (err, user) => {
             if (err) {
                 console.log(err);
             }
             refreshTokens = refreshTokens.filter(token => token !== refreshToken);
             //creater new token
-            let newAccessToken = authController.generateAccessToken(user);
+            let newAccessToken
+            if (isDashBoard) {
+                newAccessToken = authController.generateAccessToken(user, true);
+            } else {
+                newAccessToken = authController.generateAccessToken(user);
+            }
             let newRefreshToken = authController.generateRefreshToken(user);
             refreshTokens.push(newRefreshToken);
             res.cookie("refreshToken", newRefreshToken, {

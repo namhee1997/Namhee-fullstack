@@ -42,17 +42,19 @@ const orderUserSchema = new mongoose.Schema(
 );
 
 orderUserSchema.statics.checkFound = async function (id) {
-    let check = await orderUserSchema.findOne({ _id: mongoose.Types.ObjectId(id) })
+    let check = await OrderUser.findOne({ _id: mongoose.Types.ObjectId(id) })
     if (!check) {
-        throw new Error(`orderUserSchema not found`);
+        throw new Error(`OrderUser not found`);
     }
     return check;
 };
 
 orderUserSchema.plugin(AutoIncrement, { inc_field: 'idorder' });
 
-module.exports = mongoose.model(
+const OrderUser = mongoose.model(
     "OrderUser", orderUserSchema);
+
+module.exports = OrderUser;
 
 
 

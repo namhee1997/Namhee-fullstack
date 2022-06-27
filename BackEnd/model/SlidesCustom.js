@@ -35,9 +35,9 @@ const slidesCustomSchema = new mongoose.Schema(
 );
 
 slidesCustomSchema.statics.checkFound = async function (id) {
-    let check = await slidesCustomSchema.findOne({ _id: mongoose.Types.ObjectId(id) })
+    let check = await SlidesCustom.findOne({ _id: mongoose.Types.ObjectId(id) })
     if (!check) {
-        throw new Error(`slidesCustomSchema not found`);
+        throw new Error(`SlidesCustom not found`);
     }
     return check;
 };
@@ -46,8 +46,12 @@ slidesCustomSchema.plugin(AutoIncrement, { inc_field: 'idslidesmain' });
 slidesCustomSchema.plugin(AutoIncrement, { inc_field: 'idbannermain' });
 slidesCustomSchema.plugin(AutoIncrement, { inc_field: 'idslidespage' });
 
-module.exports = mongoose.model(
+
+const SlidesCustom = mongoose.model(
     "SlidesCustom", slidesCustomSchema);
+
+module.exports = SlidesCustom;
+
 
 
 

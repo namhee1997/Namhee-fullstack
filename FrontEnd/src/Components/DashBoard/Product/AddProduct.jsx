@@ -40,7 +40,7 @@ export default function AddProduct({ handleRedirect }) {
                     variable: $($(".variable")[i]).val(),
                     data: {
                         avatar: $($(".Avatar")[i]).attr('src'),
-                        img: listImg[i]
+                        img: listImg[i],
                     }
                 })
             }

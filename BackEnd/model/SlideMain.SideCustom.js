@@ -16,15 +16,17 @@ const slidesMainSchema = new mongoose.Schema(
 );
 
 slidesMainSchema.statics.checkFound = async function (id) {
-    let check = await slidesMainSchema.findOne({ _id: mongoose.Types.ObjectId(id) })
+    let check = await SlidesMain.findOne({ _id: mongoose.Types.ObjectId(id) })
     if (!check) {
-        throw new Error(`slidesMainSchema not found`);
+        throw new Error(`SlidesMain not found`);
     }
     return check;
 };
 
-module.exports = mongoose.model(
+const SlidesMain = mongoose.model(
     "SlidesMain", slidesMainSchema);
+
+module.exports = SlidesMain;
 
 
 

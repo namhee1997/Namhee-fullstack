@@ -16,9 +16,9 @@ const bannerMainSchema = new mongoose.Schema(
 );
 
 bannerMainSchema.statics.checkFound = async function (id) {
-    let check = await bannerMain.findOne({ _id: mongoose.Types.ObjectId(id) })
+    let check = await BannerMain.findOne({ _id: mongoose.Types.ObjectId(id) })
     if (!check) {
-        throw new Error(`bannerMainSchema not found`);
+        throw new Error(`BannerMain not found`);
     }
     return check;
 };

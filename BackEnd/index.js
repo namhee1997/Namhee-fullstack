@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/auth');
 const userRouter = require('./routes/user');
 const dbUser = require('./model/User');
+const dbProduct = require('./model/Product');
 const bcrypt = require('bcryptjs');
 
 const app = express();
@@ -21,6 +22,7 @@ mongoose
     .then(() => {
         console.log('CONNECTED MONGODB');
         initial();
+        initialProduct()
     })
     .catch(err => {
         console.error("Connection error", err);
@@ -50,6 +52,40 @@ function initial() {
         }
     })
 }
+
+function initialProduct() {
+    dbProduct.estimatedDocumentCount((err, count) => {
+        if (!err && count === 0) {
+            new dbProduct({
+                slug: 'test_product',
+                promotion: true,
+                variable: [
+                    {
+                        idVariable: 't1',
+                        title: 'variable 1',
+                        avatar: 'test AVT',
+                        price: 5000000,
+                        cost: 5500000,
+                        sale: 500000,
+                        listimg: [{ thumb: 'tesst list img' }]
+                    }
+                ],
+
+                infophone: {
+                    chip: 'i5',
+                },
+                company: 'Vivo',
+
+            }).save((err, user) => {
+                if (err) {
+                    console.log("init error", err);
+                }
+                console.log("create product");
+            })
+        }
+    })
+}
+
 
 
 

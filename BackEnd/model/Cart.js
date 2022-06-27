@@ -30,7 +30,7 @@ const cartSchema = new mongoose.Schema(
 cartSchema.statics.checkFound = async function (id) {
     let check = await Cart.findOne({ _id: mongoose.Types.ObjectId(id) })
     if (!check) {
-        throw new Error(`cartSchema not found`);
+        throw new Error(`Cart not found`);
     }
     return check;
 };

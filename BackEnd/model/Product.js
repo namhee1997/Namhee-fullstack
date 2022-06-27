@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const slug = require('mongoose-slug-generator');
 
 const productSchema = new mongoose.Schema(
     {
@@ -7,25 +8,54 @@ const productSchema = new mongoose.Schema(
             unique: true,
             max: 8
         },
-        title: {
-            type: String,
-        },
-        slug: { type: String, slug: 'title', unique: true },
+        slug: { type: String, slug: 'title' },
         promotion: {
             type: Boolean,
             enum: [true, false],
             required: true,
             default: false
         },
-        variable:
-        {
-            type: mongoose.Schema.Types.Array,
-            ref: "Variable",
+        variable: [
+            {
+                idVariable: {
+                    type: String,
+                    unique: true,
+                    max: 8
+                },
+                avatar:
+                {
+                    type: String,
+                },
+                title:
+                {
+                    type: String,
+                }
+                ,
+                price: {
+                    type: Number,
+                    default: 0
+                },
+                cost: {
+                    type: Number,
+                    default: 0
+                },
+                sale: {
+                    type: Number,
+                    default: 0
+                },
+                listimg: [
+                    {
+                        thumb: {
+                            type: String,
+                        },
+                    }
+                ],
+            }
+        ],
+        company: String,
+        infophone: {
+            type: {}
         },
-        company: {
-            type: mongoose.Schema.Types.Array,
-            ref: "Company",
-        }, price: { type: Number, default: 0 },  //giá
 
     },
     {
@@ -61,13 +91,14 @@ productSchema.pre('save', async function (next) {
 });
 
 productSchema.statics.checkFound = async function (id) {
-    let check = await productSchema.findOne({ _id: mongoose.Types.ObjectId(id) })
+    let check = await Product.findOne({ _id: mongoose.Types.ObjectId(id) })
     if (!check) {
-        throw new Error(`productSchema not found`);
+        throw new Error(`Product not found`);
     }
     return check
 };
 
+mongoose.plugin(slug);
 
 const Product = mongoose.model(
     "Product", productSchema);

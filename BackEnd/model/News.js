@@ -26,18 +26,20 @@ const newsSchema = new mongoose.Schema(
 );
 
 newsSchema.statics.checkFound = async function (id) {
-    let check = await newsSchema.findOne({ _id: mongoose.Types.ObjectId(id) })
+    let check = await News.findOne({ _id: mongoose.Types.ObjectId(id) })
     if (!check) {
-        throw new Error(`newsSchema not found`);
+        throw new Error(`News not found`);
     }
     return check;
 };
 
 mongoose.plugin(slug);
 
-
-module.exports = mongoose.model(
+const News = mongoose.model(
     "News", newsSchema);
+
+
+module.exports = News;
 
 
 

@@ -46,15 +46,17 @@ const orderSuccessSchema = new mongoose.Schema(
 );
 
 orderSuccessSchema.statics.checkFound = async function (id) {
-    let check = await orderSuccessSchema.findOne({ _id: mongoose.Types.ObjectId(id) })
+    let check = await OrderSuccess.findOne({ _id: mongoose.Types.ObjectId(id) })
     if (!check) {
-        throw new Error(`orderSuccessSchema not found`);
+        throw new Error(`OrderSuccess not found`);
     }
     return check;
 };
 
-module.exports = mongoose.model(
+const OrderSuccess = mongoose.model(
     "OrderSuccess", orderSuccessSchema);
+
+module.exports = OrderSuccess;
 
 
 

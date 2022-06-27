@@ -19,17 +19,18 @@ const promotionSchema = new mongoose.Schema(
 );
 
 promotionSchema.statics.checkFound = async function (id) {
-    let check = await promotionSchema.findOne({ _id: mongoose.Types.ObjectId(id) })
+    let check = await Promotion.findOne({ _id: mongoose.Types.ObjectId(id) })
     if (!check) {
-        throw new Error(`promotionSchema not found`);
+        throw new Error(`Promotion not found`);
     }
     return check;
 };
 promotionSchema.plugin(AutoIncrement, { inc_field: 'slug' });
 
-
-module.exports = mongoose.model(
+const Promotion = mongoose.model(
     "Promotion", promotionSchema);
+
+module.exports = Promotion;
 
 
 

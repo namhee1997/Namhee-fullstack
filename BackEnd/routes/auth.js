@@ -13,6 +13,6 @@ routes.post('/login', authController.loginUser);
 routes.post("/refresh", authController.requestRefreshToken);
 
 //logout
-routes.post("/logout", middlewareController.verifyToken, authController.logoutUser);
+routes.post("/logout", authController.logoutUser);
 
 module.exports = routes;

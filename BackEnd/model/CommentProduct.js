@@ -34,9 +34,9 @@ const commentProductSchema = new mongoose.Schema(
 );
 
 commentProductSchema.statics.checkFound = async function (id) {
-    let check = await commentProductSchema.findOne({ _id: mongoose.Types.ObjectId(id) })
+    let check = await CommentProduct.findOne({ _id: mongoose.Types.ObjectId(id) })
     if (!check) {
-        throw new Error(`commentProductSchema not found`);
+        throw new Error(`CommentProduct not found`);
     }
     return check;
 };

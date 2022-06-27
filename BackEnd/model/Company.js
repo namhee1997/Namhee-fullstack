@@ -19,16 +19,17 @@ const companySchema = new mongoose.Schema(
 );
 
 companySchema.statics.checkFound = async function (id) {
-    let check = await companySchema.findOne({ _id: mongoose.Types.ObjectId(id) })
+    let check = await Company.findOne({ _id: mongoose.Types.ObjectId(id) })
     if (!check) {
-        throw new Error(`companySchema not found`);
+        throw new Error(`Company not found`);
     }
     return check;
 };
 
-
-module.exports = mongoose.model(
+const Company = mongoose.model(
     "Company", companySchema);
+
+module.exports = Company;
 
 
 

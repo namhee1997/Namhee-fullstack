@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema(
             type: String,
             lowercase: true,
             unique: true,
-            required: [true, "can't be blank"], match: [/^[a-zA-Z0-9]+$/, 'is invalid username'],
+            required: true,
             index: true
         },
         password: {

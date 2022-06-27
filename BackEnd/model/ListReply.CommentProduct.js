@@ -33,16 +33,18 @@ const listReplyCommentSchema = new mongoose.Schema(
 );
 
 listReplyCommentSchema.statics.checkFound = async function (id) {
-    let check = await listReplyCommentSchema.findOne({ _id: mongoose.Types.ObjectId(id) })
+    let check = await ListReply.findOne({ _id: mongoose.Types.ObjectId(id) })
     if (!check) {
-        throw new Error(`listReplyCommentSchema not found`);
+        throw new Error(`ListReply not found`);
     }
     return check;
 };
 listReplyCommentSchema.plugin(AutoIncrement, { inc_field: 'idComment' });
 
-module.exports = mongoose.model(
+const ListReply = mongoose.model(
     "ListReply", listReplyCommentSchema);
+
+module.exports = ListReply;
 
 
 

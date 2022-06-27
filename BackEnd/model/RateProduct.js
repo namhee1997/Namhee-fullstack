@@ -21,16 +21,18 @@ const rateProductSchema = new mongoose.Schema(
 );
 
 rateProductSchema.statics.checkFound = async function (id) {
-    let check = await rateProductSchema.findOne({ _id: mongoose.Types.ObjectId(id) })
+    let check = await RateProduct.findOne({ _id: mongoose.Types.ObjectId(id) })
     if (!check) {
-        throw new Error(`rateProductSchema not found`);
+        throw new Error(`RateProduct not found`);
     }
     return check;
 };
 rateProductSchema.plugin(AutoIncrement, { inc_field: 'idrate' });
 
-module.exports = mongoose.model(
+const RateProduct = mongoose.model(
     "RateProduct", rateProductSchema);
+
+module.exports = RateProduct;
 
 
 
