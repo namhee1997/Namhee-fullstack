@@ -4,11 +4,11 @@ const userController = require('../controllers/UserController');
 
 const routes = require('express').Router();
 
-//get all user
-routes.get('/', middlewareController.verifyToken, userController.getAllUser);
-
-//delete user
-routes.delete("/:id", middlewareController.verifyTokenAndAdminAuth, userController.deleteUser);
+//USERS
+routes.get('/get-all', middlewareController.verifyToken, userController.getAllUser);
+routes.get('/get-by-id/:id', middlewareController.verifyToken, userController.getAllUser);
+routes.post('/add-user', userController.addUser);
+routes.delete("/delete/:id", middlewareController.verifyTokenAndAdminAuth, userController.deleteUser);
 
 
 module.exports = routes;
