@@ -4,6 +4,7 @@ import { loginUser } from "../api/ApiLoginUser";
 import { useDispatch } from "react-redux";
 import jwtDecode from 'jwt-decode';
 import { useNavigate } from "react-router-dom";
+
 import "./login.css";
 const Login = () => {
     const navigate = useNavigate();
@@ -16,11 +17,12 @@ const Login = () => {
     // check logger
     const tokenUserCurrent = (localStorage.getItem('token') || '');
     const [userCurrentByToken, setUserCurrentByToken] = useState({});
+    const [err, setErr] = useState(false);
     useEffect(() => {
 
         if (tokenUserCurrent == '') {
             navigate('/login');
-        } else if (tokenUserCurrent != '') {
+        } else if (tokenUserCurrent != '' && tokenUserCurrent != 'undefined') {
             setUserCurrentByToken(jwtDecode(tokenUserCurrent));
         }
 
@@ -34,17 +36,20 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // navigate('/');
-        let data = await loginUser(dataLogin, dispatch, navigate);
-        if (data == '') {
-            console.log('err login');
-            return;
-        }
-        let obj = jwtDecode(data);
-        if (obj.isDashBoard == false) {
-            localStorage.setItem('token', data);
-            navigate('/');
-        }
+        let data = await loginUser(dataLogin, dispatch, navigate).then((e) => {
+            console.log(e, 'date');
+            if (e == '' && e == undefined && e == 'undefined') {
+                localStorage.setItem('token', '');
+            } else {
+                localStorage.setItem('token', e);
+                let obj = jwtDecode(e);
+                if (obj.isDashBoard == false) {
+                    navigate('/');
+                }
+            }
+        }).catch((err) => {
+            setErr(true);
+        });
 
     }
     return (
@@ -63,6 +68,12 @@ const Login = () => {
                 </div>
                 <button type="submit" onClick={(e) => handleSubmit(e)}> Continue </button>
             </form>
+            {
+                err ? <div className="err_login">
+                    <p>Incorrect account information or password</p>
+                </div>
+                    : ''
+            }
             <div className="login-register"> Don't have an account yet? </div>
             <Link className="login-register-link" to="/register">Register one for free </Link>
         </section>

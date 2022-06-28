@@ -13,6 +13,8 @@ const Register = () => {
         email: '',
         username: '',
         password: '',
+        address: '',
+        phone: '',
     });
 
     // check logger
@@ -22,7 +24,7 @@ const Register = () => {
 
         if (tokenUserCurrent == '') {
             navigate('/register');
-        } else if (tokenUserCurrent != '') {
+        } else if (tokenUserCurrent != '' && tokenUserCurrent && tokenUserCurrent != undefined && tokenUserCurrent != 'undefined') {
             setUserCurrentByToken(jwtDecode(tokenUserCurrent));
         }
 
@@ -36,12 +38,14 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        let data = await registerUserApi(dataLogin, dispatch, navigate);
-        if (data == 'success') {
-            navigate('/login');
-        }
-
+        let data = await registerUserApi(dataLogin, dispatch, navigate).then((e) => {
+            if (e == 'success') {
+                navigate('/login');
+            }
+        }).catch((err) => {
+        });
     }
+
     return (
         <section className="register-container">
             <div className="register-title"> Register </div>
@@ -64,6 +68,19 @@ const Register = () => {
                         onChange={(e) => setDataLogin({ ...dataLogin, password: e.target.value })}
                     />
                 </div>
+                <div className="box_login">
+                    <label>ADDRESS</label>
+                    <input type="address" placeholder="Enter your address"
+                        onChange={(e) => setDataLogin({ ...dataLogin, address: e.target.value })}
+                    />
+                </div>
+                <div className="box_login">
+                    <label>PHONE</label>
+                    <input type="phone" placeholder="Enter your phone"
+                        onChange={(e) => setDataLogin({ ...dataLogin, phone: e.target.value })}
+                    />
+                </div>
+
                 <button type="submit" onClick={(e) => handleSubmit(e)}> Create account </button>
             </form>
         </section>

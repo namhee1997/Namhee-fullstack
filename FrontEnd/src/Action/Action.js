@@ -46,12 +46,6 @@ export const addToCart = (hobby) => {
 export const loginSuccess = (hobby) => {
     return {
         type: ActionTypes.USER_LOGIN_SUCCESS,
-        userInfo: hobby
-    }
-}
-export const loginFail = (hobby) => {
-    return {
-        type: ActionTypes.USER_LOGIN_FAIL,
         payload: hobby
     }
 }
@@ -63,24 +57,25 @@ export const logOut = (hobby) => {
     }
 }
 
-export const registerUser = (hobby) => {
-    return {
-        type: ActionTypes.REGISTER_USER,
-        payload: hobby
-    }
-}
-
-export const registerUserFail = (hobby) => {
-    return {
-        type: ActionTypes.REGISTER_USER_FAIL,
-        payload: hobby
-    }
-}
-
 export const loginSuccessDashBoard = (hobby) => {
     return {
         type: ActionTypes.USER_LOGIN_SUCCESS_DASHBOARD,
         adminInfo: hobby
+    }
+}
+
+
+export const setAllUser = (hobby) => {
+    return {
+        type: ActionTypes.SET_ALL_USER,
+        payload: hobby
+    }
+}
+
+export const setJWT = (hobby) => {
+    return {
+        type: ActionTypes.SET_JWT_TO_REDUX,
+        payload: hobby
     }
 }
 

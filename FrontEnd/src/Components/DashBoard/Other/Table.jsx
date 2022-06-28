@@ -1,9 +1,32 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { deleteUser } from "../../api/ApiUser";
+import jwtDecode from 'jwt-decode';
+import { axiosJWT } from "../../../AxiosJWT";
+import { useDispatch, useSelector } from "react-redux";
+import { loginSuccess } from "../../../Action/Action";
 
 
 export default function Table({ title = '', dataCurrent = [],
     dataTitle = [], thisPage = '',
-    linkCreate = '', dataHandle, create = 'true' }) {
+    linkCreate = '', dataHandle, create = 'true', handleReRender }) {
+
+    const keyJwt = localStorage.getItem('token');
+    const dispatch = useDispatch();
+    const user = jwtDecode(keyJwt);
+    let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+
+    const fetchDeleteUser = async (e, id) => {
+        e.preventDefault();
+        try {
+            let data = await deleteUser(keyJwt, axiosJwt, id);
+            console.log('delete user success', data);
+            handleReRender.setReRender(e => !e);
+        } catch (error) {
+            console.log('delete err');
+        }
+    }
+
 
     return (
         <div className="card mb-4 table_">
@@ -71,7 +94,7 @@ export default function Table({ title = '', dataCurrent = [],
                                         <td>
                                             <div className="btn-group" role="group" aria-label="Basic example">
                                                 <button type="button" className="btn btn-danger">
-                                                    <Link to={`/dashboard/user/delete/${e.userId}`}>
+                                                    <Link to={`/dashboard/user/delete/${e.userId}`} onClick={(z) => fetchDeleteUser(z, e.userId)}>
                                                         <i className="fa-solid fa-trash-can text-white"></i>
                                                     </Link>
                                                 </button>

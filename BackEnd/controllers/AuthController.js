@@ -15,17 +15,20 @@ const authController = {
             const newUser = await new User({
                 username: req.body.username,
                 email: req.body.email,
-                password: hashed
+                password: hashed,
+                role: 'user',
+                avatar: '',
+                address: req.body.address,
+                email: req.body.email,
+                phone: req.body.phone,
             });
 
             //save to db
 
             const user = await newUser.save();
-            res.status(200).json(user);
+            res.status(200).json('success');
         } catch (e) {
-            res.status(500).json({
-                e
-            })
+            res.status(500).json('err')
         }
     },
     //accesstoken
@@ -67,11 +70,14 @@ const authController = {
             const user = await User.findOne({
                 username: req.body.username
             })
+            console.log('let', req.body);
             if (!user) {
-                res.status(404).json(
+
+                return res.status(404).json(
                     'wrong Username'
                 );
             }
+            console.log('iss', req.body);
 
             const validPassword = await bcrypt.compare(
                 req.body.password,
@@ -113,13 +119,14 @@ const authController = {
 
         } catch (error) {
             res.status(500).json({
-                error
+                'error': 'err'
             })
         }
     },
     //refresh
     requestRefreshToken: (req, res) => {
         //lấy refresh token từ user
+        console.log('rrefresh token');
         let refreshToken = req.cookies.refreshToken;
         if (!refreshToken) return res.status(401).json("you're not authenticate");
         if (!refreshTokens.includes(refreshToken)) {

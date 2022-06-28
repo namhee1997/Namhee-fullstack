@@ -1,7 +1,17 @@
 import { useState, useEffect } from "react";
 import Table from "../Other/Table";
+import { getAllUser } from "../../api/ApiUser";
+import { loginSuccess, setAllUser } from "../../../Action/Action";
+import { useDispatch, useSelector, useStore } from "react-redux";
+import { axiosJWT } from "../../../AxiosJWT";
 
 export default function Users({ handleRedirect }) {
+    const dispatch = useDispatch();
+    const keyJwt = localStorage.getItem('token');
+    const user = handleRedirect.userCurrentByToken;
+
+    let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+
     useEffect(() => {
         handleRedirect.setCheckDirect(e => {
             let data = { ...e }
@@ -10,19 +20,26 @@ export default function Users({ handleRedirect }) {
         })
     }, [])
     const [titleCurrent, setTilteCurrent] = useState(['username', 'role', 'fullname', 'avatar', 'address', 'email', 'phone']);
-    const [dataCurrent, setDataCurrent] = useState([
-        {
-            username: 'vivannam', role: 'user',
-            fullname: 'vi van nam',
-            avatar: 'https://res.cloudinary.com/dungdv/image/upload/v1652753864/ccohkl7gwrnajs8qgtfi.png',
-            address: 'vinh nghe an', email: 'nunal0889@gmail.com',
-            phone: '0968796293', userId: 1
+    const [dataCurrent, setDataCurrent] = useState([]);
+    const [reRender, setReRender] = useState(true);
+    useEffect(() => {
+
+        const fetchAllUser = async () => {
+            try {
+                let data = await getAllUser(keyJwt, axiosJwt);
+                setDataCurrent(data);
+            } catch (e) {
+                console.log(e, 'err get all un user.jsx');
+            }
         }
-    ]);
+        fetchAllUser();
+
+    }, [reRender])
+    let handleReRender = { setReRender };
     return (
         <div className="container_user_dashboard">
             <Table dataTitle={titleCurrent} dataCurrent={dataCurrent} thisPage='User'
-                title='User' linkCreate="/dashboard/user/create"
+                title='User' linkCreate="/dashboard/user/create" handleReRender={handleReRender}
             />
         </div>
     );

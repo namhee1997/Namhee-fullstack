@@ -5,6 +5,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/auth');
 const userRouter = require('./routes/user');
+const userCloud = require('./routes/cloud');
 const dbUser = require('./model/User');
 const dbProduct = require('./model/Product');
 const bcrypt = require('bcryptjs');
@@ -95,6 +96,7 @@ app.use(express.json());
 
 app.use('/v1/auth', authRoutes);
 app.use('/v1/user', userRouter);
+app.use('/v1/cloud', userCloud);
 
 app.listen(8080, () => {
     console.log('is running server success!');

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { sendImageToCloud } from "../../api/ApiUploadImage";
 import $ from 'jquery';
 
 export default function EditForm({ titleForm = '', thisPage = '', stateForm = {}, dataHandle }) {
@@ -8,24 +9,26 @@ export default function EditForm({ titleForm = '', thisPage = '', stateForm = {}
     const [checkSubmit, setCheckSubmit] = useState(false);
     const listAcceptTypeImg = ['image/png', 'image/jpeg'];
 
-    const handleChangeNew = (e, name, file = '') => {
-        if (file == 'file') {
+    const handleChangeNew = async (e, name, fileTypeCheck = '') => {
+        if (fileTypeCheck == 'file') {
             let files = e.target.files;
             let fileType = (files[0]?.type);
-            let fileReader = new FileReader();
-            fileReader.addEventListener('load', () => {
-
+            if (files[0]) {
                 if (listAcceptTypeImg.includes(fileType)) {
+                    let fd = new FormData();
+                    fd.append('file', files[0]);
+                    let res = await sendImageToCloud(fd);
+                    console.log(res, 'set update img');
                     setDataChangeNew(m => {
                         let data = { ...m };
-                        data[name] = fileReader.result;
+                        data['avatar'] = res.data.data.fileUrl;
                         return data;
                     });
                 } else {
-                    alert('not type support!');
+                    alert('img not support');
                 }
-            })
-            fileReader.readAsDataURL(files[0])
+            }
+
         } else {
             setDataChangeNew(m => {
                 let data = { ...m };
@@ -44,6 +47,7 @@ export default function EditForm({ titleForm = '', thisPage = '', stateForm = {}
             setTimeout(() => {
                 dataHandle.setDataChangeNew(dataChangeNew);
                 setCheckSubmit(false);
+                dataHandle?.setHandleSubmit(true);
             }, 500);
         }
     }, [checkSubmit])
@@ -163,7 +167,7 @@ export default function EditForm({ titleForm = '', thisPage = '', stateForm = {}
                                     </div>
                                     <div className="input-group">
                                         <input type="file" className="form-control" id="file"
-                                            onChange={(e) => handleChangeNew(e, 'avatar')}
+                                            onChange={(e) => handleChangeNew(e, 'avatar', 'file')}
                                             aria-describedby="image_button" aria-label="Upload" />
                                     </div>
                                 </div>

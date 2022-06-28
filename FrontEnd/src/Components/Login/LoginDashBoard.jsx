@@ -11,16 +11,18 @@ const LoginDashBoard = () => {
     const [dataLogin, setDataLogin] = useState({
         username: '',
         password: '',
+        isDashBoard: true,
     });
 
     // check logger
     const tokenUserCurrent = (localStorage.getItem('token') || '');
     const [userCurrentByToken, setUserCurrentByToken] = useState({});
+    const [err, setErr] = useState(false);
     useEffect(() => {
 
         if (tokenUserCurrent == '') {
             navigate('/dashboard/login');
-        } else if (tokenUserCurrent != '') {
+        } else if (tokenUserCurrent != '' && tokenUserCurrent && tokenUserCurrent != undefined && tokenUserCurrent != 'undefined') {
             setUserCurrentByToken(jwtDecode(tokenUserCurrent));
         }
 
@@ -32,20 +34,27 @@ const LoginDashBoard = () => {
     }, [userCurrentByToken])
     // check logger
 
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        let data = await loginUser(dataLogin, dispatch, navigate, true);
-        if (data == '') {
-            console.log('err login');
-            return;
-        }
-        let obj = jwtDecode(data);
-        if (obj.isDashBoard == true) {
-            localStorage.setItem('token', data);
-            navigate('/dashboard');
-        }
+        let data = await loginUser(dataLogin, dispatch, navigate, true).then((e) => {
+            console.log(e, 'date');
+            if (e == '' && e == undefined && e == 'undefined') {
+                localStorage.setItem('token', '');
+            } else {
+                localStorage.setItem('token', e);
+                let obj = jwtDecode(e);
+                if (obj.isDashBoard == true) {
+                    navigate('/dashboard');
+                }
+            }
+        }).catch((err) => {
+            setErr(true);
+        });
 
     }
+
+
     return (
         <section className="login-container">
             <div className="login-title"> Log in</div>
@@ -62,6 +71,13 @@ const LoginDashBoard = () => {
                 </div>
                 <button type="submit" onClick={(e) => handleSubmit(e)}> Continue </button>
             </form>
+            {
+                err ?
+                    <div className="err_login">
+                        <p>Incorrect account information or password</p>
+                    </div>
+                    : ``
+            }
         </section>
     );
 }

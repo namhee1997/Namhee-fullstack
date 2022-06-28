@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 
 export default function HeaderDashBoard({ userCurrent }) {
     let location = window.location.pathname.split('/');
-    console.log(userCurrent);
 
     return (
         <header>

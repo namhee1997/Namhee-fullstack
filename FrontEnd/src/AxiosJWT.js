@@ -16,12 +16,12 @@ const refreshToken = async () => {
         console.log(error, 'error');
     }
 }
-export const axiosJWT = (user, dispatch, stateSuccess) => {
+export const axiosJWT = (user, dispatch, stateSuccess, keyJwt = '') => {
     const createAxios = instance;
     createAxios.interceptors.request.use(
         async (config) => {
             let date = new Date();
-            const decodeToken = jwtDecode(user?.accessToken);
+            const decodeToken = jwtDecode(keyJwt);
             if (decodeToken.exp < date.getTime() / 1000) {
                 const data = await refreshToken();
                 const refreshUser = {

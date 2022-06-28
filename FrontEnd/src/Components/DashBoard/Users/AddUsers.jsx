@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import CreateForm from '../Other/CreateForm';
 import { useStore, useSelector } from 'react-redux';
+import { addNewUser } from '../../api/ApiUser';
 
 export default function AddUsers({ handleRedirect }) {
     useEffect(() => {
@@ -23,11 +24,32 @@ export default function AddUsers({ handleRedirect }) {
 
     const [dataForm, setDataForm] = useState({});
     const [dataAvatar, setDataAvatar] = useState('');
+    const [eventSubmit, setEventSubmit] = useState(false);
 
     let dataHandle = {
         setDataForm,
         setDataAvatar,
+        setEventSubmit,
     }
+
+    useEffect(() => {
+
+        if (Object.keys(dataForm).length > 0 && eventSubmit) {
+            const fetchUserList = async () => {
+                try {
+                    let data = await addNewUser(dataForm);
+                    setEventSubmit(false);
+                } catch (error) {
+                    setEventSubmit(false);
+                    console.log('Failed to fetch product list: ', error);
+                }
+            }
+
+            fetchUserList();
+        }
+
+    }, [dataForm])
+
     console.log(dataForm, 'dataForm', dataAvatar);
 
     return (

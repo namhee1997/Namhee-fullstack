@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import $ from 'jquery';
+import { sendImageToCloud } from "../../api/ApiUploadImage";
 
 export default function CreateForm({ titleForm = '', thisPage = '', stateForm = [], dataHandle }) {
     const navigate = useNavigate();
@@ -24,21 +25,25 @@ export default function CreateForm({ titleForm = '', thisPage = '', stateForm = 
     }, [checkSubmit])
 
 
-    const onFilePicked = (e, name) => {
+    const onFilePicked = async (e, name) => {
 
         let files = e.target.files;
         let fileType = (files[0]?.type);
-
-        let fileReader = new FileReader();
-        fileReader.addEventListener('load', () => {
-
-            if (listAcceptTypeImg.includes(fileType)) {
-                setFileImg(fileReader.result);
-            } else {
-                alert('not type support!');
-            }
-        })
-        fileReader.readAsDataURL(files[0])
+        // 
+        if (files[0]) {
+            let fd = new FormData();
+            fd.append('file', files[0]);
+            let data = await sendImageToCloud(fd);
+            setFileImg(data.data.data.fileUrl);
+        }
+        // let fileReader = new FileReader();
+        // fileReader.addEventListener('load', () => {
+        //     if (listAcceptTypeImg.includes(fileType)) {
+        //     } else {
+        //         alert('not type support!');
+        //     }
+        // })
+        // fileReader.readAsDataURL(files[0])
     }
 
     const handleChange = (name, e) => {
@@ -52,6 +57,8 @@ export default function CreateForm({ titleForm = '', thisPage = '', stateForm = 
             data[stateForm[i].name] = stateForm[i].type == 'select' ? $(`#${stateForm[i].name} option:selected`).val() : $(`#${stateForm[i].name}`).val();
         }
         data.idOderCustom = number;
+        data.avatar = fileImg;
+        dataHandle.setEventSubmit(true);
         setDataTotal(data);
         setCheckSubmit(true);
     }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import HomePage from "../Home/HomePage";
 import Login from "../Login/Login";
 import LoginDashBoard from "../Login/LoginDashBoard";
@@ -29,10 +29,12 @@ import NewsEdit from '../DashBoard/News/EditNews';
 import Oder from '../DashBoard/Order/Order';
 import jwtDecode from 'jwt-decode';
 import OderCreate from '../DashBoard/Order/AddOrder';
+import { setJWT } from "../../Action/Action";
 
 export default function Router() {
     let location = window.location.pathname.split('/');
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const tokenUserCurrent = (localStorage.getItem('token') || '');
     const [userCurrentByToken, setUserCurrentByToken] = useState({});
     const [checkLogOut, setCheckLogOut] = useState(false);
@@ -41,11 +43,15 @@ export default function Router() {
         dashBoard: true,
     });
     useEffect(() => {
+        let getJwt = setJWT(localStorage.getItem('token'));
+        dispatch(getJwt);
+    }, [localStorage.getItem('token')]);
+    useEffect(() => {
         if (location[1] != 'dashboard') {
             if (tokenUserCurrent == '' && checkDirect.user) {
                 setCheckDirect({ ...checkDirect, user: false });
                 navigate('/login');
-            } else if (tokenUserCurrent != '') {
+            } else if (tokenUserCurrent != '' && tokenUserCurrent && tokenUserCurrent != undefined && tokenUserCurrent != 'undefined') {
                 setCheckLogOut(false);
                 setUserCurrentByToken(jwtDecode(tokenUserCurrent));
             }
@@ -53,11 +59,13 @@ export default function Router() {
             if (tokenUserCurrent == '' && checkDirect.dashBoard) {
                 setCheckDirect({ ...checkDirect, dashBoard: false });
                 navigate('/dashboard/login');
-            } else if (tokenUserCurrent != '') {
+            } else if (tokenUserCurrent != '' && tokenUserCurrent && tokenUserCurrent != undefined && tokenUserCurrent != 'undefined') {
                 setUserCurrentByToken(jwtDecode(tokenUserCurrent));
                 let data = jwtDecode(tokenUserCurrent);
-                if (data?.isDashBoard && data?.role == 'admin') {
-                    setCheckLogOut(false);
+                if (data?.role == 'admin') {
+                    if (data?.isDashBoard) {
+                        setCheckLogOut(false);
+                    }
                 } else {
                     setCheckLogOut(false);
                     navigate('/');
@@ -67,8 +75,11 @@ export default function Router() {
 
     }, [checkDirect])
 
+    // console.log(userCurrentByToken, 'userCurrentByToken');
+
     let handleRedirect = {
-        setCheckDirect
+        setCheckDirect,
+        userCurrentByToken
     };
     let handleRefresh = { setCheckLogOut, checkLogOut };
     return (

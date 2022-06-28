@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import $ from 'jquery';
+import { sendImageToCloud } from "../../../api/ApiUploadImage";
 
 export default function CreateFormProduct({ listCompany = [], dataHandle }) {
 
@@ -17,14 +18,23 @@ export default function CreateFormProduct({ listCompany = [], dataHandle }) {
 
         let fileReader = new FileReader();
         fileReader.addEventListener('load', () => {
+            console.log(e, 'eeeeee');
 
             if (listAcceptTypeImg.includes(fileType)) {
                 setFileImg(fileReader.result);
             } else {
                 alert('not type support!');
             }
+            // 
+            let fd = new FormData();
+            // let files = $('#file')[0].files[0];
+            // fd.append('file', files);
+
+            // let data = await sendImageToCloud();
         })
         fileReader.readAsDataURL(files[0])
+
+
     }
 
     const onFilePickeds = (e) => {

@@ -1,10 +1,9 @@
 import * as ActionTypes from '../ActionTypes';
 
 const initialState = {
-    isLoggedIn: false,
-    userInfo: null,
-    adminInfo: null,
-    isAdmin: false,
+    userLogin: {},
+    allUsers: [],
+    jwt: '',
 }
 
 const appReducerLogin = (state = initialState, action) => {
@@ -12,26 +11,29 @@ const appReducerLogin = (state = initialState, action) => {
         case ActionTypes.USER_LOGIN_SUCCESS:
             return {
                 ...state,
-                isLoggedIn: true,
-                userInfo: action.userInfo
+                userLogin: action.payload
             }
-        case ActionTypes.USER_LOGIN_FAIL:
-            return {
-                ...state,
-                isLoggedIn: false,
-                userInfo: null
-            }
+
         case ActionTypes.PROCESS_LOGOUT:
             return {
                 ...state,
-                isLoggedIn: false,
-                userInfo: null
+                userLogin: {},
             }
         case ActionTypes.USER_LOGIN_SUCCESS_DASHBOARD:
             return {
                 ...state,
                 isAdmin: true,
                 adminInfo: action.adminInfo
+            }
+        case ActionTypes.SET_ALL_USER:
+            return {
+                ...state,
+                allUsers: action.payload
+            }
+        case ActionTypes.SET_JWT_TO_REDUX:
+            return {
+                ...state,
+                jwt: action.payload
             }
         default:
             return state;
