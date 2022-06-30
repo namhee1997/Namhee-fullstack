@@ -3,9 +3,10 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const authRoutes = require('./routes/auth');
-const userRouter = require('./routes/user');
-const userCloud = require('./routes/cloud');
+const authRoutes = require('./routes/auth.routes');
+const userRouter = require('./routes/user.routes');
+const cloudRoutes = require('./routes/cloud.routes');
+const productRoutes = require('./routes/product.routes');
 const dbUser = require('./model/User');
 const dbProduct = require('./model/Product');
 const bcrypt = require('bcryptjs');
@@ -14,6 +15,8 @@ const app = express();
 
 app.use(cors());
 app.use(cookieParser());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb' }));
 
 mongoose
     .connect(process.env.DB_MONGOO, {
@@ -23,7 +26,7 @@ mongoose
     .then(() => {
         console.log('CONNECTED MONGODB');
         initial();
-        initialProduct()
+        // initialProduct()
     })
     .catch(err => {
         console.error("Connection error", err);
@@ -54,38 +57,38 @@ function initial() {
     })
 }
 
-function initialProduct() {
-    dbProduct.estimatedDocumentCount((err, count) => {
-        if (!err && count === 0) {
-            new dbProduct({
-                slug: 'test_product',
-                promotion: true,
-                variable: [
-                    {
-                        idVariable: 't1',
-                        title: 'variable 1',
-                        avatar: 'test AVT',
-                        price: 5000000,
-                        cost: 5500000,
-                        sale: 500000,
-                        listimg: [{ thumb: 'tesst list img' }]
-                    }
-                ],
+// function initialProduct() {
+//     dbProduct.estimatedDocumentCount((err, count) => {
+//         if (!err && count === 0) {
+//             new dbProduct({
+//                 slug: 'test_product',
+//                 promotion: true,
+//                 variable: [
+//                     {
+//                         idVariable: 't1',
+//                         title: 'variable 1',
+//                         avatar: 'test AVT',
+//                         price: 5000000,
+//                         cost: 5500000,
+//                         sale: 500000,
+//                         listimg: [{ thumb: 'tesst list img' }]
+//                     }
+//                 ],
 
-                infophone: {
-                    chip: 'i5',
-                },
-                company: 'Vivo',
+//                 infophone: {
+//                     chip: 'i5',
+//                 },
+//                 company: 'Vivo',
 
-            }).save((err, user) => {
-                if (err) {
-                    console.log("init error", err);
-                }
-                console.log("create product");
-            })
-        }
-    })
-}
+//             }).save((err, user) => {
+//                 if (err) {
+//                     console.log("init error", err);
+//                 }
+//                 console.log("create product");
+//             })
+//         }
+//     })
+// }
 
 
 
@@ -96,7 +99,8 @@ app.use(express.json());
 
 app.use('/v1/auth', authRoutes);
 app.use('/v1/user', userRouter);
-app.use('/v1/cloud', userCloud);
+app.use('/v1/cloud', cloudRoutes);
+app.use('/v1/product', productRoutes);
 
 app.listen(8080, () => {
     console.log('is running server success!');

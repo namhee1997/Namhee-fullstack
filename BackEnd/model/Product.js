@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const slug = require('mongoose-slug-generator');
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const productSchema = new mongoose.Schema(
     {
@@ -8,7 +9,7 @@ const productSchema = new mongoose.Schema(
             unique: true,
             max: 8
         },
-        slug: { type: String, slug: 'title' },
+        slug: { type: String },
         promotion: {
             type: Boolean,
             enum: [true, false],
@@ -53,6 +54,7 @@ const productSchema = new mongoose.Schema(
             }
         ],
         company: String,
+        title: String,
         infophone: {
             type: {}
         },
@@ -98,7 +100,6 @@ productSchema.statics.checkFound = async function (id) {
     return check
 };
 
-mongoose.plugin(slug);
 
 const Product = mongoose.model(
     "Product", productSchema);

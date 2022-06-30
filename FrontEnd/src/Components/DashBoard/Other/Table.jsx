@@ -20,7 +20,6 @@ export default function Table({ title = '', dataCurrent = [],
         e.preventDefault();
         try {
             let data = await deleteUser(keyJwt, axiosJwt, id);
-            console.log('delete user success', data);
             handleReRender.setReRender(e => !e);
         } catch (error) {
             console.log('delete err');
@@ -114,23 +113,23 @@ export default function Table({ title = '', dataCurrent = [],
                                                 {i + 1}
                                             </td>
                                             <td>
-                                                {e.title}
+                                                {e?.title}
                                             </td>
                                             <td>
                                                 {e.slug}
                                             </td>
                                             <td>
-                                                {e.sale}
+                                                {e.variable[0].sale}
                                             </td>
                                             <td>
-                                                {e.price}
+                                                {e.variable[0].price}
                                             </td>
                                             <td>
-                                                <img height="100px" width="100px" src={e.avt} alt="" />
+                                                <img height="100px" width="100px" src={e.variable[0].avatar} alt="" />
 
                                             </td>
                                             <td>
-                                                {e.cost}
+                                                {e.variable[0].cost}
                                             </td>
                                             <td>
                                                 {e.promotion ? 'true' : 'false'}
@@ -143,17 +142,17 @@ export default function Table({ title = '', dataCurrent = [],
                                                     e.variable.map((r, x) => {
                                                         return (
                                                             <p key={x}>
-                                                                {r}
+                                                                {r.title}
                                                             </p>
                                                         );
                                                     })
                                                 }
                                             </td>
                                             <td>
-                                                <p>{e.infophone.chip}</p>
-                                                <p>{e.infophone.screen}</p>
-                                                <p>{e.infophone.ram}</p>
-                                                <p>{e.infophone.memory}</p>
+                                                <p>{e?.infophone?.chip}</p>
+                                                <p>{e?.infophone?.screen}</p>
+                                                <p>{e?.infophone?.ram}</p>
+                                                <p>{e?.infophone?.memory}</p>
 
                                             </td>
                                             <td>

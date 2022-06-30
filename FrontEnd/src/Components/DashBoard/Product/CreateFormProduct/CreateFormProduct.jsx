@@ -11,54 +11,48 @@ export default function CreateFormProduct({ listCompany = [], dataHandle }) {
     const [idListImg, setidListImg] = useState(0);
     const [ListFileImg, setListFileImg] = useState([]);
 
-    const onFilePicked = (e, name) => {
+    const onFilePicked = async (e, name) => {
 
         let files = e.target.files;
         let fileType = (files[0]?.type);
 
-        let fileReader = new FileReader();
-        fileReader.addEventListener('load', () => {
-            console.log(e, 'eeeeee');
-
+        if (files[0]) {
             if (listAcceptTypeImg.includes(fileType)) {
-                setFileImg(fileReader.result);
+                let fd = new FormData();
+                fd.append('file', files[0]);
+                let res = await sendImageToCloud(fd);
+                setFileImg(res.data.data.fileUrl);
             } else {
-                alert('not type support!');
+                alert('img not support');
             }
-            // 
-            let fd = new FormData();
-            // let files = $('#file')[0].files[0];
-            // fd.append('file', files);
-
-            // let data = await sendImageToCloud();
-        })
-        fileReader.readAsDataURL(files[0])
-
+        }
 
     }
 
-    const onFilePickeds = (e) => {
+    const onFilePickeds = async (e) => {
         let files = e.target.files;
 
         setidListImg(e => e + 1);
         let fileType = (files[0]?.type);
-        let fileReader = new FileReader();
 
-        fileReader.addEventListener('load', () => {
-
+        if (files[0]) {
             if (listAcceptTypeImg.includes(fileType)) {
+                let fd = new FormData();
+                fd.append('file', files[0]);
+                let res = await sendImageToCloud(fd);
                 setListFileImg([
                     ...ListFileImg,
                     {
                         id: idListImg,
-                        img: fileReader.result
+                        img: res.data.data.fileUrl
                     }
                 ]);
             } else {
-                alert('not type support!');
+                alert('img not support');
             }
-        })
-        fileReader.readAsDataURL(files[0])
+        }
+
+
 
 
     }
@@ -81,18 +75,8 @@ export default function CreateFormProduct({ listCompany = [], dataHandle }) {
                             <label htmlFor="variable">variable</label>
                         </div>
                     </div>
-                    <div className="col-md-6 mb-4 ">
-                        <div className="form-floating mb-3 mb-md-0 form_input">
-                            <input className="form-control title" id="" name="title" type="text" placeholder="Enter your title" />
-                            <label htmlFor="title">title</label>
-                        </div>
-                    </div>
-                    <div className="col-md-6 mb-4 ">
-                        <div className="form-floating mb-3 mb-md-0 form_input">
-                            <input className="form-control slug" id="" name="slug" type="text" placeholder="Enter your slug" />
-                            <label htmlFor="slug">slug</label>
-                        </div>
-                    </div>
+
+
                     <div className="col-md-6 mb-4 ">
                         <div className="form-floating mb-3 mb-md-0 form_input">
                             <input className="form-control sale" id="" name="sale" type="text" placeholder="Enter your sale" />
@@ -139,32 +123,12 @@ export default function CreateFormProduct({ listCompany = [], dataHandle }) {
                     </div>
                     <div className="col-md-6 mb-4 ">
                         <div className="form-floating mb-3 mb-md-0 form_input">
-                            <input className="form-control const" id="" name="const" type="text" placeholder="Enter your const" />
-                            <label htmlFor="const">const</label>
+                            <input className="form-control cost" id="" name="cost" type="text" placeholder="Enter your cost" />
+                            <label htmlFor="cost">cost</label>
                         </div>
                     </div>
-                    <div className="col-md-6 mb-4 ">
-                        <div className="form-floating mb-3 mb-md-0 form_input">
-                            <select className="form-select promotion" id="" name="role" onChange={() => { }}>
-                                <option value="true">true</option>
-                                <option value='false'>false</option>
-                            </select>
-                            <label>promotion</label>
-                        </div>
-                    </div>
-                    <div className="col-md-6 mb-4 ">
-                        <div className="form-floating mb-3 mb-md-0 form_input">
-                            <select className="form-select company" id="" name="role" onChange={() => { }}>
-                                {
-                                    listCompany.map((e, i) =>
-                                        <option key={i} value={e.slug}>{e.title}</option>
-                                    )
-                                }
 
-                            </select>
-                            <label>company</label>
-                        </div>
-                    </div>
+
                 </div>
 
             </form>

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import CreateFormProduct from './CreateFormProduct/CreateFormProduct';
 import { useStore, useSelector } from 'react-redux';
 import { Link, useNavigate } from "react-router-dom";
+import { addNewProduct } from '../../api/ApiProduct';
 import $ from 'jquery'
 
 export default function AddProduct({ handleRedirect }) {
@@ -27,30 +28,48 @@ export default function AddProduct({ handleRedirect }) {
 
     useEffect(() => {
         if (checkSubmit) {
-            let listForm = $('.card-body');
-            let data = [];
-            let listImg = [];
+            const fetchAddProduct = async () => {
+                try {
 
-            for (let i = 0; i < listForm.length; i++) {
-                listImg[i] = []
-                $($(".list_img_product")[i]).find('img').map((z, x) => {
-                    listImg[i].push($(x).attr('src'));
-                })
-                data.push({
-                    variable: $($(".variable")[i]).val(),
-                    data: {
-                        avatar: $($(".Avatar")[i]).attr('src'),
-                        img: listImg[i],
-                    }
-                })
+                    let data = await addNewProduct(dataForm);
+                    console.log('add data product success', data);
+
+                } catch (error) {
+                    console.log('add product err 1');
+                }
             }
-            setDataForm(data);
+            fetchAddProduct();
             setCheckSubmit(false);
         }
     }, [checkSubmit])
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        let listForm = $('.card-body');
+        let data = [];
+        let listImg = [];
+
+        for (let i = 0; i < listForm.length; i++) {
+            listImg[i] = []
+            $($(".list_img_product")[i]).find('img').map((z, x) => {
+                listImg[i].push({ thumb: $(x).attr('src') });
+            })
+            data.push({
+                variable: $($(".variable")[i]).val(),
+                slug: $($(".slug")[0]).val(),
+                promotion: $(".form-select.promotion option:selected").val(),
+                company: $(".form-select.company option:selected").val(),
+                title: $("input.form-control.title").val(),
+                sale: $($("input.form-control.sale")[i]).val(),
+                price: $($("input.form-control.price")[i]).val(),
+                cost: $($("input.form-control.cost")[i]).val(),
+                data: {
+                    avatar: $($(".Avatar")[i]).attr('src'),
+                    img: listImg[i],
+                }
+            })
+        }
+        setDataForm(data);
         setCheckSubmit(true);
     }
     const handleAddVariable = () => {
@@ -84,6 +103,44 @@ export default function AddProduct({ handleRedirect }) {
                                 <svg className="svg-inline--fa fa-rotate-left" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="rotate-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M480 256c0 123.4-100.5 223.9-223.9 223.9c-48.84 0-95.17-15.58-134.2-44.86c-14.12-10.59-16.97-30.66-6.375-44.81c10.59-14.12 30.62-16.94 44.81-6.375c27.84 20.91 61 31.94 95.88 31.94C344.3 415.8 416 344.1 416 256s-71.69-159.8-159.8-159.8c-37.46 0-73.09 13.49-101.3 36.64l45.12 45.14c17.01 17.02 4.955 46.1-19.1 46.1H35.17C24.58 224.1 16 215.5 16 204.9V59.04c0-24.04 29.07-36.08 46.07-19.07l47.6 47.63C149.9 52.71 201.5 32.11 256.1 32.11C379.5 32.11 480 132.6 480 256z"></path></svg> Back
                             </Link>
                         </button>
+                    </div>
+                    <div className="form_product">
+                        <div className="row mb-3">
+                            <div className="col-md-6 mb-4 flex-100">
+                                <div className="form-floating mb-3 mb-md-0 form_input">
+                                    <input className="form-control title" id="" name="title" type="text" placeholder="Enter your title" />
+                                    <label htmlFor="title">Title</label>
+                                </div>
+                            </div>
+                            <div className="col-md-6 mb-4 ">
+                                <div className="form-floating mb-3 mb-md-0 form_input">
+                                    <input className="form-control slug" id="" name="slug" type="text" placeholder="Enter your slug" />
+                                    <label htmlFor="slug">slug</label>
+                                </div>
+                            </div>
+                            <div className="col-md-6 mb-4 ">
+                                <div className="form-floating mb-3 mb-md-0 form_input">
+                                    <select className="form-select promotion" id="" name="role" onChange={() => { }}>
+                                        <option value="true">true</option>
+                                        <option value='false'>false</option>
+                                    </select>
+                                    <label>promotion</label>
+                                </div>
+                            </div>
+                            <div className="col-md-6 mb-4 ">
+                                <div className="form-floating mb-3 mb-md-0 form_input">
+                                    <select className="form-select company" id="" name="role" onChange={() => { }}>
+                                        {
+                                            data?.map((e, i) =>
+                                                <option key={i} value={e.slug}>{e.title}</option>
+                                            )
+                                        }
+
+                                    </select>
+                                    <label>company</label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <CreateFormProduct listCompany={data} dataHandle={dataHandle} />
                     {

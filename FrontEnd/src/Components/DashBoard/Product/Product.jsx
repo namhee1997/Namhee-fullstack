@@ -1,8 +1,17 @@
 import { useEffect, useState } from "react";
 import Table from "../Other/Table";
-import { useStore } from "react-redux";
+import { getAllProduct } from "../../api/ApiProduct";
+import { useDispatch, useSelector, useStore } from "react-redux";
+import { loginSuccess } from "../../../Action/Action";
+import { axiosJWT } from "../../../AxiosJWT";
 
 export default function Product({ handleRedirect }) {
+    const dispatch = useDispatch();
+    const keyJwt = localStorage.getItem('token');
+    const user = handleRedirect.userCurrentByToken;
+
+    let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+
     useEffect(() => {
         handleRedirect.setCheckDirect(e => {
             let data = { ...e }
@@ -14,8 +23,20 @@ export default function Product({ handleRedirect }) {
     const [titleCurrent, setTilteCurrent] = useState(['title', 'slug', 'sale', 'price', 'avatar', 'cost', 'promotion', 'company', 'variable', 'infophone']);
     const [dataCurrent, setDataCurrent] = useState([]);
     useEffect(() => {
-        setDataCurrent(store.getState().infoPhone.dataPhones);
+        // setDataCurrent(store.getState().infoPhone.dataPhones);
+        const fetchGetAllProduct = async () => {
+            try {
+                let data = await getAllProduct(keyJwt, axiosJwt);
+                console.log('get all product success 1', data);
+                setDataCurrent(data);
+            } catch (error) {
+                console.log('get all product err 1');
+            }
+        }
+        fetchGetAllProduct();
     }, [])
+    console.log(dataCurrent, 'dataCurrent');
+
 
     return (
         <div className="container_user_dashboard">
