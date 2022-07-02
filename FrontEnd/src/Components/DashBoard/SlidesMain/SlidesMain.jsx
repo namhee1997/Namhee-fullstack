@@ -1,8 +1,16 @@
 import { useEffect, useState } from "react";
 import ChangeFileImages from "./ChangeFileImages/ChangeFileImages";
 import { useDispatch, useSelector, useStore } from "react-redux";
+import { getAllSlidesCustom, addNewSlidesCustom, updateSlidesCustom } from "../../api/ApiSlidesCustom";
+import { axiosJWT } from "../../../AxiosJWT";
+import { loginSuccess } from "../../../Action/Action";
 
 export default function SlidesMain({ handleRedirect }) {
+
+    const keyJwt = localStorage.getItem('token');
+    const dispatch = useDispatch();
+    const user = handleRedirect.userCurrentByToken;
+
     useEffect(() => {
         handleRedirect.setCheckDirect(e => {
             let data = { ...e }
@@ -12,35 +20,51 @@ export default function SlidesMain({ handleRedirect }) {
     }, [])
     const store = useStore()
 
+    // const bannerMainRedux = useSelector(e => e.bannerMain.list);
+    // useEffect(() => {
+    //     setBannerMain(bannerMainRedux);
+    // }, [])
+
     const [totalSlidesMain, setTotalSlidesMain] = useState([]);
     const [totalSlidesPage, setTotalSlidesPage] = useState([]);
 
     const [numberSlideMain, setNumberSlideMain] = useState(1);
     const [checkChangeIs, setCheckChangeIs] = useState(true);
     const [checkChangeIsPage, setCheckChangeIsPage] = useState(true);
+    const [checkOnchange, setCheckOnchange] = useState(false);
     //Slides main
 
-    const [slidesMain, setSlidesMain] = useState([
-        { url: '/static/media/banner2.b496451f.webp', id: 123 },
-        { url: '/static/media/banner2.b496451f.webp', id: 124 },
-        { url: '/static/media/banner2.b496451f.webp', id: 125 },
-    ]);
+    const [slidesMain, setSlidesMain] = useState([]);
     //end Slides main
 
     //banner main
     const [bannerMain, setBannerMain] = useState([]);
-    const bannerMainRedux = useSelector(e => e.bannerMain.list);
-    useEffect(() => {
-        setBannerMain(bannerMainRedux);
-    }, [])
+    const [idSlide, setIdSlide] = useState();
+
     //end banner main
 
     //Slides page
 
-    const [slidesPage, setSlidesPage] = useState([
-        { url: '/static/media/banner2.b496451f.webp', id: 4435 },
-        { url: '/static/media/banner2.b496451f.webp', id: 3456 },
-    ]);
+    const [slidesPage, setSlidesPage] = useState([]);
+    const [reRender, setReRender] = useState(true);
+
+    useEffect(() => {
+        let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+        const fetchGetAllSlides = async () => {
+            try {
+                let data = await getAllSlidesCustom(keyJwt, axiosJwt);
+                console.log('get all slide success', data);
+                setBannerMain(data[0].bannermain);
+                setSlidesPage(data[0].slidespage);
+                setSlidesMain(data[0].slidesmain);
+                setIdSlide(data[0]._id);
+            } catch (error) {
+                console.log('get all slide err 1');
+            }
+        }
+        fetchGetAllSlides();
+
+    }, [reRender])
     //end Slides page
 
     const [handleChangSlidesMain, setHandleChangSlidesMain] = useState([]);
@@ -65,35 +89,34 @@ export default function SlidesMain({ handleRedirect }) {
             { id: numberSlideMain, url: '', element: <ChangeFileImages section='slidesPage' data={data} /> }
         ]);
     }
-
+    const [removeBannerRerender, setRemoveBannerRerender] = useState(true);
 
     const handleRemoveSlidesMain = (id) => {
-        setCheckChangeIs(true);
+        console.log('remove slides main', id);
 
-        let arrSlidesMain = slidesMain;
-        let arrNewSlidesMain = handleChangSlidesMain;
-        let arrNewSlidesMainChange = dataChange;
-        let resultSlidesMain = arrSlidesMain.filter(e => e.id !== id);
-        let resultNewSlidesMain = arrNewSlidesMain.filter(e => e.id !== id);
-        let resultNewSlidesMainChange = arrNewSlidesMainChange.filter(e => e.id !== id);
+        setSlidesMain(zx => {
+            let data = [...zx];
+            let resultBannerPages = data.filter(e => e._id != id);
 
-        setSlidesMain(resultSlidesMain);
-        setHandleChangSlidesMain(resultNewSlidesMain);
-        setDataChange(resultNewSlidesMainChange);
+            return resultBannerPages;
+        });
+
+        setRemoveBannerRerender(!removeBannerRerender);
     }
 
     const handleRemoveSlidesPage = (id) => { //banner page
-        setCheckChangeIsPage(true);
 
-        let arrSlidesMain = slidesPage;
-        let arrNewSlidesMain = handleChangSlidesPage;
-        let arrNewSlidesMainChange = dataChangePage;
-        let resultSlidesMain = arrSlidesMain.filter(e => e.id !== id);
-        let resultNewSlidesMain = arrNewSlidesMain.filter(e => e.id !== id);
-        let resultNewSlidesMainChange = arrNewSlidesMainChange.filter(e => e.id !== id);
-        setSlidesPage(resultSlidesMain);
-        setHandleChangSlidesPage(resultNewSlidesMain);
-        setDataChangePage(resultNewSlidesMainChange);
+        console.log('remove banner pages', id);
+
+        setSlidesPage(zx => {
+            let data = [...zx];
+            let resultBannerPages = data.filter(e => e._id != id);
+
+            return resultBannerPages;
+        });
+
+        setRemoveBannerRerender(!removeBannerRerender);
+
     }
 
     let data = {
@@ -104,7 +127,12 @@ export default function SlidesMain({ handleRedirect }) {
         dataChangePage,
         setCheckChangeIs,
         setCheckChangeIsPage,
-        bannerMain,
+        setReRender,
+        setBannerMain,
+        setSlidesMain,
+        setSlidesPage,
+        setCheckOnchange,
+        removeBannerRerender,
     }
 
     useEffect(() => {
@@ -112,10 +140,52 @@ export default function SlidesMain({ handleRedirect }) {
         setTotalSlidesPage(slidesPage.concat(dataChangePage));
     }, [slidesMain, slidesPage, dataChange, dataChangePage])
 
+    const [resultSlides, setResultSlides] = useState({});
+
+    useEffect(() => {
+        if (Object.keys(resultSlides).length > 0) {
+            const fetchAddSlides = async () => {
+                try {
+                    // let data = await addNewSlidesCustom(resultSlides);
+                    let data = await updateSlidesCustom(resultSlides);
+                    console.log('add slide success', data);
+
+                } catch (error) {
+                    console.log('add slides err 1');
+                }
+            };
+            fetchAddSlides();
+
+        }
+    }, [resultSlides])
+
     const submitSlides = () => {
-        const bannerMain = store.getState().bannerMain.list;
-        console.log('submit', bannerMain, 'main', totalSlidesMain, 'page', totalSlidesPage);
+        // const bannerMain = store.getState().bannerMain.list;
+        setResultSlides(e => {
+            let data = {
+                slidesmain: totalSlidesMain,
+                bannermain: bannerMain,
+                slidespage: totalSlidesPage,
+                _id: idSlide
+            };
+
+            console.log(data, 'data send to be');
+
+            return data;
+        })
     }
+
+    useEffect(() => {
+        if (checkOnchange) {
+            setSlidesPage(totalSlidesPage);
+            setSlidesMain(totalSlidesMain);
+            setCheckOnchange(false);
+            setHandleChangSlidesMain([]);
+            setHandleChangSlidesPage([]);
+        }
+    }, [checkOnchange])
+
+    // console.log(slidesMain, 'slidesMain', bannerMain, 'bannermain');
 
     return (
         <div className="container_user_dashboard slides">
@@ -127,8 +197,8 @@ export default function SlidesMain({ handleRedirect }) {
                             return (
 
                                 <li key={i}>
-                                    <ChangeFileImages url={e.url} section='slidesMain' data={data} />
-                                    <div className="remove_banner" onClick={() => handleRemoveSlidesMain(e.id)}>
+                                    <ChangeFileImages url={e.url} section='slidesMain' data={data} dataState={e} />
+                                    <div className="remove_banner" onClick={() => handleRemoveSlidesMain(e._id)}>
                                         <i className="fa-solid fa-trash-can "></i>
                                     </div>
                                 </li>
@@ -140,7 +210,7 @@ export default function SlidesMain({ handleRedirect }) {
                             return (
                                 <li key={i}>
                                     {e?.element}
-                                    <div className="remove_banner" onClick={() => handleRemoveSlidesMain(e?.id)}>
+                                    <div className="remove_banner" onClick={() => handleRemoveSlidesMain(e?._id)}>
                                         <i className="fa-solid fa-trash-can "></i>
                                     </div>
                                 </li>
@@ -181,8 +251,8 @@ export default function SlidesMain({ handleRedirect }) {
                     {
                         slidesPage.map((e, i) =>
                             <li key={i}>
-                                <ChangeFileImages url={e.url} section='slidesPage' data={data} />
-                                <div className="remove_banner" onClick={() => handleRemoveSlidesPage(e?.id)}>
+                                <ChangeFileImages url={e.url} section='slidesPage' data={data} dataState={e} />
+                                <div className="remove_banner" onClick={() => handleRemoveSlidesPage(e?._id)}>
                                     <i className="fa-solid fa-trash-can "></i>
                                 </div>
                             </li>
@@ -193,7 +263,7 @@ export default function SlidesMain({ handleRedirect }) {
                             return (
                                 <li key={i}>
                                     {e?.element}
-                                    <div className="remove_banner" onClick={() => handleRemoveSlidesPage(e?.id)}>
+                                    <div className="remove_banner" onClick={() => handleRemoveSlidesPage(e?._id)}>
                                         <i className="fa-solid fa-trash-can "></i>
                                     </div>
                                 </li>

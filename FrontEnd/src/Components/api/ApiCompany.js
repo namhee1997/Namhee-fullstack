@@ -1,17 +1,17 @@
 import axios from './Axios';
 
-export const addNewProduct = async (product) => {
+export const addNewCompany = async (company) => {
     try {
-        let data = await axios.post("/v1/product/add-product", product);
+        let data = await axios.post("/v1/company/add-company", company);
         return 'success';
     } catch (error) {
         return 'fail';
     }
 }
 
-export const getAllProduct = async (accessToken, axiosJWT) => {
+export const getAllCompany = async (accessToken, axiosJWT) => {
     try {
-        let res = await axiosJWT.get("/v1/product/get-all", {
+        let res = await axiosJWT.get("/v1/company/get-all", {
             headers: { token: `Bearer ${accessToken}` },
         });
 
@@ -22,9 +22,9 @@ export const getAllProduct = async (accessToken, axiosJWT) => {
     }
 }
 
-export const getProductById = async (accessToken, axiosJWT, slug) => {
+export const getCompanyById = async (accessToken, axiosJWT, slug) => {
     try {
-        let res = await axiosJWT.get(`/v1/product/get-by-id/${slug}`, {
+        let res = await axiosJWT.get(`/v1/company/get-by-id/${slug}`, {
             headers: { token: `Bearer ${accessToken}` },
         });
         return res?.data;
@@ -33,21 +33,21 @@ export const getProductById = async (accessToken, axiosJWT, slug) => {
     }
 }
 
-export const updateProduct = async (data) => {
+export const updateCompany = async (data) => {
     try {
-        let res = await axios.post("/v1/product/update-product", data);
+        let res = await axios.post("/v1/company/update-company", data);
         return 'success';
     } catch (error) {
         return 'fail';
     }
 }
 
-export const deleteProduct = async (accessToken, axiosJWT, id) => {
+export const deleteCompany = async (accessToken, axiosJWT, id) => {
     try {
-        let res = await axiosJWT.delete(`/v1/product/delete/${id}`, {
+        let res = await axiosJWT.delete(`/v1/company/delete/${id}`, {
             headers: { token: `Bearer ${accessToken}` },
         });
-        console.log('remove product success');
+        console.log('remove company success');
 
         return 'success';
     } catch (error) {

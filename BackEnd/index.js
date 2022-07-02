@@ -5,8 +5,10 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/auth.routes');
 const userRouter = require('./routes/user.routes');
+const companyRouter = require('./routes/company.routes');
 const cloudRoutes = require('./routes/cloud.routes');
 const productRoutes = require('./routes/product.routes');
+const slidesCustomRoutes = require('./routes/slidesCustom.routes');
 const dbUser = require('./model/User');
 const dbProduct = require('./model/Product');
 const bcrypt = require('bcryptjs');
@@ -15,8 +17,8 @@ const app = express();
 
 app.use(cors());
 app.use(cookieParser());
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb' }));
+// app.use(express.json({ limit: '50mb' }));
+// app.use(express.urlencoded({ limit: '50mb' }));
 
 mongoose
     .connect(process.env.DB_MONGOO, {
@@ -101,6 +103,8 @@ app.use('/v1/auth', authRoutes);
 app.use('/v1/user', userRouter);
 app.use('/v1/cloud', cloudRoutes);
 app.use('/v1/product', productRoutes);
+app.use('/v1/company', companyRouter);
+app.use('/v1/slides', slidesCustomRoutes);
 
 app.listen(8080, () => {
     console.log('is running server success!');

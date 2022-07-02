@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import CreateForm from '../Other/CreateForm';
 import { useStore, useSelector } from 'react-redux';
+import { addNewCompany } from '../../api/ApiCompany';
 
 export default function AddCompany({ handleRedirect }) {
     useEffect(() => {
@@ -19,11 +20,33 @@ export default function AddCompany({ handleRedirect }) {
 
     const [dataForm, setDataForm] = useState({});
     const [dataAvatar, setDataAvatar] = useState('');
+    const [eventSubmit, setEventSubmit] = useState(false);
 
     let dataHandle = {
         setDataForm,
         setDataAvatar,
+        setEventSubmit,
     }
+
+    useEffect(() => {
+
+        if (Object.keys(dataForm).length > 0 && eventSubmit) {
+            const fetchUserList = async () => {
+                try {
+                    let data = await addNewCompany(dataForm);
+                    console.log('add new success', data);
+                    setEventSubmit(false);
+                } catch (error) {
+                    setEventSubmit(false);
+                    console.log('Failed to fetch company list: ', error);
+                }
+            }
+
+            fetchUserList();
+        }
+
+    }, [dataForm])
+
     console.log(dataForm, 'dataForm', dataAvatar);
 
     return (

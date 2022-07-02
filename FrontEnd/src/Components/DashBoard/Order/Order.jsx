@@ -22,7 +22,7 @@ export default function Order({ handleRedirect }) {
         {
             username: 'ct', role: 'user',
             fullname: 'nguyen van a',
-            avatar: 'https://res.cloudinary.com/dungdv/image/upload/v1652753864/ccohkl7gwrnajs8qgtfi.png',
+            avatar: '',
             address: 'vinh nghe an', email: 'nunal0889@gmail.com',
             phone: '0968796293', userId: 1
         }

@@ -28,14 +28,10 @@ let productController = {
     },
     deleteProduct: async (req, res) => {
         try {
-            Product.remove({
-                idPhone: req.params.id
-            }, function (err, product) {
-                if (err)
-                    return console.error(err);
+            let data = await Product.deleteOne({ _id: req.params.id });
+            res.status(200).json('success');
 
-                res.status(200).json("delete success!");
-            });
+
         } catch (error) {
             res.status(500).json({ error });
         }
@@ -87,8 +83,9 @@ let productController = {
     updateProduct: async (req, res) => {
         try {
             let product = req.body;
-            console.log('updateUser', product);
+            console.log('updateProduct', product);
             let data = await Product.findByIdAndUpdate(product._id, product);
+            console.log('update success product');
             return res.status(200).json('success');
         } catch (error) {
             res.status(500).json({ error });

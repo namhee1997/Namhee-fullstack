@@ -10,7 +10,6 @@ export default function EditUser({ handleRedirect }) {
     const keyJwt = localStorage.getItem('token');
     const dispatch = useDispatch();
     const user = handleRedirect.userCurrentByToken;
-    let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
 
     useEffect(() => {
         handleRedirect.setCheckDirect(e => {
@@ -25,6 +24,7 @@ export default function EditUser({ handleRedirect }) {
     const [handleSubmit, setHandleSubmit] = useState(false);
     let dataHandle = { setDataChangeNew, setHandleSubmit };
     useEffect(() => {
+        let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
         const fetchUserByid = async () => {
             try {
                 let data = await getUserById(keyJwt, axiosJwt, param.id);
@@ -53,7 +53,7 @@ export default function EditUser({ handleRedirect }) {
         }
     }, [handleSubmit])
 
-    console.log(dataChangeNew, 'dataChangeNew');
+    // console.log(dataChangeNew, 'dataChangeNew');
 
 
     return (

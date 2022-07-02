@@ -1,17 +1,17 @@
 import axios from './Axios';
 
-export const addNewProduct = async (product) => {
+export const addNewSlidesCustom = async (slides) => {
     try {
-        let data = await axios.post("/v1/product/add-product", product);
+        let data = await axios.post("/v1/slides/add-slides", slides);
         return 'success';
     } catch (error) {
         return 'fail';
     }
 }
 
-export const getAllProduct = async (accessToken, axiosJWT) => {
+export const getAllSlidesCustom = async (accessToken, axiosJWT) => {
     try {
-        let res = await axiosJWT.get("/v1/product/get-all", {
+        let res = await axiosJWT.get("/v1/slides/get-all", {
             headers: { token: `Bearer ${accessToken}` },
         });
 
@@ -22,9 +22,9 @@ export const getAllProduct = async (accessToken, axiosJWT) => {
     }
 }
 
-export const getProductById = async (accessToken, axiosJWT, slug) => {
+export const getSlidesCustomById = async (accessToken, axiosJWT, slug) => {
     try {
-        let res = await axiosJWT.get(`/v1/product/get-by-id/${slug}`, {
+        let res = await axiosJWT.get(`/v1/slides/get-by-id/${slug}`, {
             headers: { token: `Bearer ${accessToken}` },
         });
         return res?.data;
@@ -33,21 +33,21 @@ export const getProductById = async (accessToken, axiosJWT, slug) => {
     }
 }
 
-export const updateProduct = async (data) => {
+export const updateSlidesCustom = async (data) => {
     try {
-        let res = await axios.post("/v1/product/update-product", data);
+        let res = await axios.post("/v1/slides/update-slides", data);
         return 'success';
     } catch (error) {
         return 'fail';
     }
 }
 
-export const deleteProduct = async (accessToken, axiosJWT, id) => {
+export const deleteSlidesCustom = async (accessToken, axiosJWT, id) => {
     try {
-        let res = await axiosJWT.delete(`/v1/product/delete/${id}`, {
+        let res = await axiosJWT.delete(`/v1/slides/delete/${id}`, {
             headers: { token: `Bearer ${accessToken}` },
         });
-        console.log('remove product success');
+        console.log('remove slides success');
 
         return 'success';
     } catch (error) {

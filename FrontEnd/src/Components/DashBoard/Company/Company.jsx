@@ -1,8 +1,17 @@
 import { useStore } from "react-redux";
 import { useEffect, useState } from "react";
 import Table from "../Other/Table";
+import { useDispatch } from "react-redux";
+import { getAllCompany } from "../../api/ApiCompany";
+import { axiosJWT } from "../../../AxiosJWT";
+import { loginSuccess } from "../../../Action/Action";
 
 export default function Company({ handleRedirect }) {
+
+    const keyJwt = localStorage.getItem('token');
+    const dispatch = useDispatch();
+    const user = handleRedirect.userCurrentByToken;
+
     useEffect(() => {
         handleRedirect.setCheckDirect(e => {
             let data = { ...e }
@@ -13,13 +22,28 @@ export default function Company({ handleRedirect }) {
     const store = useStore();
     const [titleCurrent, setTilteCurrent] = useState(['title', 'slug', 'avatar']);
     const [dataCurrent, setDataCurrent] = useState([]);
+    const [reRender, setReRender] = useState(true);
     useEffect(() => {
-        setDataCurrent(store.getState().companyPhone.list);
-    }, [])
+        let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+
+        const fetchGetAllCompany = async () => {
+            try {
+                let data = await getAllCompany(keyJwt, axiosJwt);
+                console.log('get all data success', data);
+                setDataCurrent(data);
+            } catch (error) {
+                console.log('get all company err 1');
+            }
+        };
+        fetchGetAllCompany();
+        // setDataCurrent(store.getState().companyPhone.list);
+    }, [reRender])
+    let handleReRender = { setReRender };
     return (
         <div className="container_user_dashboard">
             <Table dataTitle={titleCurrent} dataCurrent={dataCurrent} thisPage='Company' title='Company'
                 linkCreate="/dashboard/company/create"
+                handleReRender={handleReRender}
             />
         </div>
     );

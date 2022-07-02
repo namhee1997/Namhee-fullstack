@@ -10,7 +10,6 @@ export default function Product({ handleRedirect }) {
     const keyJwt = localStorage.getItem('token');
     const user = handleRedirect.userCurrentByToken;
 
-    let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
 
     useEffect(() => {
         handleRedirect.setCheckDirect(e => {
@@ -22,8 +21,9 @@ export default function Product({ handleRedirect }) {
     const store = useStore();
     const [titleCurrent, setTilteCurrent] = useState(['title', 'slug', 'sale', 'price', 'avatar', 'cost', 'promotion', 'company', 'variable', 'infophone']);
     const [dataCurrent, setDataCurrent] = useState([]);
+    const [reRender, setReRender] = useState(true);
     useEffect(() => {
-        // setDataCurrent(store.getState().infoPhone.dataPhones);
+        let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
         const fetchGetAllProduct = async () => {
             try {
                 let data = await getAllProduct(keyJwt, axiosJwt);
@@ -34,8 +34,9 @@ export default function Product({ handleRedirect }) {
             }
         }
         fetchGetAllProduct();
-    }, [])
-    console.log(dataCurrent, 'dataCurrent');
+    }, [reRender])
+    let handleReRender = { setReRender };
+    // console.log(dataCurrent, 'dataCurrent');
 
 
     return (
@@ -43,6 +44,7 @@ export default function Product({ handleRedirect }) {
             <Table dataTitle={titleCurrent} dataCurrent={dataCurrent} thisPage='Product'
                 title='Product'
                 linkCreate="/dashboard/product/create"
+                handleReRender={handleReRender}
             />
         </div>
     );

@@ -28,6 +28,7 @@ export const axiosJWT = (user, dispatch, stateSuccess, keyJwt = '') => {
                     ...user,
                     accessToken: data.accessToken,
                 }
+                localStorage.setItem('token', data.accessToken);
                 dispatch(stateSuccess(refreshUser));
                 config.headers['token'] = `Bearer ${data.accessToken}`;
             }

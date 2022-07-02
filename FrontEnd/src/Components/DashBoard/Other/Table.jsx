@@ -5,6 +5,8 @@ import jwtDecode from 'jwt-decode';
 import { axiosJWT } from "../../../AxiosJWT";
 import { useDispatch, useSelector } from "react-redux";
 import { loginSuccess } from "../../../Action/Action";
+import { deleteProduct } from "../../api/ApiProduct";
+import { deleteCompany } from "../../api/ApiCompany";
 
 
 export default function Table({ title = '', dataCurrent = [],
@@ -14,12 +16,34 @@ export default function Table({ title = '', dataCurrent = [],
     const keyJwt = localStorage.getItem('token');
     const dispatch = useDispatch();
     const user = jwtDecode(keyJwt);
-    let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
 
     const fetchDeleteUser = async (e, id) => {
         e.preventDefault();
+        let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
         try {
             let data = await deleteUser(keyJwt, axiosJwt, id);
+            handleReRender.setReRender(e => !e);
+        } catch (error) {
+            console.log('delete err');
+        }
+    }
+
+    const fetchDeleteProduct = async (e, id) => {
+        e.preventDefault();
+        let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+        try {
+            let data = await deleteProduct(keyJwt, axiosJwt, id);
+            handleReRender.setReRender(e => !e);
+        } catch (error) {
+            console.log('delete err');
+        }
+    }
+
+    const fetchDeleteCompany = async (e, id) => {
+        e.preventDefault();
+        let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+        try {
+            let data = await deleteCompany(keyJwt, axiosJwt, id);
             handleReRender.setReRender(e => !e);
         } catch (error) {
             console.log('delete err');
@@ -158,7 +182,8 @@ export default function Table({ title = '', dataCurrent = [],
                                             <td>
                                                 <div className="btn-group" role="group" aria-label="Basic example">
                                                     <button type="button" className="btn btn-danger">
-                                                        <Link to={`/dashboard/product/delete/${e.slug}`}>
+                                                        <Link to={`/dashboard/product/delete/${e.slug}`}
+                                                            onClick={(b) => fetchDeleteProduct(b, e._id)}>
                                                             <i className="fa-solid fa-trash-can text-white"></i>
                                                         </Link>
                                                     </button>
@@ -192,7 +217,7 @@ export default function Table({ title = '', dataCurrent = [],
                                                 <td>
                                                     <div className="btn-group" role="group" aria-label="Basic example">
                                                         <button type="button" className="btn btn-danger">
-                                                            <Link to={`/dashboard/company/delete/${e.slug}`}>
+                                                            <Link to={`/dashboard/company/delete/${e.slug}`} onClick={(v) => fetchDeleteCompany(v, e._id)}>
                                                                 <i className="fa-solid fa-trash-can text-white"></i>
                                                             </Link>
                                                         </button>

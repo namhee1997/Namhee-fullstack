@@ -19,7 +19,7 @@ export default function EditNews({ handleRedirect }) {
     useEffect(() => {
         setDataCurrent(store.getState().newsList.list[0]);
     }, [])
-    console.log(dataChangeNew, 'dataChangeNew');
+    // console.log(dataChangeNew, 'dataChangeNew');
 
     return (
         <div className="container_user_dashboard">

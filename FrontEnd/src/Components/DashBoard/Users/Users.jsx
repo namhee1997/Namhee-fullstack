@@ -10,7 +10,6 @@ export default function Users({ handleRedirect }) {
     const keyJwt = localStorage.getItem('token');
     const user = handleRedirect.userCurrentByToken;
 
-    let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
 
     useEffect(() => {
         handleRedirect.setCheckDirect(e => {
@@ -24,6 +23,7 @@ export default function Users({ handleRedirect }) {
     const [reRender, setReRender] = useState(true);
     useEffect(() => {
 
+        let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
         const fetchAllUser = async () => {
             try {
                 let data = await getAllUser(keyJwt, axiosJwt);

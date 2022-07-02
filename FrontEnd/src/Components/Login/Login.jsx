@@ -29,7 +29,12 @@ const Login = () => {
     }, [])
     useEffect(() => {
         if (userCurrentByToken?.role !== undefined) {
-            navigate('/');
+            let date = new Date();
+            if (userCurrentByToken.exp < date.getTime() / 1000) {
+                navigate('/login');
+            } else {
+                navigate('/');
+            }
         }
     }, [userCurrentByToken])
     // check logger
@@ -44,7 +49,12 @@ const Login = () => {
                 localStorage.setItem('token', e);
                 let obj = jwtDecode(e);
                 if (obj.isDashBoard == false) {
-                    navigate('/');
+                    let date = new Date();
+                    if (obj.exp < date.getTime() / 1000) {
+                        navigate('/login');
+                    } else {
+                        navigate('/');
+                    }
                 }
             }
         }).catch((err) => {
@@ -52,6 +62,8 @@ const Login = () => {
         });
 
     }
+
+    console.log('rerender');
     return (
         <section className="login-container">
             <div className="login-title"> Log in</div>

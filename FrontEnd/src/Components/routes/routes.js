@@ -53,7 +53,13 @@ export default function Router() {
                 navigate('/login');
             } else if (tokenUserCurrent != '' && tokenUserCurrent && tokenUserCurrent != undefined && tokenUserCurrent != 'undefined') {
                 setCheckLogOut(false);
-                setUserCurrentByToken(jwtDecode(tokenUserCurrent));
+
+                let decodeToken = jwtDecode(tokenUserCurrent);
+                setUserCurrentByToken(decodeToken);
+                let date = new Date();
+                if (decodeToken.exp < date.getTime() / 1000) {
+                    navigate('/login');
+                }
             }
         } else {
             if (tokenUserCurrent == '' && checkDirect.dashBoard) {
@@ -65,10 +71,21 @@ export default function Router() {
                 if (data?.role == 'admin') {
                     if (data?.isDashBoard) {
                         setCheckLogOut(false);
+                        let decodeToken = jwtDecode(tokenUserCurrent);
+                        let date = new Date();
+                        if (decodeToken.exp < date.getTime() / 1000) {
+                            navigate('/login');
+                        }
                     }
                 } else {
                     setCheckLogOut(false);
-                    navigate('/');
+                    let decodeToken = jwtDecode(tokenUserCurrent);
+                    let date = new Date();
+                    if (decodeToken.exp < date.getTime() / 1000) {
+                        navigate('/login');
+                    } else {
+                        navigate('/');
+                    }
                 }
             }
         }

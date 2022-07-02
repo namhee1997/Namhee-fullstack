@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { sendImageToCloud } from "../../api/ApiUploadImage";
 import $ from 'jquery';
 
 export default function EditForm({ titleForm = '', thisPage = '', stateForm = {}, dataHandle }) {
@@ -9,37 +10,45 @@ export default function EditForm({ titleForm = '', thisPage = '', stateForm = {}
     const [checkSubmit, setCheckSubmit] = useState(false);
     const listAcceptTypeImg = ['image/png', 'image/jpeg'];
 
-    const handleChangeNew = (e, name, file = '') => {
+    const handleChangeNew = async (e, name, file = '', id) => {
 
         if (file == 'file') {
             let files = e.target.files;
             let fileType = (files[0]?.type);
-            let fileReader = new FileReader();
-            fileReader.addEventListener('load', () => {
-
+            if (files[0]) {
                 if (listAcceptTypeImg.includes(fileType)) {
+                    let fd = new FormData();
+                    fd.append('file', files[0]);
+                    let res = await sendImageToCloud(fd);
+
                     setDataChangeNew({
                         ...dataChangeNew,
-                        src: fileReader.result
+                        src: res.data.data.fileUrl,
+                        _id: id
                     });
+
                 } else {
-                    alert('not type support!');
+                    alert('img not support');
                 }
-            })
-            fileReader.readAsDataURL(files[0])
+            }
+
+
         } else {
             if (name == 'title') {
                 setDataChangeNew({
                     ...dataChangeNew,
-                    title: e.target.value
+                    title: e.target.value,
+                    _id: id
                 });
             }
             if (name == 'slug') {
                 setDataChangeNew({
                     ...dataChangeNew,
-                    slug: e.target.value
+                    slug: e.target.value,
+                    _id: id
                 });
             }
+
         }
 
 
@@ -47,8 +56,13 @@ export default function EditForm({ titleForm = '', thisPage = '', stateForm = {}
 
     useEffect(() => {
         if (checkSubmit) {
+            let data = {
+                _id: dataChangeNew._id,
+                title: dataChangeNew.title ? dataChangeNew.title : $("#title12").val(),
+                slug: dataChangeNew.slug ? dataChangeNew.slug : $("#slug1").val(),
+            };
             setTimeout(() => {
-                dataHandle.setDataChangeNew(dataChangeNew);
+                dataHandle.setDataChangeNew(data);
                 dataHandle.setCheckSubmit(true);
                 setCheckSubmit(false);
             }, 500);
@@ -59,6 +73,8 @@ export default function EditForm({ titleForm = '', thisPage = '', stateForm = {}
         e.preventDefault();
         setCheckSubmit(true);
     }
+
+    // console.log(dataChangeNew, 'dataChangeNewdataChangeNew');
 
 
     return (
@@ -88,7 +104,7 @@ export default function EditForm({ titleForm = '', thisPage = '', stateForm = {}
                                     name="title" type="text"
                                     placeholder="Enter your title12"
                                     value={dataChangeNew.title ? dataChangeNew?.title : stateForm?.title ? stateForm?.title : ''}
-                                    onChange={(e) => handleChangeNew(e, 'title')} />
+                                    onChange={(e) => handleChangeNew(e, 'title', '', stateForm?._id)} />
                                 <label htmlFor="title12">title</label>
                             </div>
                         </div>
@@ -98,7 +114,7 @@ export default function EditForm({ titleForm = '', thisPage = '', stateForm = {}
                                     name="slug11" type="text"
                                     placeholder="Enter your slug"
                                     value={dataChangeNew.slug ? dataChangeNew?.slug : stateForm?.slug ? stateForm?.slug : ''}
-                                    onChange={(e) => handleChangeNew(e, 'slug')} />
+                                    onChange={(e) => handleChangeNew(e, 'slug', '', stateForm?._id)} />
                                 <label htmlFor="slug1">slug</label>
                             </div>
                         </div>
@@ -109,7 +125,7 @@ export default function EditForm({ titleForm = '', thisPage = '', stateForm = {}
                             </div>
                             <div className="input-group">
                                 <input type="file" className="form-control" id="file"
-                                    onChange={(e) => handleChangeNew(e, 'src', 'file')}
+                                    onChange={(e) => handleChangeNew(e, 'src', 'file', stateForm?._id)}
                                     aria-describedby="image_button" aria-label="Upload" />
                             </div>
                         </div>

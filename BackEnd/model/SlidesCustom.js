@@ -3,30 +3,27 @@ const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const slidesCustomSchema = new mongoose.Schema(
     {
-        idslidesmain: {
+        idslidescustom: {
             type: Number,
             unique: true,
         },
-        slidesmain: {
-            type: mongoose.Schema.Types.Array,
-            ref: 'SlidesMain',
-        },
-        idbannermain: {
-            type: Number,
-            unique: true,
-        },
-        bannermain: {
-            type: mongoose.Schema.Types.Array,
-            ref: 'BannerMain',
-        },
-        idslidespage: {
-            type: Number,
-            unique: true,
-        },
-        slidespage: {
-            type: mongoose.Schema.Types.Array,
-            ref: 'SlidesPage',
-        },
+        slidesmain: [
+            {
+                url: String,
+            }
+        ],
+
+        bannermain: [
+            {
+                url: String,
+            }
+        ],
+
+        slidespage: [
+            {
+                url: String,
+            }
+        ],
 
     },
     {
@@ -42,9 +39,7 @@ slidesCustomSchema.statics.checkFound = async function (id) {
     return check;
 };
 
-slidesCustomSchema.plugin(AutoIncrement, { inc_field: 'idslidesmain' });
-slidesCustomSchema.plugin(AutoIncrement, { inc_field: 'idbannermain' });
-slidesCustomSchema.plugin(AutoIncrement, { inc_field: 'idslidespage' });
+slidesCustomSchema.plugin(AutoIncrement, { inc_field: 'idslidescustom' });
 
 
 const SlidesCustom = mongoose.model(

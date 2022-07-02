@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { getProductById } from '../../../api/ApiProduct';
+import { getProductById, updateProduct } from '../../../api/ApiProduct';
 import { loginSuccess } from "../../../../Action/Action";
 import { useDispatch, useStore } from "react-redux";
 import { axiosJWT } from "../../../../AxiosJWT";
@@ -17,10 +17,8 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
     const dispatch = useDispatch();
     const keyJwt = localStorage.getItem('token');
     const user = jwtDecode(keyJwt);
-    let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
 
     //end
-
 
     const [dataChangeCurrent, setDataChangeCurrent] = useState([]);
     const [dataChangeNew, setDataChangeNew] = useState({});
@@ -198,6 +196,7 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
 
     useEffect(() => {
 
+        let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
         const fetchByIdProduct = async () => {
             try {
                 let data = await getProductById(keyJwt, axiosJwt, params.slug);
@@ -220,10 +219,21 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
     useEffect(() => {
         if (checkSubmit) {
 
+            setTimeout(() => {
+                const fetchUpdateProduct = async () => {
+                    try {
+                        let data = await updateProduct(dataChangeNew);
+                        console.log('update success', data);
 
+                        return data;
+                    } catch (error) {
+                        console.log('update fail 1');
+                    }
+                }
+                fetchUpdateProduct();
 
-
-            setCheckSubmit(false);
+                setCheckSubmit(false);
+            }, 500);
         }
     }, [checkSubmit])
 
@@ -251,6 +261,7 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
             promotion: $(".form-select.promotion option:selected").val(),
             slug: $('input.form-control.slug').val(),
             title: $('input.form-control.title').val(),
+            _id: dataChangeCurrent[0]._id,
             infophone: {
                 chip: $('input#chip').val(),
                 screen: $('input#screen').val(),
@@ -264,7 +275,7 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
         setCheckSubmit(true);
     }
     //END SUBMIT
-    console.log('dataChangeCurrent', dataChangeNew);
+    // console.log('dataChangeCurrent', dataChangeNew);
     return (
         <div className="container-fluid px-4">
             <h1 className="mt-4">{titleForm}</h1>

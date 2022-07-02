@@ -43,7 +43,7 @@ export const loginUserDashBoard = async (user, dispatch, navigate) => {
         // const res = await axios.post("/v1/auth/login", user);
         // dispatch(loginSuccessDashBoard(res.data));
         dispatch(loginSuccessDashBoard(user.data));
-        navigate('/');
+        // navigate('/');
     } catch (error) {
         console.log(error);
     }
