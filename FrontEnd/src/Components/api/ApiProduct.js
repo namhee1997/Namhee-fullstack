@@ -33,6 +33,20 @@ export const getProductById = async (accessToken, axiosJWT, slug) => {
     }
 }
 
+export const getProductRelater = async (accessToken, axiosJWT, slug, exculed) => {
+    try {
+        let res = await axiosJWT.get(`/v1/product/getproductrelater/${slug}`, {
+            headers: { token: `Bearer ${accessToken}` },
+        });
+        let dataReturn = res?.data;
+        let filter = dataReturn.filter(e => e.idPhone != exculed);
+
+        return filter;
+    } catch (error) {
+        console.log('data relater get by id err');
+    }
+}
+
 export const updateProduct = async (data) => {
     try {
         let res = await axios.post("/v1/product/update-product", data);

@@ -70,7 +70,7 @@ export default function ItemsCart({ e, i, productPrice, handleNumber }) {
     return (
         <div key={i} className='box_list_cart' >
             <div className="thumb_cart_product">
-                <img src={e?.selected?.img[0]} alt="" />
+                <img src={(e?.selected?.listimg || []).length > 0 ? e?.selected?.listimg[0].thumb : ''} alt="" />
             </div>
             <div className="content_product_cart">
                 <div className="head_cart_product">

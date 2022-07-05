@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import CreateForm from '../Other/CreateForm';
 import { useStore, useSelector, useDispatch } from 'react-redux';
 import { addOrder } from '../../../Action/Action';
+import { addNewOrderSuccess } from '../../api/ApiOrderSuccess';
 
 export default function AddOrder({ handleRedirect }) {
     useEffect(() => {
@@ -31,10 +32,33 @@ export default function AddOrder({ handleRedirect }) {
     const [dataAvatar, setDataAvatar] = useState('');
     const [checkFirsRerender, setCheckFirsRerender] = useState(false);
 
+    const [eventSubmit, setEventSubmit] = useState(false);
+
     let dataHandle = {
         setDataForm,
         setDataAvatar,
+        setEventSubmit,
     }
+
+
+    useEffect(() => {
+
+        if (Object.keys(dataForm).length > 0 && eventSubmit) {
+            const fetchOrderSuccessList = async () => {
+                try {
+                    let data = await addNewOrderSuccess(dataForm);
+                    console.log('add new success', data);
+                    setEventSubmit(false);
+                } catch (error) {
+                    setEventSubmit(false);
+                    console.log('Failed to fetch company list: ', error);
+                }
+            }
+
+            fetchOrderSuccessList();
+        }
+
+    }, [dataForm])
 
     useEffect(() => {
         if (checkFirsRerender) {
@@ -46,7 +70,7 @@ export default function AddOrder({ handleRedirect }) {
     }, [dataForm])
 
 
-    console.log(dataForm, 'dataForm', dataAvatar);
+    // console.log(dataForm, 'dataForm', dataAvatar);
 
     return (
         <div className="container_user_dashboard">

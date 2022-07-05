@@ -20,16 +20,17 @@ const productSchema = new mongoose.Schema(
             {
                 idVariable: {
                     type: String,
-                    unique: true,
                     max: 8
                 },
                 avatar:
                 {
                     type: String,
+                    default: ''
                 },
                 title:
                 {
                     type: String,
+                    default: ''
                 }
                 ,
                 price: {

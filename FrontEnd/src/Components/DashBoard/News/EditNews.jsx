@@ -2,8 +2,18 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import EditForm from './EditFormNews';
 import { useStore } from 'react-redux';
+import { getNewsById, updateNews } from '../../api/ApiNews';
+import { axiosJWT } from "../../../AxiosJWT";
+import { loginSuccess } from "../../../Action/Action";
+import { useDispatch } from "react-redux";
+import jwtDecode from 'jwt-decode';
 
 export default function EditNews({ handleRedirect }) {
+
+    const dispatch = useDispatch();
+    const keyJwt = localStorage.getItem('token');
+    const user = jwtDecode(keyJwt);
+
     useEffect(() => {
         handleRedirect.setCheckDirect(e => {
             let data = { ...e }
@@ -15,10 +25,39 @@ export default function EditNews({ handleRedirect }) {
     const store = useStore();
     const [dataCurrent, setDataCurrent] = useState({});
     const [dataChangeNew, setDataChangeNew] = useState({});
-    let dataHandle = { setDataChangeNew };
+    const [eventSubmit, setEventSubmit] = useState(false);
+    let dataHandle = { setDataChangeNew, setEventSubmit };
     useEffect(() => {
-        setDataCurrent(store.getState().newsList.list[0]);
+        let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+
+        const fechGetByIdNews = async () => {
+            try {
+                let data = await getNewsById(keyJwt, axiosJwt, param.slug);
+                console.log('get by id success news', data);
+                setDataCurrent(data[0]);
+            } catch (error) {
+                console.log('get by id news err 1');
+            }
+        }
+        fechGetByIdNews();
     }, [])
+
+    useEffect(() => {
+        if (Object.keys(dataChangeNew).length > 0 && eventSubmit) {
+
+            const fetchEditNews = async () => {
+                try {
+                    let data = await updateNews(dataChangeNew);
+                    console.log('update news success ', data);
+                } catch (error) {
+                    console.log('update news err 1');
+                }
+            };
+            fetchEditNews();
+
+            setEventSubmit(false);
+        }
+    }, [dataChangeNew, eventSubmit])
     // console.log(dataChangeNew, 'dataChangeNew');
 
     return (

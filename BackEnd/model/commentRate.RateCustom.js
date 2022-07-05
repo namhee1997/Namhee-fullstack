@@ -1,27 +1,26 @@
 const mongoose = require("mongoose");
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const commentRateSchema = new mongoose.Schema(
     {
-        idrate: {
+        idrateComment: {
             type: Number,
-            unique: true,
         },
         start: {
-            type: String,
-            unique: true,
+            type: Number,
         },
         avt: {
             type: String,
-            unique: true,
         },
         user: {
             type: String,
-            unique: true,
         },
         title: {
             type: String,
-            unique: true,
-        }
+        },
+        idPhone: {
+            type: String,
+        },
     },
     {
         timestamps: true
@@ -31,10 +30,13 @@ const commentRateSchema = new mongoose.Schema(
 commentRateSchema.statics.checkFound = async function (id) {
     let check = await ListCommentRate.findOne({ _id: mongoose.Types.ObjectId(id) })
     if (!check) {
-        throw new Error(`ListCommentRate not found`);
+        return true;
+    } else {
+        return false;
     }
-    return check;
 };
+
+commentRateSchema.plugin(AutoIncrement, { inc_field: 'idrateComment' });
 
 const ListCommentRate = mongoose.model(
     "ListCommentRate", commentRateSchema);

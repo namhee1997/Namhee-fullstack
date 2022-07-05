@@ -9,7 +9,15 @@ const companyRouter = require('./routes/company.routes');
 const cloudRoutes = require('./routes/cloud.routes');
 const productRoutes = require('./routes/product.routes');
 const slidesCustomRoutes = require('./routes/slidesCustom.routes');
+const newsRoutes = require('./routes/news.routes');
+const orderSuccessRoutes = require('./routes/orderSuccess.routes');
+const orderUserRoutes = require('./routes/orderUser.routes');
+const cartRoutes = require('./routes/cart.routes');
+const rateProductRoutes = require('./routes/rateProduct.routes');
+const commentProductRoutes = require('./routes/commentProduct.routes');
+
 const dbUser = require('./model/User');
+const dbUserOrder = require('./model/OrderUser');
 const dbProduct = require('./model/Product');
 const bcrypt = require('bcryptjs');
 
@@ -28,6 +36,7 @@ mongoose
     .then(() => {
         console.log('CONNECTED MONGODB');
         initial();
+        initialOrderUser();
         // initialProduct()
     })
     .catch(err => {
@@ -54,6 +63,27 @@ function initial() {
                     console.log("init error", err);
                 }
                 console.log("create admin");
+            })
+        }
+    })
+}
+
+function initialOrderUser() {
+    dbUserOrder.estimatedDocumentCount((err, count) => {
+        if (!err && count === 0) {
+            new dbUserOrder({
+                slug: 'iphone_11',
+                title: 'iphone 11',
+                price: 100000,
+                cost: 120000,
+                userbuy: 'U0002',
+                promotion: 1,
+                idPhone: 't1'
+            }).save((err, user) => {
+                if (err) {
+                    console.log("init error", err);
+                }
+                console.log("create order");
             })
         }
     })
@@ -105,6 +135,12 @@ app.use('/v1/cloud', cloudRoutes);
 app.use('/v1/product', productRoutes);
 app.use('/v1/company', companyRouter);
 app.use('/v1/slides', slidesCustomRoutes);
+app.use('/v1/news', newsRoutes);
+app.use('/v1/order-success', orderSuccessRoutes);
+app.use('/v1/order-user', orderUserRoutes);
+app.use('/v1/cart', cartRoutes);
+app.use('/v1/rate-product', rateProductRoutes);
+app.use('/v1/comment-product', commentProductRoutes);
 
 app.listen(8080, () => {
     console.log('is running server success!');

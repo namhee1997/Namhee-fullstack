@@ -66,6 +66,12 @@ export default function AddProduct({ handleRedirect }) {
                 data: {
                     avatar: $($(".Avatar")[i]).attr('src'),
                     img: listImg[i],
+                },
+                infophone: {
+                    chip: $("#chip").val(),
+                    memory: $("#memory").val(),
+                    ram: $("#ram").val(),
+                    screen: $("#screen").val(),
                 }
             })
         }
@@ -138,6 +144,42 @@ export default function AddProduct({ handleRedirect }) {
 
                                     </select>
                                     <label>company</label>
+                                </div>
+                            </div>
+                            <div className="col-md-6 mb-4">
+                                <div className="form-floating mb-3 mb-md-0 form_input">
+                                    <input className="form-control" id="chip"
+                                        name="chip" type="text"
+                                        placeholder="Enter your chip"
+                                    />
+                                    <label htmlFor="chip">chip</label>
+                                </div>
+                            </div>
+                            <div className="col-md-6 mb-4">
+                                <div className="form-floating mb-3 mb-md-0 form_input">
+                                    <input className="form-control" id="screen"
+                                        name="screen" type="text"
+                                        placeholder="Enter your screen"
+                                    />
+                                    <label htmlFor="screen">screen</label>
+                                </div>
+                            </div>
+                            <div className="col-md-6 mb-4">
+                                <div className="form-floating mb-3 mb-md-0 form_input">
+                                    <input className="form-control" id="ram"
+                                        name="ram" type="text"
+                                        placeholder="Enter your ram"
+                                    />
+                                    <label htmlFor="ram">ram</label>
+                                </div>
+                            </div>
+                            <div className="col-md-6 mb-4">
+                                <div className="form-floating mb-3 mb-md-0 form_input">
+                                    <input className="form-control" id="memory"
+                                        name="memory" type="text"
+                                        placeholder="Enter your memory"
+                                    />
+                                    <label htmlFor="memory">memory</label>
                                 </div>
                             </div>
                         </div>

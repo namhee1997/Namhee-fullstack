@@ -230,6 +230,8 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
                         console.log('update fail 1');
                     }
                 }
+
+
                 fetchUpdateProduct();
 
                 setCheckSubmit(false);
@@ -243,19 +245,38 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
         let listImgArr = [];
         for (let i = 0; i < $('.break_div_edit').length; i++) {
             listImgArr[i] = []
-            $($(".box_item_img.edit_product")[i]).find('img').map((z, x) => {
-                listImgArr[i].push({ thumb: $(x).attr('src') });
-            })
+
+            for (let zx = 0; zx < $(`.list_number${i}`).length; zx++) {
+                if ($($(`.list_number${i} img`)[zx]).attr('id')) {
+
+                    listImgArr[i].push(
+                        {
+                            thumb: $($(`.list_number${i} img`)[zx]).attr('src'),
+                            // _id: $($(`.list_number${i} img`)[zx]).attr('id') || ''
+                        }
+                    );
+                } else {
+                    listImgArr[i].push(
+                        {
+                            thumb: $($(`.list_number${i} img`)[zx]).attr('src'),
+                        }
+                    );
+                }
+
+            }
+
             let obj = {
                 avatar: $($('.box_img.string')[i]).find('img').attr('src'),
-                cost: $($('input.cost')[i]).val(),
+                cost: parseInt($($('input.cost')[i]).val()),
                 listimg: listImgArr[i],
-                price: $($('input.price')[i]).val(),
-                sale: $($('input.sale')[i]).val(),
+                price: parseInt($($('input.price')[i]).val()),
+                sale: parseInt($($('input.sale')[i]).val()),
                 title: $($('input.variable')[i]).val(),
+                idVariable: $($('.break_div_edit')[i]).attr('idvariable'),
             };
             arrVariable.push(obj);
         }
+
         let data = {
             company: $('select.form-select.company option:selected').val(),
             promotion: $(".form-select.promotion option:selected").val(),
@@ -389,7 +410,7 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
                         {
                             dataChangeCurrent[0]?.variable?.map((z, x) => {
                                 return (
-                                    <div className="break_div_edit" key={x}>
+                                    <div className="break_div_edit" key={x} idVariable={z.idVariable}>
                                         <div className="row mb-3">
                                             <div className="col-md-6 mb-4">
                                                 <div className="form-floating mb-3 mb-md-0">
@@ -418,8 +439,8 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
                                                     <div className="box_img arr">
                                                         {
                                                             listImgCurrent[`l${x}`]?.map((i, o) =>
-                                                                <div className="box_item_img edit_product" key={o}>
-                                                                    <img src={i?.thumb || ''} alt="" />
+                                                                <div className={`box_item_img edit_product list_number${x} img${o}`} key={o}>
+                                                                    <img src={i?.thumb || ''} alt="" id={i._id} />
                                                                     <button onClick={(m) =>
                                                                         z.handleRemoveIMG ? z.handleRemoveIMG(`l${x}`, o, m) : handleRemoveIMG(`l${x}`, o, m)
                                                                     }>Remove</button>

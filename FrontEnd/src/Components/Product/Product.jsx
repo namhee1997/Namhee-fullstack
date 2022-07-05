@@ -4,15 +4,28 @@ import { useStore, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import ReactPaginate from 'react-paginate';
 import RelaterProduct from "../Home/RelaterProduct/RelaterProduct";
-import { addToCart } from "../../Action/Action";
+import { addToCart, loginSuccess } from "../../Action/Action";
 import $ from 'jquery';
 import moment from 'moment';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getProductById, getProductRelater } from "../api/ApiProduct";
+import { axiosJWT } from "../../AxiosJWT";
+import { addNewCart } from "../api/ApiCart";
+import { addNewRatesProduct, getAllRatesProduct, getRatesProductById } from "../api/ApiRateProduct";
+import jwtDecode from 'jwt-decode';
+import { addNewCommentProduct, updateCommentProduct, getCommentProductById } from "../api/ApiCommentProduct";
+
 moment().format();
 
 export default function Product({ handleRedirect }) {
 
     const store = useStore();
     const dispatch = useDispatch();
+    const param = useParams();
+    const navigate = useNavigate();
+    const keyJwt = localStorage.getItem('token');
+    const user = jwtDecode(keyJwt);
+
     useEffect(() => {
         handleRedirect.setCheckDirect(e => {
             let data = { ...e }
@@ -20,88 +33,55 @@ export default function Product({ handleRedirect }) {
             return data;
         })
     }, [])
-    const [infoSinglePhone, setInfoSinglePhone] = useState([
-        {
-            idPhone: 2,
-            variable: 'Đen',
-            data: {
-                img: [
-                    'https://images.fpt.shop/unsafe/fit-in/585x390/filters:quality(90):fill(white)/fptshop.com.vn/Uploads/Originals/2022/2/28/637816814848818566_oppo-reno7-z-den-1.jpg',
-                    'https://images.fpt.shop/unsafe/fit-in/585x390/filters:quality(90):fill(white)/fptshop.com.vn/Uploads/Originals/2022/2/28/637816847409611807_oppo-reno7-z-den-3.jpg'
-                ],
-                title: 'OPPO Reno7 8GB-128GB',
-                slug: 'oppo-reno-78gb-128gb',
-                installment: '0',
-                sale: 500000,
-                price: 8490000,
-                company: 'oppo',
-                cost: 8990000,
-                promotion: true,
-                infophone: {
-                    chip: 'Snapdragon 680',
-                    screen: '6.4',
-                    ram: '8',
-                    memory: '128',
-                },
-            }
-        },
-        {
-            idPhone: 2,
-            variable: 'Bạc',
-            data: {
-                img: [
-                    'https://images.fpt.shop/unsafe/fit-in/585x390/filters:quality(90):fill(white)/fptshop.com.vn/Uploads/Originals/2022/2/28/637816815482886220_oppo-reno7-z-bac-1.jpg',
-                    'https://images.fpt.shop/unsafe/fit-in/585x390/filters:quality(90):fill(white)/fptshop.com.vn/Uploads/Originals/2022/2/28/637816845096624267_oppo-reno7-z-bac-3.jpg'
-                ],
-                title: 'OPPO Reno7 8GB-128GB',
-                slug: 'oppo-reno-78gb-128gb',
-                installment: '0',
-                sale: 500000,
-                price: 9590000,
-                company: 'oppo',
-                cost: 10190000,
-                promotion: true,
-                infophone: {
-                    chip: 'Snapdragon 680',
-                    screen: '6.4',
-                    ram: '12',
-                    memory: '128',
-                },
-            }
-        }
-    ]);
-    const [itemsRelater, setItemsRelater] = useState([
-        {
-            img: [
-                'https://images.fpt.shop/unsafe/fit-in/200x132/filters:quality(90):fill(white)/fptshop.com.vn/Uploads/Originals/2021/10/25/637707822857432352_00779950-vivo-y15s-trang-xanh-dd.jpg',
-            ],
-            title: 'Vivo Y15s 3GB - 32GB',
-            slug: 'vivo-y15s-3gb-32gb',
-            installment: '0',
-            price: 3490000,
-            company: 'oppo',
-            promotion: true,
-        },
-        {
-            img: [
-                'https://images.fpt.shop/unsafe/fit-in/200x132/filters:quality(90):fill(white)/fptshop.com.vn/Uploads/Originals/2022/5/6/637874460472027520_oppo-reno7-4g-dd-2.jpg',
-            ],
-            title: 'OPPO Reno7 8GB-128GB',
-            slug: 'oppo-reno78gb-128gb',
-            installment: '0',
-            price: 8990000,
-            company: 'oppo',
-            promotion: true,
-        }
-    ]);
+    const [infoSinglePhone, setInfoSinglePhone] = useState([]);
+    const [itemsRelater, setItemsRelater] = useState([]);
 
     const [salientFeatures, setSalientFeatures] = useState([
-        'https://images.fpt.shop/unsafe/fit-in/665x374/filters:quality(100):fill(white)/fptshop.com.vn/Uploads/Originals/2022/3/25/637838233261978253_oppo-reno7-z-chan-dung.png',
-        'https://images.fpt.shop/unsafe/fit-in/665x374/filters:quality(100):fill(white)/fptshop.com.vn/Uploads/Originals/2022/3/25/637838233275415887_oppo-reno7-z-sac-nhanh.png',
-        'https://images.fpt.shop/unsafe/fit-in/665x374/filters:quality(100):fill(white)/fptshop.com.vn/Uploads/Originals/2022/3/25/637838233274322124_oppo-reno7-z-thiet-ke.png',
+        { thumb: 'https://images.fpt.shop/unsafe/fit-in/665x374/filters:quality(100):fill(white)/fptshop.com.vn/Uploads/Originals/2022/3/25/637838233261978253_oppo-reno7-z-chan-dung.png' },
+        { thumb: 'https://images.fpt.shop/unsafe/fit-in/665x374/filters:quality(100):fill(white)/fptshop.com.vn/Uploads/Originals/2022/3/25/637838233275415887_oppo-reno7-z-sac-nhanh.png' },
+        { thumb: 'https://images.fpt.shop/unsafe/fit-in/665x374/filters:quality(100):fill(white)/fptshop.com.vn/Uploads/Originals/2022/3/25/637838233274322124_oppo-reno7-z-thiet-ke.png' },
     ]);
 
     const [variableProduct, setVariableProduct] = useState(0);
+
+    /////////GET 
+    useEffect(() => {
+        let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+
+        const fetchGetProductById = async () => {
+            try {
+                let data = await getProductById(keyJwt, axiosJwt, param.slug);
+                console.log('get product success', data);
+                setInfoSinglePhone(data[0]);
+            } catch (error) {
+                console.log('get product err1');
+            }
+        }
+
+        fetchGetProductById();
+    }, [param])
+
+    useEffect(() => {
+        if (Object.keys(infoSinglePhone).length > 0) {
+            let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+            const fetchGetProductRelater = async () => {
+                try {
+                    let data = await getProductRelater(keyJwt, axiosJwt, infoSinglePhone.company, infoSinglePhone.idPhone);
+                    console.log('get product relater success', data);
+                    setItemsRelater(data);
+                } catch (error) {
+                    console.log('get product relater err1');
+                }
+            }
+            fetchGetProductRelater();
+        }
+    }, [infoSinglePhone])
+
+
+    // console.log(infoSinglePhone, 'infoSinglePhone');
+    /////////GET
+
+
     //PROMOTION
     const [listPromotion, setListPromotion] = useState([]);
     const [choosePromotion, setChoosePromotion] = useState(1);
@@ -124,42 +104,55 @@ export default function Product({ handleRedirect }) {
     const [boxSendRate, setBoxSendRate] = useState({
         status: false,
         start: 0,
-        content: '',
+        title: '',
+        user: user.fullname,
+        avt: user.avatar
+
     });
 
-    const [totalRate, setTotalRate] = useState([]);
+    const [totalRate, setTotalRate] = useState({});
+    const [rerenderRate, setRerenderRate] = useState(true);
     const [startRate, setStartRate] = useState({
         averageRating: '',
         listRow: {}
     });
 
-    useEffect(() => {
-        setTotalRate({
-            totalStart: {
-                start5: 47,
-                start4: 5,
-                start3: 1,
-                start2: 0,
-                start1: 0,
-            },
-            listCommentRate: [
-                {
-                    start: 4,
-                    avt: 'NVT',
-                    user: 'Nguyễn Vũ Thịnh',
-                    title: 'Máy xài rất tốt',
-                    createdAt: '2022-06-21T12:09:50.706+00:00'
-                },
-            ]
-        });
-    }, [])
+    //PAGING rate
+    const [offsetPagingRate, setOffsetPagingRate] = useState(0);
+    const [dataPagingRate, setDataPagingRate] = useState([]);
+    const [perPageRate] = useState(5);
+    const [pageCountPagingRate, setPageCountPagingRate] = useState(0);
+    const [handlePaGingClickRate, setHandlePaGingClickRate] = useState(true);
 
     useEffect(() => {
-        if (totalRate.length != 0) {
+        if (Object.keys(infoSinglePhone).length > 0 && rerenderRate) {
+
+            let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+            const fetchGetRateById = async () => {
+                try {
+                    let data = await getRatesProductById(keyJwt, axiosJwt, infoSinglePhone?.idPhone);
+                    console.log('get success ', data);
+                    setTotalRate(data[0]);
+
+                    setRerenderRate(false);
+                    setHandlePaGingClickRate(!handlePaGingClickRate);
+
+                } catch (error) {
+                    console.log('get err');
+                    setRerenderRate(false);
+                }
+            }
+            fetchGetRateById();
+
+        }
+    }, [infoSinglePhone, rerenderRate])
+
+    useEffect(() => {
+        if (Object.keys(totalRate).length > 0) {
 
             setStartRate(e => {
                 let data = { ...e };
-                let totalStart = totalRate.totalStart ? totalRate.totalStart : {};
+                let totalStart = totalRate.totalstart ? totalRate.totalstart : {};
                 let arrKey = Object.keys(totalStart);
                 let arrValue = Object.values(totalStart);
                 //averageRating
@@ -178,14 +171,43 @@ export default function Product({ handleRedirect }) {
 
                 //end listRow
 
+
                 return data;
             });
         }
     }, [totalRate])
 
+    useEffect(() => {
+        if (Object.keys(totalRate).length > 0) {
+            setPageCountPagingRate(Math.ceil(totalRate.listCommentRate.length / perPageRate));
+            let slice = totalRate?.listCommentRate.slice(offsetPagingRate, offsetPagingRate + perPageRate)
+            setDataPagingRate(slice);
+
+        }
+    }, [totalRate, handlePaGingClickRate])
+
     const handleSendRate = () => {
-        console.log(boxSendRate, 'boxSendRate');//send api ~ User //api
+        let dataCustomsRates = { ...boxSendRate };
+        dataCustomsRates.idPhone = infoSinglePhone.idPhone;
+        const fechAddRatesProduct = async () => {
+            try {
+                let data = await addNewRatesProduct(dataCustomsRates);
+                console.log('add rates product success', data);
+                setRerenderRate(true);
+            } catch (error) {
+                console.log('add rates product err 1');
+                setRerenderRate(true);
+            }
+        };
+        fechAddRatesProduct();
     }
+
+
+    const handleClickRatePaGing = (e) => {
+        let selectedPage = e.selected;
+        setOffsetPagingRate(selectedPage * perPageRate);
+        setHandlePaGingClickRate(!handlePaGingClickRate);
+    };
 
     //END RATE
 
@@ -193,43 +215,107 @@ export default function Product({ handleRedirect }) {
 
     const [handleReply, setHandleReply] = useState({
         status: false,
-        content: '',
+        title: '',
+        user: user.fullname,
+        avt: user.avatar,
+        idUser: user.userId,
+        isAdmin: user.role == 'admin' ? true : false,
+        idPhone: '',
+        idComment: 0,
     })
     const [handleComment, setHandleComment] = useState({
-        content: '',
-    })
+        title: '',
+        user: user.fullname,
+        avt: user.avatar,
+        idUser: user.userId,
+        isAdmin: user.role == 'admin' ? true : false,
+        idPhone: '',
+    });
+
+
     const [dataComment, setDataComment] = useState([]);
+    const [rerenderComment, setRerenderComment] = useState(true);
+
+    //PAGING comment
+    const [offsetPagingComment, setOffsetPagingComment] = useState(0);
+    const [dataPagingComment, setDataPagingComment] = useState([]);
+    const [perPageComment] = useState(5);
+    const [pageCountPagingComment, setPageCountPagingComment] = useState(0);
+    const [handlePaGingComment, setHandlePaGingComment] = useState(true);
 
     useEffect(() => {
-        setDataComment([
-            {
-                id_comment: 1,
-                idUser: 34,
-                avt: 'NVT',
-                user: 'Nguyễn Vũ Thịnh',
-                isAdmin: false,
-                title: 'Máy xài rất tốt',
-                createdAt: '2022-06-21T13:09:50.706+00:00',
-                listReply: [
-                    {
-                        idUser: 1,
-                        avt: 'ADM',
-                        user: 'Admin',
-                        isAdmin: true,
-                        title: 'Cảm ơn bạn',
-                        createdAt: '2022-06-21T13:50:50.706+00:00',
-                    }
-                ]
-            },
-        ]);
-    }, [])
+        if (Object.keys(infoSinglePhone).length > 0 && rerenderComment) {
+
+            let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+            const fetchGetCommentById = async () => {
+                try {
+                    let data = await getCommentProductById(keyJwt, axiosJwt, infoSinglePhone?.idPhone);
+                    console.log('get success comment ', data);
+                    setDataComment(data);
+
+                    setRerenderComment(false);
+                    setHandlePaGingComment(!handlePaGingClickRate);
+
+                } catch (error) {
+                    console.log('get err');
+                    setRerenderComment(false);
+                }
+            }
+            fetchGetCommentById();
+
+        }
+    }, [infoSinglePhone, rerenderComment])
+
+    useEffect(() => {
+        if (Object.keys(dataComment).length > 0) {
+            setPageCountPagingComment(Math.ceil(dataComment.length / perPageComment));
+            let slice = dataComment?.slice(offsetPagingComment, offsetPagingComment + perPageComment)
+            setDataPagingComment(slice);
+
+        }
+    }, [dataComment, handlePaGingComment])
+
+
+    const handleClickCommentPaGing = (e) => {
+        let selectedPage = e.selected;
+        setOffsetPagingComment(selectedPage * perPageComment);
+        setHandlePaGingComment(!handlePaGingComment);
+    };
 
 
     const handleSendComment = () => {
         console.log('handleSendComment', handleComment); //api
+        const fetchAddComment = async () => {
+            try {
+                let data = addNewCommentProduct(handleComment);
+                console.log('add comment success', data);
+                setRerenderComment(true);
+                setHandleComment({ ...handleComment, title: '' })
+
+            } catch (error) {
+                console.log('add comment err 1');
+                setRerenderComment(true);
+            }
+        }
+        fetchAddComment();
     }
+
     const handleReplyComment = (id_comment, idUser) => {
-        console.log('handleReply', handleReply, id_comment, idUser);//api
+        console.log('handleReply', handleReply);//api
+
+        const fetchUpdateComment = async () => {
+            try {
+                let data = updateCommentProduct(handleReply);
+                console.log('update comment success', data);
+                setRerenderComment(true);
+                setHandleReply({ ...handleReply, title: '' });
+
+            } catch (error) {
+                console.log('update comment err 1');
+                setRerenderComment(true);
+            }
+        }
+        fetchUpdateComment();
     }
     //END COMMENT
 
@@ -281,18 +367,20 @@ export default function Product({ handleRedirect }) {
     useEffect(() => {
         setDataTotal(e => {
             let data = { ...e };
-            data.idPhone = infoSinglePhone[variableProduct].idPhone;
+            let dataTotalArr = [];
+            data.idPhone = infoSinglePhone?.idPhone;
+            data.totalCurrent = 1;
+            data.userId = user.userId;
             //selected
-            data.selected['variable'] = infoSinglePhone[variableProduct].variable;
-            data.selected['img'] = infoSinglePhone[variableProduct].data.img;
-            data.selected['title'] = infoSinglePhone[variableProduct].data.title;
-            data.selected['slug'] = infoSinglePhone[variableProduct].data.slug;
-            data.selected['installment'] = infoSinglePhone[variableProduct].data.installment;
-            data.selected['sale'] = infoSinglePhone[variableProduct].data.sale;
-            data.selected['price'] = infoSinglePhone[variableProduct].data.price;
-            data.selected['cost'] = infoSinglePhone[variableProduct].data.cost;
-            data.selected['company'] = infoSinglePhone[variableProduct].data.company;
-            data.selected['promotion'] = infoSinglePhone[variableProduct].data.promotion;
+            data.selected['variable'] = Object.keys(infoSinglePhone).length > 0 ? infoSinglePhone?.variable[variableProduct].title : '';
+            data.selected['listimg'] = Object.keys(infoSinglePhone).length > 0 ? infoSinglePhone?.variable[variableProduct].listimg : '';
+            data.selected['title'] = infoSinglePhone?.title;
+            data.selected['slug'] = infoSinglePhone?.slug;
+            data.selected['sale'] = Object.keys(infoSinglePhone).length > 0 ? infoSinglePhone?.variable[variableProduct].sale : 0;
+            data.selected['price'] = Object.keys(infoSinglePhone).length > 0 ? infoSinglePhone?.variable[variableProduct].price : 0;
+            data.selected['cost'] = Object.keys(infoSinglePhone).length > 0 ? infoSinglePhone?.variable[variableProduct].cost : 0;
+            data.selected['company'] = infoSinglePhone?.company;
+            data.selected['promotion'] = infoSinglePhone?.promotion;
             data.selected['promotionChoose'] = choosePromotion;
             if (paymentMethods.moca) {
                 data.selected['paymentCart'] = 'moca';
@@ -301,64 +389,117 @@ export default function Product({ handleRedirect }) {
                 data.selected['paymentCart'] = 'vnp';
             }
             //end selected
+            //for custom data total
+            for (let o = 0; o < (infoSinglePhone?.variable?.length > 0 ? infoSinglePhone?.variable : []).length; o++) {
+                dataTotalArr.push({
+                    variable: infoSinglePhone?.variable[o].title,
+                    data: {
+                        title: '',
+                        slug: infoSinglePhone?.slug,
+                        installment: '0',
+                        sale: infoSinglePhone?.variable[o].sale,
+                        price: infoSinglePhone?.variable[o].price,
+                        company: infoSinglePhone?.company,
+                        cost: infoSinglePhone?.variable[o].cost,
+                        promotion: infoSinglePhone?.promotion,
+                    },
+                });
+            }
+
             //dataTotal
             data.dataTotal['promotionChoose'] = listPromotion;
-            data.dataTotal['totalSelect'] = infoSinglePhone;
+            data.dataTotal['totalSelect'] = dataTotalArr;
             //end dataTotal
 
             return data;
         })
-    }, [variableProduct, choosePromotion, paymentMethods, clickAddCart])
+    }, [variableProduct, choosePromotion, paymentMethods, clickAddCart, infoSinglePhone])
 
-    const handleAddToCard = () => {
+    const handleAddToCard = (e, buy) => {
+        if (buy == 'buy') {
+            e.preventDefault();
+        }
         setClickAddCart(!clickAddCart);
         setTimeout(() => {
-            let addToCartRedux = addToCart(dataTotal);
-            dispatch(addToCartRedux);
+            const fetchAddNewCart = async () => {
+                try {
+                    let data = await addNewCart(dataTotal);
+                    console.log('add new cart success', data);
+                    // dataTotal._id = data?._id;
+                    let addToCartRedux = addToCart(dataTotal);
+                    dispatch(addToCartRedux);
+                    if (buy == 'buy') {
+                        setTimeout(() => {
+                            navigate('/cart');
+                        }, 1000);
+                    }
+                } catch (error) {
+                    console.log('add new cart err 1');
+                }
+            }
+            fetchAddNewCart();
+
         }, 800);
     }
 
     //END DATA SEND
-
     return (
         <div className="product_phone">
             <div className="title_phone">
-                <h1>{infoSinglePhone[variableProduct].data.title}</h1>
+                <h1>{infoSinglePhone?.title}</h1>
                 <div className="evaluate">
                     <div className="start">
-                        <i className="fa-solid star-checked fa-star"></i>
-                        <i className="fa-solid star-checked fa-star"></i>
-                        <i className="fa-solid star-checked fa-star"></i>
-                        <i className="fa-solid star-checked fa-star"></i>
-                        <i className="fa-solid fa-star"></i>
+                        <i className={`
+                        fa-solid ${startRate?.averageRating == 'start1'
+                                || startRate?.averageRating == 'start2'
+                                || startRate?.averageRating == 'start3'
+                                || startRate?.averageRating == 'start4'
+                                || startRate?.averageRating == 'start5' ? `star-checked` : ``} fa-star
+                        `}></i>
+                        <i className={`
+                        fa-solid ${startRate?.averageRating == 'start2'
+                                || startRate?.averageRating == 'start3'
+                                || startRate?.averageRating == 'start4'
+                                || startRate?.averageRating == 'start5' ? `star-checked` : ``} fa-star
+                        `}></i>
+                        <i className={`
+                        fa-solid ${startRate?.averageRating == 'start3'
+                                || startRate?.averageRating == 'start4'
+                                || startRate?.averageRating == 'start5' ? `star-checked` : ``} fa-star
+                        `}></i>
+                        <i className={`
+                        fa-solid ${startRate?.averageRating == 'start4'
+                                || startRate?.averageRating == 'start5' ? `star-checked` : ``} fa-star
+                        `}></i>
+                        <i className={`fa-solid ${startRate?.averageRating == 'start5' ? `star-checked` : ``} fa-star`}></i>
                     </div>
                     <div className="total_comment">
-                        <p>47 đánh giá</p>
+                        <p>{totalRate?.listCommentRate?.length} đánh giá</p>
                     </div>
                 </div>
             </div>
             <div className="content_product">
                 <div className="box_left_product">
                     <div className="slide_thumb_product">
-                        <Banner dataBanner={infoSinglePhone[variableProduct].data.img} thisPage='Product' />
+                        <Banner dataBanner={Object.keys(infoSinglePhone).length > 0 ? infoSinglePhone?.variable[variableProduct].listimg : []} thisPage='Product' />
                     </div>
                     <div className="info_phone">
                         <ul>
                             <li className="chipset">
                                 <i className="fa-solid fa-microchip"></i>
-                                <p>{infoSinglePhone[variableProduct].data?.infophone?.chip}</p>
+                                <p>{infoSinglePhone?.infophone?.chip}</p>
                             </li>
                             <li className="screen">
                                 <i className="fa-solid fa-mobile-screen"></i>
-                                <p>{infoSinglePhone[variableProduct].data.infophone?.screen}inch</p>
+                                <p>{infoSinglePhone?.infophone?.screen}</p>
                             </li>
                             <li className="ram">
                                 <i className="fa-solid fa-memory"></i>
-                                <p>{infoSinglePhone[variableProduct].data.infophone?.ram}GB</p>
+                                <p>{infoSinglePhone?.infophone?.ram}</p>
                             </li>
                             <li className="memory">
                                 <i className="fa-solid fa-sd-card"></i>
-                                <p>{infoSinglePhone[variableProduct].data?.infophone?.memory}GB</p>
+                                <p>{infoSinglePhone?.infophone?.memory}</p>
                             </li>
                         </ul>
                         <Link to='/info-phone'>Xem chi tiết thông số kỹ thuật</Link>
@@ -379,17 +520,17 @@ export default function Product({ handleRedirect }) {
                     </div>
                 </div>
                 <div className="box_right_product">
-                    <h2>{infoSinglePhone[variableProduct].data.price}</h2>
+                    <h2>{Object.keys(infoSinglePhone).length > 0 ? infoSinglePhone?.variable[variableProduct]?.price : []}</h2>
                     <div className="list_ver_phone">
                         <ul>
                             {
-                                infoSinglePhone.map((e, i) => {
+                                infoSinglePhone?.variable?.map((e, i) => {
                                     return (
                                         <li key={i} className={variableProduct == i ? `active` : ``} onClick={() => setVariableProduct(i)}>
                                             <span>
-                                                <img src={e.data.img[0]} alt="" />
+                                                <img src={e.avatar} alt="" />
                                             </span>
-                                            <p>{e.variable}</p>
+                                            <p>{e.title}</p>
                                         </li>
                                     );
                                 })
@@ -470,7 +611,9 @@ export default function Product({ handleRedirect }) {
                         </ul>
                     </div>
                     <div className="buying_product">
-                        <Link to='/buy'>
+                        <Link to='/buy'
+                            onClick={(zx) => handleAddToCard(zx, 'buy')}
+                        >
                             <h4>Mua Ngay</h4>
                             <p>
                                 Giao hàng miễn phí hoặc nhận tại shop
@@ -491,11 +634,11 @@ export default function Product({ handleRedirect }) {
                 <div className="box_flex">
                     <div className="box_left_more box_shadow">
                         <div className="box_more_info">
-                            <h3>Đặc điểm nổi bật của {infoSinglePhone[variableProduct].data.title}</h3>
+                            <h3>Đặc điểm nổi bật của {infoSinglePhone?.title}</h3>
                             <Banner dataBanner={salientFeatures} />
                         </div>
                         <div className="text_content_more">
-                            <h3>Đánh giá chi tiết {infoSinglePhone[variableProduct].data.title}</h3>
+                            <h3>Đánh giá chi tiết {infoSinglePhone?.title}</h3>
                             <div className="box_text">
                                 <a href="https://fptshop.com.vn/dien-thoai/oppo-reno7-z">OPPO Reno7 Z 5G</a> chinh phục người dùng ngay từ ánh nhìn đầu tiên với thiết kế thời thượng bậc nhất. Bên trong <a href="https://fptshop.com.vn/dien-thoai">điện thoại</a> còn có nội lực mạnh mẽ từ công nghệ cải tiến, hệ thống camera chân dung tuyệt đỉnh, vi xử lý Snapdragon 695 5G và sạc siêu tốc 33W, giúp bạn sẵn sàng khám phá cuộc sống tràn đầy màu sắc.
                                 <img src="https://fptshop.com.vn/Uploads/images/2015/OPPO-Reno7-Z-5G.jpg" alt="" />
@@ -509,19 +652,19 @@ export default function Product({ handleRedirect }) {
                                 <tbody>
                                     <tr>
                                         <td>Màn hình</td>
-                                        <td>{infoSinglePhone[variableProduct].data.infophone?.screen}</td>
+                                        <td>{infoSinglePhone?.infophone?.screen}</td>
                                     </tr>
                                     <tr>
                                         <td>CPU</td>
-                                        <td>{infoSinglePhone[variableProduct].data.infophone?.chip}</td>
+                                        <td>{infoSinglePhone?.infophone?.chip}</td>
                                     </tr>
                                     <tr>
                                         <td>RAM</td>
-                                        <td>{infoSinglePhone[variableProduct].data.infophone?.ram}</td>
+                                        <td>{infoSinglePhone?.infophone?.ram}</td>
                                     </tr>
                                     <tr>
                                         <td>Bộ nhớ</td>
-                                        <td>{infoSinglePhone[variableProduct].data.infophone?.memory}</td>
+                                        <td>{infoSinglePhone?.infophone?.memory}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -592,19 +735,37 @@ export default function Product({ handleRedirect }) {
                 </div>
                 <div className="rate box_shadow">
                     <div className="container_rate">
-                        <h3>Đánh giá nhận xét về {infoSinglePhone[0].data.title}</h3>
+                        <h3>Đánh giá nhận xét về {infoSinglePhone?.title}</h3>
                         <div className="box_total_rate">
                             <div className="rate_1">
                                 <h4>Đánh giá trung bình</h4>
                                 <div className="number_rate_1">
                                     <span>{startRate.averageRating == 'start5' ? 5 : startRate.averageRating == 'start4' ? 4 : startRate.averageRating == 'start3' ? 3 : startRate.averageRating == 'start2' ? 2 : startRate.averageRating == 'start1' ? 1 : ''}</span>/<span>5</span>
                                 </div>
-                                <div className="start_1">
-                                    <i className="fa-solid fa-star"></i>
-                                    <i className="fa-solid fa-star"></i>
-                                    <i className="fa-solid fa-star"></i>
-                                    <i className="fa-solid fa-star"></i>
-                                    <i className="fa-solid fa-star"></i>
+                                <div className="start_1 noall">
+                                    <i className={`
+                        fa-solid ${startRate?.averageRating == 'start1'
+                                            || startRate?.averageRating == 'start2'
+                                            || startRate?.averageRating == 'start3'
+                                            || startRate?.averageRating == 'start4'
+                                            || startRate?.averageRating == 'start5' ? `star-checked` : ``} fa-star
+                        `}></i>
+                                    <i className={`
+                        fa-solid ${startRate?.averageRating == 'start2'
+                                            || startRate?.averageRating == 'start3'
+                                            || startRate?.averageRating == 'start4'
+                                            || startRate?.averageRating == 'start5' ? `star-checked` : ``} fa-star
+                        `}></i>
+                                    <i className={`
+                        fa-solid ${startRate?.averageRating == 'start3'
+                                            || startRate?.averageRating == 'start4'
+                                            || startRate?.averageRating == 'start5' ? `star-checked` : ``} fa-star
+                        `}></i>
+                                    <i className={`
+                        fa-solid ${startRate?.averageRating == 'start4'
+                                            || startRate?.averageRating == 'start5' ? `star-checked` : ``} fa-star
+                        `}></i>
+                                    <i className={`fa-solid ${startRate?.averageRating == 'start5' ? `star-checked` : ``} fa-star`}></i>
                                 </div>
                                 <div className="text_1">
                                     <span>{totalRate?.listCommentRate?.length}</span> đánh giá & nhận xét
@@ -719,7 +880,7 @@ export default function Product({ handleRedirect }) {
                             <textarea name="send_rate" id="" cols="30" rows="10"
                                 onChange={(e) => setBoxSendRate({
                                     ...boxSendRate,
-                                    content: e.target.value
+                                    title: e.target.value
                                 })}
                             >
 
@@ -733,10 +894,12 @@ export default function Product({ handleRedirect }) {
                     <div className="list_rate_user">
                         <ul>
                             {
-                                totalRate?.listCommentRate?.map((e, i) =>
+                                dataPagingRate?.map((e, i) =>
                                     <li key={i}>
                                         <div className="thumb_user_rate">
-                                            <div className="box_avata">{e.avt}</div>
+                                            <div className="box_avata">
+                                                <img src={e.avt} alt="" />
+                                            </div>
                                         </div>
                                         <div className="info_user_rate">
                                             <h4>{e.user}</h4>
@@ -761,13 +924,15 @@ export default function Product({ handleRedirect }) {
 
                         </ul>
                         <div className="list_pagination">
+
                             <ReactPaginate
-                                breakLabel="..."
-                                nextLabel=">"
-                                onPageChange={``}
+                                previousLabel={"<"}
+                                nextLabel={">"}
+                                breakLabel={"..."}
+                                pageCount={pageCountPagingRate}
+                                marginPagesDisplayed={2}
                                 pageRangeDisplayed={5}
-                                pageCount={5}
-                                previousLabel="<"
+                                onPageChange={handleClickRatePaGing}
                                 renderOnZeroPageCount={null}
                             />
                         </div>
@@ -775,12 +940,15 @@ export default function Product({ handleRedirect }) {
                 </div>
                 <div className="box_comment box_shadow">
                     <div className="container_box_comment">
-                        <h2>Hỏi & Đáp về {infoSinglePhone[0].data.title}</h2>
+                        <h2>Hỏi & Đáp về {infoSinglePhone?.title}</h2>
                         <div className="box_send_comment">
                             <textarea name="send_comment" id="send_comment" cols="30" rows="10"
                                 placeholder="Viết câu hỏi của bạn"
+                                value={handleComment.title}
                                 onChange={(e) => setHandleComment({
-                                    content: e.target.value,
+                                    ...handleComment,
+                                    title: e.target.value,
+                                    idPhone: infoSinglePhone.idPhone
                                 })}
                             ></textarea>
                             <p className="send_comment" onClick={() => handleSendComment()}>Gửi câu hỏi</p>
@@ -788,10 +956,12 @@ export default function Product({ handleRedirect }) {
                         <div className="list_comment">
                             <ul>
                                 {
-                                    dataComment.map((e, i) =>
+                                    dataPagingComment.map((e, i) =>
                                         <li key={i}>
                                             <div className="thumb_user_rate">
-                                                <div className="box_avata">{e.avt}</div>
+                                                <div className="box_avata">
+                                                    <img src={e.avt} alt="" />
+                                                </div>
                                             </div>
                                             <div className="info_user_comment">
                                                 <div className="name_comment">
@@ -801,7 +971,8 @@ export default function Product({ handleRedirect }) {
                                                 <div className="content_rate_text">
                                                     {e.title}
                                                 </div>
-                                                <div className="reply_box_title" onClick={() => { setHandleReply({ ...handleReply, status: true }); }}>
+                                                <div className="reply_box_title"
+                                                    onClick={() => { setHandleReply({ ...handleReply, status: true, idComment: e.idComment }); }}>
                                                     <p>Trả lời</p>
                                                 </div>
                                                 <ul className="reply_comment">
@@ -826,11 +997,12 @@ export default function Product({ handleRedirect }) {
                                                     }
 
                                                 </ul>
-                                                <div className={`send_reply ${handleReply.status ? `` : `none`}`}>
-                                                    <textarea name="send_reply" id="" cols="30" rows="10"
+                                                <div className={`send_reply ${handleReply.idComment == e.idComment ? `` : `none`}`}>
+                                                    <textarea name="send_reply" id="" cols="30" rows="10" value={handleReply.title}
                                                         onChange={(m) => setHandleReply({
                                                             ...handleReply,
-                                                            content: m.target.value,
+                                                            title: m.target.value,
+                                                            idPhone: infoSinglePhone.idPhone
                                                         })}
                                                     ></textarea>
                                                     <p className="send_reply_btn"
@@ -844,12 +1016,13 @@ export default function Product({ handleRedirect }) {
                             </ul>
                             <div className="list_pagination">
                                 <ReactPaginate
-                                    breakLabel="..."
-                                    nextLabel=">"
-                                    onPageChange={``}
+                                    previousLabel={"<"}
+                                    nextLabel={">"}
+                                    breakLabel={"..."}
+                                    pageCount={pageCountPagingComment}
+                                    marginPagesDisplayed={2}
                                     pageRangeDisplayed={5}
-                                    pageCount={5}
-                                    previousLabel="<"
+                                    onPageChange={handleClickCommentPaGing}
                                     renderOnZeroPageCount={null}
                                 />
                             </div>

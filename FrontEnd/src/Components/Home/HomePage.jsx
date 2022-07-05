@@ -12,8 +12,17 @@ import Nokia from '../../assets/img/nokia.png';
 import { Link } from "react-router-dom";
 import ListHotPromotion from "./ListHotPromotion/ListHotPromotion";
 import ProductList from "./ProductList/ProductList";
+import { axiosJWT } from "../../AxiosJWT";
+import { loginSuccess } from "../../Action/Action";
+import { getAllCart } from "../api/ApiCart";
+import { addToCart } from "../../Action/Action";
+
 
 const HomePage = ({ handleRedirect }) => {
+
+  const dispatch = useDispatch();
+  const keyJwt = localStorage.getItem('token');
+  const user = handleRedirect.userCurrentByToken;
 
   const [listBanner, setListBanner] = useState([{ thumb: Banner1, link: '' }, { thumb: Banner2, link: '' }, { thumb: Banner2, link: '' }]);
   const [listPromotion, setListPromotion] = useState([
@@ -40,6 +49,20 @@ const HomePage = ({ handleRedirect }) => {
       data.user = true;
       return data;
     })
+  }, [])
+
+  useEffect(() => {
+    let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+    const fetchGetAllCart = async () => {
+      try {
+        let data = await getAllCart(keyJwt, axiosJwt);
+        let addToCartRedux = addToCart(data);
+        dispatch(addToCartRedux);
+      } catch (error) {
+        console.log('get all cart err 1');
+      }
+    }
+    fetchGetAllCart();
   }, [])
 
 

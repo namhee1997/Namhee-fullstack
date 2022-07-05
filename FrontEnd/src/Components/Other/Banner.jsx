@@ -22,7 +22,7 @@ export default function Banner({ dataBanner, thisPage = '' }) {
                     dataBanner.map((e, i) => {
                         return (
                             thisPage == 'Product' ?
-                                <img className="bg items_slides" key={i} src={e} alt="" />
+                                <img className="bg items_slides" key={i} src={e?.thumb} alt="" />
                                 : <Link to={`/${e.link}`} key={i}>
                                     <img className="bg items_slides" src={e.thumb} alt="" />
                                 </Link>

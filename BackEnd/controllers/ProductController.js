@@ -4,7 +4,6 @@ let productController = {
     //get all user
     getAllProduct: async (req, res) => {
         try {
-            console.log('start get all product');
             let product = await Product.find();
             return res.status(200).json(product);
         } catch (error) {
@@ -18,7 +17,6 @@ let productController = {
             const product = await Product.find({
                 slug: req.params.slug
             });
-            console.log(product, 'product');
             return res.status(200).json(product);
         } catch (error) {
             return res.status(500).json({
@@ -50,9 +48,9 @@ let productController = {
                 dataArr['cost'] = parseInt(product[i].cost);
                 dataArr['sale'] = parseInt(product[i].sale);
                 dataArr['listimg'] = product[i].data.img;
+
                 productArr.push(dataArr);
             }
-
 
             let dataProductSave = {
                 slug: product[0].slug,
@@ -60,18 +58,24 @@ let productController = {
                 promotion: product[0].promotion == 'true' ? true : false,
                 variable: productArr,
                 infophone: {
-
+                    chip: product[0].infophone.chip,
+                    memory: product[0].infophone.memory,
+                    ram: product[0].infophone.ram,
+                    screen: product[0].infophone.screen,
                 },
                 company: product[0].company,
             };
 
+            console.log('add product', dataProductSave);
             let productNew = new Product(dataProductSave);
 
             productNew.save(function (err, results) {
                 if (err) {
+                    console.log('add product err', err);
                     return res.status(200).json('add err!');
                 }
                 else {
+                    console.log('add product success');
                     res.status(200).json('add success!');
                 }
             });
@@ -83,12 +87,26 @@ let productController = {
     updateProduct: async (req, res) => {
         try {
             let product = req.body;
-            console.log('updateProduct', product);
+
             let data = await Product.findByIdAndUpdate(product._id, product);
-            console.log('update success product');
             return res.status(200).json('success');
         } catch (error) {
             res.status(500).json({ error });
+        }
+    },
+
+    getProductRelater: async (req, res) => {
+        try {
+            console.log(req.params, 'getProductRelater');
+            const productRelater = await Product.find({
+                company: req.params.slug
+            });
+            console.log(productRelater, 'productRelater');
+            return res.status(200).json(productRelater);
+        } catch (error) {
+            return res.status(500).json({
+                error
+            })
         }
     },
 }

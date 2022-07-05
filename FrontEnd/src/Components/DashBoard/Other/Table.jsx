@@ -7,6 +7,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginSuccess } from "../../../Action/Action";
 import { deleteProduct } from "../../api/ApiProduct";
 import { deleteCompany } from "../../api/ApiCompany";
+import { deleteNews } from "../../api/ApiNews";
+import { deleteOrderSuccess } from "../../api/ApiOrderSuccess";
+import { deleteOrderUser } from "../../api/ApiOrderUser";
 
 
 export default function Table({ title = '', dataCurrent = [],
@@ -44,6 +47,39 @@ export default function Table({ title = '', dataCurrent = [],
         let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
         try {
             let data = await deleteCompany(keyJwt, axiosJwt, id);
+            handleReRender.setReRender(e => !e);
+        } catch (error) {
+            console.log('delete err');
+        }
+    }
+
+    const fetchDeleteNews = async (e, id) => {
+        e.preventDefault();
+        let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+        try {
+            let data = await deleteNews(keyJwt, axiosJwt, id);
+            handleReRender.setReRender(e => !e);
+        } catch (error) {
+            console.log('delete err');
+        }
+    }
+
+    const fetchDeleteOrderSuccess = async (e, id) => {
+        e.preventDefault();
+        let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+        try {
+            let data = await deleteOrderSuccess(keyJwt, axiosJwt, id);
+            handleReRender.setReRender(e => !e);
+        } catch (error) {
+            console.log('delete err');
+        }
+    }
+
+    const fetchDeleteOrderUser = async (e, id) => {
+        e.preventDefault();
+        let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+        try {
+            let data = await deleteOrderUser(keyJwt, axiosJwt, id);
             handleReRender.setReRender(e => !e);
         } catch (error) {
             console.log('delete err');
@@ -247,17 +283,18 @@ export default function Table({ title = '', dataCurrent = [],
                                                         {e.content}
                                                     </td>
                                                     <td>
-                                                        {e.urlTo}
+                                                        {e.urlto}
                                                     </td>
                                                     <td>
-                                                        {e.avatar}
+                                                        <img height="100px" width="100px" src={e.avatar} alt="" />
                                                     </td>
 
 
                                                     <td>
                                                         <div className="btn-group" role="group" aria-label="Basic example">
                                                             <button type="button" className="btn btn-danger">
-                                                                <Link to={`/dashboard/news/delete/${e.slug}`}>
+                                                                <Link to={`/dashboard/news/delete/${e.slug}`}
+                                                                    onClick={(zx) => fetchDeleteNews(zx, e._id)}>
                                                                     <i className="fa-solid fa-trash-can text-white"></i>
                                                                 </Link>
                                                             </button>
@@ -276,11 +313,11 @@ export default function Table({ title = '', dataCurrent = [],
                                                         <td>
                                                             {i + 1}
                                                         </td>
+                                                        {/* <td>
+                                                            {e.idorder}
+                                                        </td> */}
                                                         <td>
-                                                            {e.idOrder}
-                                                        </td>
-                                                        <td>
-                                                            {e.slugProduct}
+                                                            {e.slug}
                                                         </td>
                                                         <td>
                                                             {e.title}
@@ -289,16 +326,16 @@ export default function Table({ title = '', dataCurrent = [],
                                                             {e.price}
                                                         </td>
                                                         <td>
-                                                            {e.sale}
+                                                            {e?.cost - e?.price || 0}
                                                         </td>
                                                         <td>
                                                             {e.cost}
                                                         </td>
                                                         <td>
-                                                            {e.userID}
+                                                            {e.userbuy}
                                                         </td>
                                                         <td>
-                                                            {e.paid}
+                                                            {e.paid ? 'true' : 'false'}
                                                         </td>
 
                                                         <td>
@@ -307,7 +344,8 @@ export default function Table({ title = '', dataCurrent = [],
                                                                     <Link to={``}
                                                                         onClick={(z) => {
                                                                             z.preventDefault();
-                                                                            dataHandle.handleRemoveTable(e.idOrder)
+                                                                            dataHandle.handleRemoveTable(e.idOrder);
+                                                                            fetchDeleteOrderUser(z, e._id);
                                                                         }}
                                                                     >
                                                                         <i className="fa-solid fa-trash-can text-white"></i>
@@ -326,9 +364,9 @@ export default function Table({ title = '', dataCurrent = [],
                                                                     create == 'false' ?
                                                                         <button className="btn btn-success" onClick={() => dataHandle.setViewBox(m => {
                                                                             let data = {};
-                                                                            data.userID = e.userID;
+                                                                            data.userID = e.userbuy;
                                                                             data.view = !m.view;
-                                                                            data.idOrder = e.idOrder;
+                                                                            data.idOrder = e.idorder;
                                                                             return data;
                                                                         })}>
                                                                             <i className="fa-solid fa-eye"></i>
@@ -349,9 +387,9 @@ export default function Table({ title = '', dataCurrent = [],
                                                             <td>
                                                                 {e.title}
                                                             </td>
-                                                            <td>
+                                                            {/* <td>
                                                                 {e.name}
-                                                            </td>
+                                                            </td> */}
                                                             <td>
                                                                 {e.fullname}
                                                             </td>
@@ -367,14 +405,17 @@ export default function Table({ title = '', dataCurrent = [],
                                                             <td>
                                                                 {e.company}
                                                             </td>
-
+                                                            <td>
+                                                                {e.phone}
+                                                            </td>
                                                             <td>
                                                                 <div className={`btn-group this_order`} role="group" aria-label="Basic example">
                                                                     <button type="button" className="btn btn-danger">
                                                                         <Link to={`/dashboard/order/delete/${e.idOrder}`}
                                                                             onClick={(z) => {
                                                                                 z.preventDefault();
-                                                                                dataHandle.handleRemoveTableCustom(e.idOderCustom)
+                                                                                dataHandle.handleRemoveTableCustom(e.idOderCustom);
+                                                                                fetchDeleteOrderSuccess(z, e._id)
                                                                             }}
                                                                         >
                                                                             <i className="fa-solid fa-trash-can text-white"></i>

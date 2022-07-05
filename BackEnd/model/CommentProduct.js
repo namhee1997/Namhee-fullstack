@@ -3,13 +3,17 @@ const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const commentProductSchema = new mongoose.Schema(
     {
-        idComment: {
+        id_comment: {
             type: Number,
-            unique: true,
         },
         idUser: {
             type: String,
-            unique: true,
+        },
+        idPhone: {
+            type: String,
+        },
+        avt: {
+            type: String,
         },
         user: {
             type: String,
@@ -23,10 +27,11 @@ const commentProductSchema = new mongoose.Schema(
         title: {
             type: String,
         },
-        listReply: {
-            type: mongoose.Schema.Types.Array,
-            ref: 'ListReply'
-        },
+        listReply: [
+            {
+                type: {}
+            }
+        ],
     },
     {
         timestamps: true
@@ -40,7 +45,9 @@ commentProductSchema.statics.checkFound = async function (id) {
     }
     return check;
 };
+
 commentProductSchema.plugin(AutoIncrement, { inc_field: 'idComment' });
+
 
 const CommentProduct = mongoose.model(
     "CommentProduct", commentProductSchema);

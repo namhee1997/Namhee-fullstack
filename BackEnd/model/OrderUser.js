@@ -7,6 +7,8 @@ const orderUserSchema = new mongoose.Schema(
             type: Number,
             unique: true,
         },
+        idPhone: String,
+        promotion: Number,
         slug: {
             type: String,
             trim: true,
@@ -25,8 +27,8 @@ const orderUserSchema = new mongoose.Schema(
             default: 0
         },
         userbuy: {
-            type: Number,
-            default: 0
+            type: String,
+            default: ''
         },
         paid: {
             type: Boolean,
@@ -40,6 +42,8 @@ const orderUserSchema = new mongoose.Schema(
         timestamps: true
     }
 );
+
+
 
 orderUserSchema.statics.checkFound = async function (id) {
     let check = await OrderUser.findOne({ _id: mongoose.Types.ObjectId(id) })

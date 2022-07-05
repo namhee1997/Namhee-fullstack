@@ -1,12 +1,21 @@
 import { useEffect, useState } from "react";
 import ItemsCart from "./ItemsCart/ItemsCart";
 import { useStore, useDispatch } from "react-redux";
-import { removeProductCart } from "../../Action/Action";
+import { removeProductCart, loginSuccess } from "../../Action/Action";
 import $ from 'jquery';
+import { axiosJWT } from "../../AxiosJWT";
+import { getAllCart } from "../api/ApiCart";
+import { addToCart } from "../../Action/Action";
+import { addNewOrderUser } from "../api/ApiOrderUser";
+import { deleteAllCart } from "../api/ApiCart";
 
 export default function Cart({ handleRedirect }) {
     const store = useStore();
     const dispatch = useDispatch();
+
+    const keyJwt = localStorage.getItem('token');
+    const user = handleRedirect.userCurrentByToken;
+
     useEffect(() => {
         handleRedirect.setCheckDirect(e => {
             let data = { ...e }
@@ -18,7 +27,19 @@ export default function Cart({ handleRedirect }) {
     const [checkRemove, setCheckRemove] = useState(false);
 
     useEffect(() => {
-        setListProduct(store.getState().cart.data);
+        let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+        const fetchGetAllCart = async () => {
+            try {
+                let data = await getAllCart(keyJwt, axiosJwt);
+                console.log('get all cart SUCCESS', data);
+                setListProduct(data);
+                let addToCartRedux = addToCart(data);
+                dispatch(addToCartRedux);
+            } catch (error) {
+                console.log('get all cart err 1');
+            }
+        };
+        fetchGetAllCart();
     }, [checkRemove])
 
     const [numberProduct, setNumberProduct] = useState(null);
@@ -107,9 +128,8 @@ export default function Cart({ handleRedirect }) {
     //END SUM PRICE
 
     //ORDER API
-    const [orderApi, setOrderApi] = useState([
-
-    ]);
+    const [orderApi, setOrderApi] = useState([]);
+    const [checkOrder, setCheckOrder] = useState(false);
     const handleOrder = () => {//user
 
         for (let i = 0; i < listProduct.length; i++) {
@@ -117,21 +137,46 @@ export default function Cart({ handleRedirect }) {
                 let data = [...e];
                 let obj = {};
                 obj['idPhone'] = listProduct[i].idPhone;
-                obj['slugProduct'] = listProduct[i].selected.slug;
-                obj['titleProduct'] = listProduct[i].selected.title + `x${$(`.total_product${i} .total_product`).text()} - ${$(`.select_variable_${i} :selected`).text()}`;
+                obj['slug'] = listProduct[i].selected.slug;
+                obj['title'] = listProduct[i].selected.title + `x${$(`.total_product${i} .total_product`).text()} - ${$(`.select_variable_${i} :selected`).text()}`;
                 obj['price'] = sumPrice.price
                 obj['sale'] = sumPrice.sale;
                 obj['cost'] = sumPrice.cost;
                 obj['promotion'] = listProduct[i].selected.promotionChoose;
-                obj['userBuy'] = 1;
+                obj['userbuy'] = user.userId;
 
                 data.push(obj);
                 return data;
             });
         }
 
+        setCheckOrder(true);
     }
-    console.log(orderApi, 'orderApi');
+
+    useEffect(() => {
+
+        if (checkOrder) {
+
+            let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+            const fetchAddNewOrderUser = async () => {
+                try {
+                    let data = await addNewOrderUser(orderApi);
+                    console.log('add news order user success', data);
+                    let removeAllCart = await deleteAllCart(keyJwt, axiosJwt);
+                    console.log('remove all cart success', removeAllCart);
+                    setCheckRemove(!checkRemove);
+                    setCheckOrder(false);
+
+                } catch (error) {
+                    setCheckOrder(false);
+                    console.log('add news order user err');
+                }
+            }
+            fetchAddNewOrderUser();
+            console.log(orderApi, 'orderApi');
+        }
+
+    }, [checkOrder])
     //END ORDER API
 
 

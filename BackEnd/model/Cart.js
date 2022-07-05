@@ -12,14 +12,22 @@ const cartSchema = new mongoose.Schema(
             unique: true,
             trim: true,
         },
-        paymentCart: {
-            type: String,
-            unique: true,
-            trim: true,
-        },
         selected: {
-            type: mongoose.Schema.Types.ObjectId,
-        }
+            type: {}
+        },
+        dataTotal: {
+            promotionChoose: [
+                {
+                    type: {}
+                }
+            ],
+            totalSelect: [
+                {
+                    type: {}
+                }
+            ],
+        },
+        totalCurrent: Number,
 
     },
     {
@@ -28,11 +36,12 @@ const cartSchema = new mongoose.Schema(
 );
 
 cartSchema.statics.checkFound = async function (id) {
-    let check = await Cart.findOne({ _id: mongoose.Types.ObjectId(id) })
+    let check = await Cart.findOne({ idPhone: id })
     if (!check) {
-        throw new Error(`Cart not found`);
+        return true;
+    } else {
+        return false;
     }
-    return check;
 };
 
 const Cart = mongoose.model(

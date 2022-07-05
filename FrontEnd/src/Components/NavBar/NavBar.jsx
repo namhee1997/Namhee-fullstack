@@ -14,6 +14,8 @@ const NavBar = ({ userCurrent, refresh }) => {
   const [user, setUSer] = useState(null);
   const [showItem, setShowItem] = useState(false);
   const [totalCart, setTotalCart] = useState(0);
+
+
   useEffect(() => {
     if (userCurrent.role !== undefined) {
       setUSer(true);

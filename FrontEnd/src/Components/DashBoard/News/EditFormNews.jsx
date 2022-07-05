@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import $ from 'jquery';
+import { sendImageToCloud } from "../../api/ApiUploadImage";
 
 export default function EditForm({ titleForm = '', thisPage = '', stateForm = {}, dataHandle }) {
     const navigate = useNavigate();
@@ -8,8 +9,29 @@ export default function EditForm({ titleForm = '', thisPage = '', stateForm = {}
     const [checkSubmit, setCheckSubmit] = useState(false);
     const listAcceptTypeImg = ['image/png', 'image/jpeg'];
 
-    const handleChangeNew = (e, name, file = '') => {
+    const handleChangeNew = async (e, name, file = '') => {
+
+
         if (file == 'file') {
+            let files = e.target.files;
+            let fileType = (files[0]?.type);
+            if (files[0]) {
+                if (listAcceptTypeImg.includes(fileType)) {
+                    let fd = new FormData();
+                    fd.append('file', files[0]);
+                    let res = await sendImageToCloud(fd);
+
+                    setDataChangeNew(m => {
+                        let data = { ...m };
+                        data[`avatar`] = res.data.data.fileUrl;
+                        return data;
+                    });
+
+                } else {
+                    alert('img not support');
+                }
+            }
+
 
         } else {
             setDataChangeNew(m => {
@@ -29,6 +51,8 @@ export default function EditForm({ titleForm = '', thisPage = '', stateForm = {}
             setTimeout(() => {
                 dataHandle.setDataChangeNew(dataChangeNew);
                 setCheckSubmit(false);
+                dataHandle.setEventSubmit(true);
+                console.log('CHECK');
             }, 500);
         }
     }, [checkSubmit])
@@ -86,8 +110,8 @@ export default function EditForm({ titleForm = '', thisPage = '', stateForm = {}
                             <div className="form-floating mb-3 mb-md-0 flex_column_re">
                                 <input className="form-control get_value" id="urlTo" name="urlTo"
                                     type="text" placeholder="Enter your urlTo"
-                                    onChange={(e) => handleChangeNew(e, 'urlTo')}
-                                    value={dataChangeNew?.urlTo ? dataChangeNew?.urlTo : stateForm.urlTo ? stateForm.urlTo : ''} />
+                                    onChange={(e) => handleChangeNew(e, 'urlto')}
+                                    value={dataChangeNew?.urlto ? dataChangeNew?.urlto : stateForm.urlto ? stateForm.urlto : ''} />
                                 <label htmlFor="urlTo">urlTo</label>
                             </div>
                         </div>
@@ -99,6 +123,15 @@ export default function EditForm({ titleForm = '', thisPage = '', stateForm = {}
                                     onChange={(e) => handleChangeNew(e, 'content')}
                                     value={dataChangeNew?.content ? dataChangeNew?.content : stateForm.content ? stateForm.content : ''} />
                                 <label htmlFor="content">content</label>
+                            </div>
+                        </div>
+                        <div className="col-md-6 mb-4 img_list">
+                            <div className="form-floating mb-3 mb-md-0 " >
+                                <label htmlFor="avt">avatar</label>
+                                <div className="box_img string">
+                                    <img src={dataChangeNew?.avatar ? dataChangeNew?.avatar : stateForm.avatar ? stateForm.avatar : ''} alt="" />
+                                    <input type="file" onChange={(e) => handleChangeNew(e, 'avatar', 'file')} />
+                                </div>
                             </div>
                         </div>
 
