@@ -25,19 +25,19 @@ export default function ListHotPromotion({ list }) {
                             <div className="box_product_promotion">
                                 <Link className="box_link_thumb" to={`/product/${e.slug}`}>
                                     <div className="thumb_box_promotion">
-                                        <img src={e.img} alt="" />
+                                        <img src={e.variable.length > 0 ? e.variable[0].avatar : ''} alt="" />
                                         {
                                             e.installment ? <h4 className="title_sale_1">Trả góp {e.installment}%</h4> : ''
                                         }
-                                        <h4 className="title_sale_2">Giảm giá {e.sale}đ</h4>
+                                        <h4 className="title_sale_2">Giảm giá {e.variable.length > 0 ? e.variable[0].sale : ''}đ</h4>
                                     </div>
                                 </Link>
                                 <Link to={`/product/${e.slug}`} className="title_product_sale">
                                     {e.title}
                                 </Link>
                                 <div className="price_box">
-                                    <h3>{e.price}đ</h3>
-                                    <p>{e.cost}đ</p>
+                                    <h3>{e.variable.length > 0 ? e.variable[0].price : ''}đ</h3>
+                                    <p>{e.variable.length > 0 ? e.variable[0].cost : ''}đ</p>
                                 </div>
                                 <div className="bank">
                                     <ul>

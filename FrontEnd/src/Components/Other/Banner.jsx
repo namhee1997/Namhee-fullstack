@@ -3,7 +3,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
-export default function Banner({ dataBanner, thisPage = '' }) {
+export default function Banner({ dataBanner, thisPage = '', listBannerSlides }) {
     const settings = {
         dots: true,
         infinite: true,
@@ -23,9 +23,12 @@ export default function Banner({ dataBanner, thisPage = '' }) {
                         return (
                             thisPage == 'Product' ?
                                 <img className="bg items_slides" key={i} src={e?.thumb} alt="" />
-                                : <Link to={`/${e.link}`} key={i}>
-                                    <img className="bg items_slides" src={e.thumb} alt="" />
+                                : listBannerSlides ? <Link to={`/${e.link}`} key={i}>
+                                    <img className="bg items_slides" src={e.url} alt="" />
                                 </Link>
+                                    : <Link to={`/${e.link}`} key={i}>
+                                        <img className="bg items_slides" src={e.thumb} alt="" />
+                                    </Link>
                         );
                     })
                 }

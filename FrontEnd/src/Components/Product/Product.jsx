@@ -75,7 +75,7 @@ export default function Product({ handleRedirect }) {
             }
             fetchGetProductRelater();
         }
-    }, [infoSinglePhone])
+    }, [infoSinglePhone, param])
 
 
     // console.log(infoSinglePhone, 'infoSinglePhone');
@@ -125,7 +125,7 @@ export default function Product({ handleRedirect }) {
     const [handlePaGingClickRate, setHandlePaGingClickRate] = useState(true);
 
     useEffect(() => {
-        if (Object.keys(infoSinglePhone).length > 0 && rerenderRate) {
+        if (Object.keys(infoSinglePhone).length > 0) {
 
             let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
             const fetchGetRateById = async () => {
@@ -139,13 +139,19 @@ export default function Product({ handleRedirect }) {
 
                 } catch (error) {
                     console.log('get err');
+                    setTotalRate({
+                        idPhone: "0",
+                        idrate: 0,
+                        listCommentRate: [],
+                        totalstart: { start5: 0, start4: 0, start3: 0, start2: 0, start1: 0 },
+                    });
                     setRerenderRate(false);
                 }
             }
             fetchGetRateById();
 
         }
-    }, [infoSinglePhone, rerenderRate])
+    }, [infoSinglePhone, rerenderRate, param])
 
     useEffect(() => {
         if (Object.keys(totalRate).length > 0) {
@@ -175,7 +181,7 @@ export default function Product({ handleRedirect }) {
                 return data;
             });
         }
-    }, [totalRate])
+    }, [totalRate, param])
 
     useEffect(() => {
         if (Object.keys(totalRate).length > 0) {
@@ -184,7 +190,7 @@ export default function Product({ handleRedirect }) {
             setDataPagingRate(slice);
 
         }
-    }, [totalRate, handlePaGingClickRate])
+    }, [totalRate, handlePaGingClickRate, param])
 
     const handleSendRate = () => {
         let dataCustomsRates = { ...boxSendRate };
@@ -244,33 +250,38 @@ export default function Product({ handleRedirect }) {
     const [handlePaGingComment, setHandlePaGingComment] = useState(true);
 
     useEffect(() => {
-        if (Object.keys(infoSinglePhone).length > 0 && rerenderComment) {
+        if (Object.keys(infoSinglePhone).length > 0) {
 
             let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
             const fetchGetCommentById = async () => {
                 try {
                     let data = await getCommentProductById(keyJwt, axiosJwt, infoSinglePhone?.idPhone);
                     console.log('get success comment ', data);
-                    setDataComment(data);
+                    setDataComment(data.length > 0 ? data : { idComment: '' });
 
                     setRerenderComment(false);
                     setHandlePaGingComment(!handlePaGingClickRate);
 
                 } catch (error) {
-                    console.log('get err');
+                    console.log('get err comment');
                     setRerenderComment(false);
+                    setDataComment({ idComment: '' });
                 }
             }
             fetchGetCommentById();
 
         }
-    }, [infoSinglePhone, rerenderComment])
+    }, [infoSinglePhone, rerenderComment, param])
 
     useEffect(() => {
         if (Object.keys(dataComment).length > 0) {
-            setPageCountPagingComment(Math.ceil(dataComment.length / perPageComment));
-            let slice = dataComment?.slice(offsetPagingComment, offsetPagingComment + perPageComment)
-            setDataPagingComment(slice);
+            if (dataComment.idComment != '') {
+                setPageCountPagingComment(Math.ceil(dataComment.length / perPageComment));
+                let slice = dataComment?.slice(offsetPagingComment, offsetPagingComment + perPageComment)
+                setDataPagingComment(slice);
+            } else {
+                setDataPagingComment([]);
+            }
 
         }
     }, [dataComment, handlePaGingComment])
@@ -956,7 +967,7 @@ export default function Product({ handleRedirect }) {
                         <div className="list_comment">
                             <ul>
                                 {
-                                    dataPagingComment.map((e, i) =>
+                                    dataComment.idComment != '' ? dataPagingComment?.map((e, i) =>
                                         <li key={i}>
                                             <div className="thumb_user_rate">
                                                 <div className="box_avata">
@@ -965,11 +976,11 @@ export default function Product({ handleRedirect }) {
                                             </div>
                                             <div className="info_user_comment">
                                                 <div className="name_comment">
-                                                    <h4>{e.user} {e.isAdmin ? <span>Quản trị viên</span> : ''}</h4>
-                                                    <p className="time_comment">{moment(e.createdAt).fromNow()}</p>
+                                                    <h4>{e?.user} {e?.isAdmin ? <span>Quản trị viên</span> : ''}</h4>
+                                                    <p className="time_comment">{moment(e?.createdAt).fromNow()}</p>
                                                 </div>
                                                 <div className="content_rate_text">
-                                                    {e.title}
+                                                    {e?.title}
                                                 </div>
                                                 <div className="reply_box_title"
                                                     onClick={() => { setHandleReply({ ...handleReply, status: true, idComment: e.idComment }); }}>
@@ -977,7 +988,7 @@ export default function Product({ handleRedirect }) {
                                                 </div>
                                                 <ul className="reply_comment">
                                                     {
-                                                        e.listReply.map((z, x) =>
+                                                        e?.listReply?.map((z, x) =>
                                                             <li key={x}>
                                                                 <div className="thumb_user_rate">
                                                                     <div className="box_avata">{z.avt}</div>
@@ -1011,6 +1022,7 @@ export default function Product({ handleRedirect }) {
                                             </div>
                                         </li>
                                     )
+                                        : ''
                                 }
 
                             </ul>

@@ -4,6 +4,7 @@ import { useDispatch, useSelector, useStore } from "react-redux";
 import { getAllSlidesCustom, addNewSlidesCustom, updateSlidesCustom } from "../../api/ApiSlidesCustom";
 import { axiosJWT } from "../../../AxiosJWT";
 import { loginSuccess } from "../../../Action/Action";
+import $ from 'jquery';
 
 export default function SlidesMain({ handleRedirect }) {
 
@@ -160,19 +161,42 @@ export default function SlidesMain({ handleRedirect }) {
     }, [resultSlides])
 
     const submitSlides = () => {
-        // const bannerMain = store.getState().bannerMain.list;
+
+
+        let slidesMainDom = $('.slides_main.only ul li');
+        let bannerMainDom = $('.slides_main.banner_top_main   ul li');
+        let bannerPageDom = $('.slides_main.banner_page_main  ul li');
+        let slidesMainArr = [];
+        let bannerMainArr = [];
+        let bannerPageArr = [];
+        for (let i = 0; i < slidesMainDom.length; i++) {
+            let obj = {};
+            obj.url = $($('.slides_main.only ul li img')[i]).attr('src');
+            slidesMainArr.push(obj);
+        }
+        for (let i = 0; i < bannerMainDom.length; i++) {
+            let obj = {};
+            obj.url = $($('.slides_main.banner_top_main ul li img')[i]).attr('src');
+            bannerMainArr.push(obj);
+        }
+        for (let i = 0; i < bannerPageDom.length; i++) {
+            let obj = {};
+            obj.url = $($('.slides_main.banner_page_main ul li img')[i]).attr('src');
+            bannerPageArr.push(obj);
+        }
+
         setResultSlides(e => {
+
             let data = {
-                slidesmain: totalSlidesMain,
-                bannermain: bannerMain,
-                slidespage: totalSlidesPage,
+                slidesmain: slidesMainArr,
+                bannermain: bannerMainArr,
+                slidespage: bannerPageArr,
                 _id: idSlide
             };
-
-            console.log(data, 'data send to be');
-
+            console.log(data, 'bannerPageArr');
             return data;
         })
+
     }
 
     useEffect(() => {
@@ -189,7 +213,7 @@ export default function SlidesMain({ handleRedirect }) {
 
     return (
         <div className="container_user_dashboard slides">
-            <div className="slides_main box_shadow">
+            <div className="slides_main only box_shadow">
                 <h2>Slides main</h2>
                 <ul>
                     {

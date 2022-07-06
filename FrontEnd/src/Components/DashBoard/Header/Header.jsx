@@ -48,8 +48,11 @@ export default function HeaderDashBoard({ userCurrent }) {
                 </ul>
                 <div className="user_login">
                     <h2>Wellcome: {userCurrent?.username || ''}</h2>
+                    <Link to={`/`}>
+                        <i className="fa-solid fa-arrow-right-from-bracket"></i>
+                    </Link>
                 </div>
             </div>
-        </header>
+        </header >
     );
 }

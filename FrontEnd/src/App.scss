@@ -289,6 +289,7 @@ footer {
 .box_product_promotion {
   background: #fff;
   border-radius: 10px;
+  height: calc(100% - 35px);
 }
 
 .list_hot_promotion.product .li>h3 {
@@ -343,6 +344,10 @@ a.title_product_sale {
   align-items: center;
   justify-content: space-between;
   margin: 10px 0;
+}
+
+.box_lex label {
+  margin: 0;
 }
 
 .price_box h3 {
@@ -1043,6 +1048,11 @@ i.fa-solid.fa-question {
   align-items: center;
   justify-content: center;
   gap: 4px;
+}
+
+.thumb_box_promotion img {
+  object-fit: cover;
+  height: 270px;
 }
 
 .start_1 i::before,
@@ -2495,4 +2505,44 @@ ul.list_img_product li {
 .box_avata {
   width: 100%;
   height: 100%;
+}
+
+@media screen and (max-width: 1500px) {
+
+  p,
+  a {
+    font-size: 18px;
+  }
+
+  .h4,
+  h4 {
+    font-size: 20px;
+  }
+
+  .h2,
+  h2 {
+    font-size: 22px;
+  }
+
+  .cart_box h2 {
+    font-size: 22px;
+  }
+
+  .btn_submit button {
+    font-size: 16px;
+  }
+
+  .slide_logo_phone h3 {
+    font-size: 24px;
+  }
+
+  .user_login {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .user_login a i::before {
+    color: #ffbaba;
+  }
 }

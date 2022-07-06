@@ -1,4 +1,5 @@
 import axios from './Axios';
+import jwtDecode from 'jwt-decode';
 
 export const addNewNews = async (news) => {
     try {
@@ -11,11 +12,16 @@ export const addNewNews = async (news) => {
 
 export const getAllNews = async (accessToken, axiosJWT) => {
     try {
-        let res = await axiosJWT.get("/v1/news/get-all", {
-            headers: { token: `Bearer ${accessToken}` },
-        });
+        let date = new Date();
+        const decodeToken = jwtDecode(accessToken);
+        if (decodeToken.exp > date.getTime() / 1000) {
+            let res = await axiosJWT.get("/v1/news/get-all", {
+                headers: { token: `Bearer ${accessToken}` },
+            });
 
-        return res?.data;
+            return res?.data;
+        }
+        return 'tokenEXP';
     } catch (error) {
         console.log('data get all err 2');
         return [];
@@ -24,10 +30,15 @@ export const getAllNews = async (accessToken, axiosJWT) => {
 
 export const getNewsById = async (accessToken, axiosJWT, slug) => {
     try {
-        let res = await axiosJWT.get(`/v1/news/get-by-id/${slug}`, {
-            headers: { token: `Bearer ${accessToken}` },
-        });
-        return res?.data;
+        let date = new Date();
+        const decodeToken = jwtDecode(accessToken);
+        if (decodeToken.exp > date.getTime() / 1000) {
+            let res = await axiosJWT.get(`/v1/news/get-by-id/${slug}`, {
+                headers: { token: `Bearer ${accessToken}` },
+            });
+            return res?.data;
+        }
+        return 'tokenEXP';
     } catch (error) {
         console.log('data get by id err');
     }
@@ -44,12 +55,17 @@ export const updateNews = async (data) => {
 
 export const deleteNews = async (accessToken, axiosJWT, id) => {
     try {
-        let res = await axiosJWT.delete(`/v1/news/delete/${id}`, {
-            headers: { token: `Bearer ${accessToken}` },
-        });
-        console.log('remove news success');
+        let date = new Date();
+        const decodeToken = jwtDecode(accessToken);
+        if (decodeToken.exp > date.getTime() / 1000) {
+            let res = await axiosJWT.delete(`/v1/news/delete/${id}`, {
+                headers: { token: `Bearer ${accessToken}` },
+            });
+            console.log('remove news success');
 
-        return 'success';
+            return 'success';
+        }
+        return 'tokenEXP';
     } catch (error) {
         return 'fail';
     }

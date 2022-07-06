@@ -11,12 +11,23 @@ import Samsung from '../../assets/img/samsung.png';
 import Vivo from '../../assets/img/vivo.png';
 import Nokia from '../../assets/img/nokia.png';
 import { Link, useParams } from "react-router-dom";
+import jwtDecode from 'jwt-decode';
 import ProductList from "../Home/ProductList/ProductList";
+import { axiosJWT } from '../../AxiosJWT';
+import { loginSuccess } from '../../Action/Action';
+import { getAllProduct } from '../api/ApiProduct';
+import { getAllSlidesCustom } from '../api/ApiSlidesCustom';
 
 
 export default function ListPhone({ handleRedirect }) {
     const params = useParams();
     const store = useStore();
+
+    const dispatch = useDispatch();
+    const keyJwt = localStorage.getItem('token');
+    const user = jwtDecode(keyJwt);
+
+
     const [listBanner, setListBanner] = useState([{ thumb: Banner1, link: '' }, { thumb: Banner2, link: '' }, { thumb: Banner2, link: '' }]);
     useEffect(() => {
         handleRedirect.setCheckDirect(e => {
@@ -63,22 +74,42 @@ export default function ListPhone({ handleRedirect }) {
     const [totalProduct, setTotalProduct] = useState(0);
     const [dataPhone, setDataPhone] = useState([]);
     const [sort, setSort] = useState('min');
+    const [isSort, setisSort] = useState('');
     const [layout, setLayout] = useState('grid');
 
-    useEffect(() => {
-        setDataPhone(store.getState().dataState.data);
-    }, [])
+
 
     useEffect(() => {
-        dataPhone.sort(function (a, b) {
-            if (sort == 'max') {
-                return a.price - b.price;
+        let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+
+        const fetchGetAllProduct = async () => {
+            try {
+                let data = await getAllProduct(keyJwt, axiosJwt);
+                console.log('get all product success', data);
+                setDataPhone(data);
+            } catch (error) {
+                console.log('err get all product 1');
             }
-            if (sort == 'min') {
-                return b.price - a.price;
+        }
+        fetchGetAllProduct();
+    }, [])
+
+    //get all slides
+
+    useEffect(() => {
+        let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+
+        const fetchGetAllSlides = async () => {
+            try {
+                let data = await getAllSlidesCustom(keyJwt, axiosJwt);
+                console.log('get all slides success', data);
+                setListBanner(data[0].slidespage);
+            } catch (error) {
+                console.log('err get all slides 1');
             }
-        });
-    }, [dataPhone, sort])
+        }
+        fetchGetAllSlides();
+    }, [])
 
     useEffect(() => {
         setChange({
@@ -106,10 +137,129 @@ export default function ListPhone({ handleRedirect }) {
 
     //END GET DATA SEND API
 
+    //PAGING
+    const [offsetPagingProduct, setOffsetPagingProduct] = useState(0);
+    const [dataPagingProduct, setDataPagingProduct] = useState([]);
+    const [perPageProduct] = useState(9);
+    const [pageCountPagingProduct, setPageCountPagingProduct] = useState(0);
+    const [handlePaGingClick, setHandlePaGingClick] = useState(true);
+
+    const [handleReadyPaging, setHandleReadyPaging] = useState(false);
+    const [dataFilter, setDataFilter] = useState([]);
+
+
+    useEffect(() => {
+        dataPhone.sort(function (a, b) {
+            if (sort == 'max') {
+                return a.variable[0].price - b.variable[0].price;
+            }
+            if (sort == 'min') {
+                return b.variable[0].price - a.variable[0].price;
+            }
+        });
+    }, [dataPhone, sort])
+
+    useEffect(() => {
+        if (handleReadyPaging) {
+
+            setPageCountPagingProduct(Math.ceil(dataFilter.length / perPageProduct));
+            let slice = dataFilter?.slice(offsetPagingProduct, offsetPagingProduct + perPageProduct)
+            setDataPagingProduct(slice);
+            setHandleReadyPaging(false);
+        }
+    }, [dataPhone, handlePaGingClick, params, handleReadyPaging])
+
+    useEffect(() => {
+        if (Object.keys(dataPhone).length > 0) {
+            let data = [...dataPhone];
+            let dataResult = [];
+            data.map((e, i) => {
+                if (change.price == 'allprice') {
+                    if (change.company == 'allcompany') {
+                        dataResult.push(e);
+                    } else {
+                        if (e.company == change.company) {
+                            dataResult.push(e);
+                        }
+                    }
+                } else if (change.price == '<2') {
+                    if (e.variable[0].price < 2000000) {
+                        if (change.company == 'allcompany') {
+                            dataResult.push(e);
+                        } else {
+                            if (e.company == change.company) {
+                                dataResult.push(e);
+                            }
+                        }
+                    }
+                } else if (change.price == '2-4') {
+                    if (e.variable[0].price >= 2000000 && e.variable[0].price <= 4000000) {
+                        if (change.company == 'allcompany') {
+                            dataResult.push(e);
+                        } else {
+                            if (e.company == change.company) {
+                                dataResult.push(e);
+                            }
+                        }
+                    }
+                } else if (change.price == '4-7') {
+                    if (e.variable[0].price >= 4000000 && e.variable[0].price <= 7000000) {
+                        if (change.company == 'allcompany') {
+                            dataResult.push(e);
+                        } else {
+                            if (e.company == change.company) {
+                                dataResult.push(e);
+                            }
+                        }
+                    }
+                } else if (change.price == '7-12') {
+                    if (e.variable[0].price >= 7000000 && e.variable[0].price <= 12000000) {
+                        if (change.company == 'allcompany') {
+                            dataResult.push(e);
+                        } else {
+                            if (e.company == change.company) {
+                                dataResult.push(e);
+                            }
+                        }
+                    }
+                } else if (change.price == '>12') {
+                    if (e.variable[0].price >= 12000000) {
+                        if (change.company == 'allcompany') {
+                            dataResult.push(e);
+                        } else {
+                            if (e.company == change.company) {
+                                dataResult.push(e);
+                            }
+                        }
+                    }
+                }
+            })
+            if (isSort != '') {
+                dataResult.sort(function (a, b) {
+                    if (sort == 'max') {
+                        return a.variable[0].price - b.variable[0].price;
+                    }
+                    if (sort == 'min') {
+                        return b.variable[0].price - a.variable[0].price;
+                    }
+                });
+            }
+            setDataFilter(dataResult);
+            setHandleReadyPaging(true);
+        }
+    }, [dataPhone, change, isSort])
+
+    const handleClickRatePaGing = (e) => {
+        let selectedPage = e.selected;
+        setOffsetPagingProduct(selectedPage * perPageProduct);
+        setHandleReadyPaging(true);
+        setHandlePaGingClick(!handlePaGingClick);
+    };
+
     return (
         <div className="container_phone">
             <div className="banner_phone">
-                <Banner dataBanner={listBanner} />
+                <Banner dataBanner={listBanner} listBannerSlides />
             </div>
             <div className="box_flex_phone">
                 <div className="box_left_phone">
@@ -164,7 +314,7 @@ export default function ListPhone({ handleRedirect }) {
                             </ul>
                         </div>
                     </div>
-                    <div className="box_search_phone">
+                    {/* <div className="box_search_phone">
                         <h3>Ram</h3>
                         <div className="left_box_search">
                             <ul>
@@ -213,7 +363,7 @@ export default function ListPhone({ handleRedirect }) {
                                 }
                             </ul>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
                 <div className="box_right_phone">
                     <div className="list_phone_right">
@@ -230,11 +380,20 @@ export default function ListPhone({ handleRedirect }) {
                                     <span>
                                         Ưu tiên xem:
                                     </span>
-                                    <p className={sort == 'min' ? 'active' : ''} onClick={() => setSort('min')}>
-                                        Giá thấp
-                                    </p>
-                                    <p className={sort == 'max' ? 'active' : ''} onClick={() => setSort('max')}>
+                                    <p className={isSort == 'min' ? 'active' : ''}
+                                        onClick={() => {
+                                            setSort('min');
+                                            setisSort('min');
+                                        }}>
                                         Giá cao
+                                    </p>
+                                    <p className={isSort == 'max' ? 'active' : ''}
+                                        onClick={() => {
+                                            setSort('max');
+                                            setisSort('max');
+                                        }}>
+
+                                        Giá thấp
                                     </p>
                                 </div>
                                 <div className="box_right_sort">
@@ -251,19 +410,21 @@ export default function ListPhone({ handleRedirect }) {
                                 </div>
                             </div>
                             <div className="items_result layout">
-                                <ProductList list={dataPhone} layout={layout} />
+                                <ProductList list={dataPagingProduct} layout={layout} />
                             </div>
                         </div>
                         <div className="list_pagination">
                             <ReactPaginate
-                                breakLabel="..."
-                                nextLabel=">"
-                                onPageChange={``}
+                                previousLabel={"<"}
+                                nextLabel={">"}
+                                breakLabel={"..."}
+                                pageCount={pageCountPagingProduct}
+                                marginPagesDisplayed={2}
                                 pageRangeDisplayed={5}
-                                pageCount={5}
-                                previousLabel="<"
+                                onPageChange={handleClickRatePaGing}
                                 renderOnZeroPageCount={null}
                             />
+
                         </div>
                     </div>
                 </div>

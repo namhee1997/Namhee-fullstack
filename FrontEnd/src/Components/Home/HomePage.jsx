@@ -16,6 +16,9 @@ import { axiosJWT } from "../../AxiosJWT";
 import { loginSuccess } from "../../Action/Action";
 import { getAllCart } from "../api/ApiCart";
 import { addToCart } from "../../Action/Action";
+import { getAllProduct } from "../api/ApiProduct";
+import { getAllSlidesCustom } from "../api/ApiSlidesCustom";
+import { getAllNews } from "../api/ApiNews";
 
 
 const HomePage = ({ handleRedirect }) => {
@@ -24,14 +27,14 @@ const HomePage = ({ handleRedirect }) => {
   const keyJwt = localStorage.getItem('token');
   const user = handleRedirect.userCurrentByToken;
 
-  const [listBanner, setListBanner] = useState([{ thumb: Banner1, link: '' }, { thumb: Banner2, link: '' }, { thumb: Banner2, link: '' }]);
+  const [listBannerSlides, setListBannerSlides] = useState([{ thumb: Banner1, link: '' }, { thumb: Banner2, link: '' }, { thumb: Banner2, link: '' }]);
   const [listPromotion, setListPromotion] = useState([
     { src: Samsung, title: 'Samsung', url: 'samsung' },
     { src: Vivo, title: 'Vivo', url: 'vivo' },
     { src: Apple, title: 'Apple', url: 'apple' },
     { src: Nokia, title: 'Nokia', url: 'nokia' }
   ]);
-  const [listFeatureBanner, setListFeatureBanner] = useState([
+  const [listNews, setListNews] = useState([
     {
       img: 'https://images.fpt.shop/unsafe/fit-in/70x40/filters:quality(90):fill(white)/https://fptshop.com.vn/Uploads/images/2015/CTKM-Voucher/sieu%20sale/70x40(1).png',
       title: 'Tuần lễ Xiaomi giảm sốc đến 40%'
@@ -41,8 +44,69 @@ const HomePage = ({ handleRedirect }) => {
       title: 'Nhận ngay Voucher 50.000Đ'
     }
   ]);
-  const listHotPromotion = useSelector(e => e.dataState.data);
-  const userCurrent = useSelector(e => e.loginUser);
+  const [listBanner, setListBanner] = useState([
+    { thumb: 'https://images.fpt.shop/unsafe/fit-in/385x100/filters:quality(90):fill(white)/fptshop.com.vn/Uploads/Originals/2022/5/10/637877861412853482_F-H2_385x100.png' },
+    { thumb: 'https://images.fpt.shop/unsafe/fit-in/385x100/filters:quality(90):fill(white)/fptshop.com.vn/Uploads/Originals/2022/5/1/637869969726431249_F-H2_385x100.png' },
+  ]);
+
+  //get all slides
+
+  useEffect(() => {
+    let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+
+    const fetchGetAllSlides = async () => {
+      try {
+        let data = await getAllSlidesCustom(keyJwt, axiosJwt);
+        console.log('get all slides success', data);
+        setListBannerSlides(data[0].slidesmain);
+        setListBanner(data[0].bannermain);
+
+      } catch (error) {
+        console.log('err get all slides 1');
+      }
+    }
+    fetchGetAllSlides();
+  }, [])
+
+  const [listHotPromotion, setListHotPromotion] = useState([]);
+
+  //get list hot
+
+  useEffect(() => {
+    let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+
+    const fetchGetAllProduct = async () => {
+      try {
+        let data = await getAllProduct(keyJwt, axiosJwt);
+        console.log('get all product success', data);
+        setListHotPromotion(data);
+      } catch (error) {
+        console.log('err get all product 1');
+      }
+    }
+    fetchGetAllProduct();
+  }, [])
+
+
+  //end get list hot
+
+  //get all news
+
+  useEffect(() => {
+    let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+
+    const fetchGetAllNews = async () => {
+      try {
+        let data = await getAllNews(keyJwt, axiosJwt);
+        console.log('get all NEWS success', data);
+        setListNews(data);
+      } catch (error) {
+        console.log('err get all NEWS 1');
+      }
+    }
+    fetchGetAllNews();
+  }, [])
+
   useEffect(() => {
     handleRedirect.setCheckDirect(e => {
       let data = { ...e }
@@ -72,14 +136,17 @@ const HomePage = ({ handleRedirect }) => {
       <div className="banner">
         <div className="container_main">
           <div className="container_banner box_shadow">
-            <Banner dataBanner={listBanner} />
+            <Banner dataBanner={listBannerSlides} listBannerSlides />
             <div className="content_right_banner">
-              <div className="banner_1">
-                <img src="https://images.fpt.shop/unsafe/fit-in/385x100/filters:quality(90):fill(white)/fptshop.com.vn/Uploads/Originals/2022/5/10/637877861412853482_F-H2_385x100.png" alt="" />
-              </div>
-              <div className="banner_1">
-                <img src="https://images.fpt.shop/unsafe/fit-in/385x100/filters:quality(90):fill(white)/fptshop.com.vn/Uploads/Originals/2022/5/1/637869969726431249_F-H2_385x100.png" alt="" />
-              </div>
+              {
+                listBanner?.map((e, i) =>
+                  <div className="banner_1" key={i}>
+                    <img src={e.url} alt="" />
+                  </div>
+                )
+              }
+
+
               <div className="info_feature_banner">
                 <div className="title_info">
                   <h4>Featured information</h4>
@@ -87,11 +154,11 @@ const HomePage = ({ handleRedirect }) => {
                 </div>
                 <ul>
                   {
-                    listFeatureBanner.map((e, i) => {
+                    listNews.map((e, i) => {
                       return (
                         <li key={i}>
                           <Link to='/'>
-                            <img src={`${e.img}`} alt="" />
+                            <img src={`${e.avatar}`} alt="" />
                             <p>
                               {e.title}
                             </p>
@@ -166,6 +233,14 @@ const HomePage = ({ handleRedirect }) => {
               <h2>Vivo</h2>
             </div>
             <ProductList list={listHotPromotion} company='vivo' />
+          </div>
+        </div>
+        <div className="section_2 product_selling">
+          <div className="container_1 box_shadow">
+            <div className="title_1">
+              <h2>Nokia</h2>
+            </div>
+            <ProductList list={listHotPromotion} company='nokia' />
           </div>
         </div>
       </div>

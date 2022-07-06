@@ -1,4 +1,5 @@
 import axios from './Axios';
+import jwtDecode from 'jwt-decode';
 
 export const addNewCommentProduct = async (commentProduct) => {
     try {
@@ -11,11 +12,16 @@ export const addNewCommentProduct = async (commentProduct) => {
 
 export const getAllCommentProduct = async (accessToken, axiosJWT) => {
     try {
-        let res = await axiosJWT.get("/v1/comment-product/get-all", {
-            headers: { token: `Bearer ${accessToken}` },
-        });
+        let date = new Date();
+        const decodeToken = jwtDecode(accessToken);
+        if (decodeToken.exp > date.getTime() / 1000) {
+            let res = await axiosJWT.get("/v1/comment-product/get-all", {
+                headers: { token: `Bearer ${accessToken}` },
+            });
 
-        return res?.data;
+            return res?.data;
+        }
+        return 'tokenEXP';
     } catch (error) {
         console.log('data get all err 2');
         return [];
@@ -24,10 +30,15 @@ export const getAllCommentProduct = async (accessToken, axiosJWT) => {
 
 export const getCommentProductById = async (accessToken, axiosJWT, id) => {
     try {
-        let res = await axiosJWT.get(`/v1/comment-product/get-by-id/${id}`, {
-            headers: { token: `Bearer ${accessToken}` },
-        });
-        return res?.data;
+        let date = new Date();
+        const decodeToken = jwtDecode(accessToken);
+        if (decodeToken.exp > date.getTime() / 1000) {
+            let res = await axiosJWT.get(`/v1/comment-product/get-by-id/${id}`, {
+                headers: { token: `Bearer ${accessToken}` },
+            });
+            return res?.data;
+        }
+        return 'tokenEXP';
     } catch (error) {
         console.log('data get by id err');
     }
@@ -44,12 +55,17 @@ export const updateCommentProduct = async (data) => {
 
 export const deleteCommentProduct = async (accessToken, axiosJWT, id) => {
     try {
-        let res = await axiosJWT.delete(`/v1/comment-product/delete/${id}`, {
-            headers: { token: `Bearer ${accessToken}` },
-        });
-        console.log('remove commentProduct success');
+        let date = new Date();
+        const decodeToken = jwtDecode(accessToken);
+        if (decodeToken.exp > date.getTime() / 1000) {
+            let res = await axiosJWT.delete(`/v1/comment-product/delete/${id}`, {
+                headers: { token: `Bearer ${accessToken}` },
+            });
+            console.log('remove commentProduct success');
 
-        return 'success';
+            return 'success';
+        }
+        return 'tokenEXP';
     } catch (error) {
         return 'fail';
     }
