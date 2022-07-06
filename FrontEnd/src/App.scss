@@ -2440,6 +2440,10 @@ ul.list_img_product li {
   gap: 10px;
 }
 
+.btn_menu_mobile {
+  cursor: pointer;
+}
+
 .container_view_order ul li h3 {
   min-width: 150px;
   font-size: 20px;
@@ -2630,6 +2634,7 @@ a:hover {
     top: 34px;
     padding-top: 10px;
     left: 0;
+    box-shadow: 0px 2px 6px #a7a7a79e;
   }
 
   .menu_mobile .logo {
