@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -9,17 +9,63 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
+import { useDispatch } from "react-redux";
 import { Bar } from 'react-chartjs-2';
+import { loginSuccess } from '../../Action/Action';
+import { axiosJWT } from "../../AxiosJWT";
+import { getAllUser } from "../api/ApiUser";
+import { getAllOrderUser } from "../api/ApiOrderUser";
+import { getAllOrderSuccess } from "../api/ApiOrderSuccess";
 
 
 export default function DashBoard({ handleRedirect }) {
+    const dispatch = useDispatch();
+    const keyJwt = localStorage.getItem('token');
+    const user = handleRedirect.userCurrentByToken;
+
+    const [totalUser, setTotalUser] = useState([]);
+    const [totalOrderUser, setTotalOrderUser] = useState([]);
+    const [totalOrderSuccess, setTotalOrderSuccess] = useState([]);
 
     useEffect(() => {
+        let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
         handleRedirect.setCheckDirect(e => {
             let data = { ...e }
             data.dashBoard = true;
             return data;
         })
+        const fetchGetAllUser = async () => {
+            try {
+                let data = await getAllUser(keyJwt, axiosJwt);
+                console.log('get all user success', data);
+                setTotalUser(data);
+            } catch (error) {
+                console.log('get all user err 1');
+            }
+        }
+        const fetchGetAllOrderUser = async () => {
+            try {
+                let data = await getAllOrderUser(keyJwt, axiosJwt);
+                console.log('get all order user success', data);
+                setTotalOrderUser(data);
+            } catch (error) {
+                console.log('get all user err 1');
+            }
+        }
+        const fetchGetAllOrderSuccess = async () => {
+            try {
+                let data = await getAllOrderSuccess(keyJwt, axiosJwt);
+                console.log('get all order success', data);
+                setTotalOrderSuccess(data);
+            } catch (error) {
+                console.log('get all user err 1');
+            }
+        }
+
+        fetchGetAllOrderSuccess();
+        fetchGetAllOrderUser();
+        fetchGetAllUser();
+
     }, [])
 
     const options = {
@@ -65,13 +111,18 @@ export default function DashBoard({ handleRedirect }) {
                     <h2>DashBoard</h2>
                     <ul className="list_dashboard box_shadow">
                         <li className="total_user">
-                            <Link to={`/`}>
-                                <h4>Tổng số người dùng: 100</h4>
+                            <Link to={`/dashboard/user`}>
+                                <h4>Tổng số người đăng ký: {totalUser.length}</h4>
                             </Link>
                         </li>
                         <li className="total_price">
-                            <Link to={`/`}>
-                                <h4>Tổng số tiền đã giao dịch: 100.000.000VNĐ</h4>
+                            <Link to={`/dashboard/order`}>
+                                <h4>Tổng số đơn hàng đã giao dịch: {totalOrderSuccess.length}</h4>
+                            </Link>
+                        </li>
+                        <li className="total_order">
+                            <Link to={`/dashboard/order`}>
+                                <h4>Tổng số đơn hàng đang đặt: {totalOrderUser.length}</h4>
                             </Link>
                         </li>
                     </ul>

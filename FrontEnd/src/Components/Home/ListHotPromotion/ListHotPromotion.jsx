@@ -10,7 +10,17 @@ export default function ListHotPromotion({ list }) {
         slidesToScroll: 4,
         arrows: false,
         className: 'list_hot_promotion product',
-        centerPadding: 20
+        centerPadding: 20,
+        responsive: [
+            {
+                breakpoint: 900,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    dots: false,
+                },
+            },
+        ],
     };
 
     return (

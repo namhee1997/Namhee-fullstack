@@ -99,12 +99,16 @@ export default function Router() {
         userCurrentByToken
     };
     let handleRefresh = { setCheckLogOut, checkLogOut };
+    console.log(location, 'location');
     return (
         <>
             {
                 location[1] != 'dashboard' ?
                     <>
-                        <NavBar userCurrent={userCurrentByToken} refresh={handleRefresh} />
+                        {
+                            location[1] != "login" ? <NavBar userCurrent={userCurrentByToken} refresh={handleRefresh} /> : ''
+                        }
+
                         <div className="App">
                             <Routes>
                                 <Route path="/product/:slug" element={<Product handleRedirect={handleRedirect} />} />
@@ -120,7 +124,10 @@ export default function Router() {
 
                     : <>
                         <div className="DashBoard">
-                            <HeaderDashBoard userCurrent={userCurrentByToken} />
+                            {
+                                location[2] != "login" ? <HeaderDashBoard userCurrent={userCurrentByToken} /> : ''
+                            }
+
                             <Routes>
                                 <Route path="/dashboard" element={<DashBoard handleRedirect={handleRedirect} />} />
                                 <Route path="/dashboard/login" element={<LoginDashBoard />} />
