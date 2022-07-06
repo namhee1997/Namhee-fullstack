@@ -99,7 +99,6 @@ export default function Router() {
         userCurrentByToken
     };
     let handleRefresh = { setCheckLogOut, checkLogOut };
-    console.log(location, 'location');
     return (
         <>
             {

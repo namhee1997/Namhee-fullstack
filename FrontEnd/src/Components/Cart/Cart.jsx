@@ -9,6 +9,7 @@ import { addToCart } from "../../Action/Action";
 import { addNewOrderUser } from "../api/ApiOrderUser";
 import { deleteAllCart } from "../api/ApiCart";
 import { iconLoading } from "../svg/svg";
+import { deleteCart } from "../api/ApiCart";
 
 export default function Cart({ handleRedirect }) {
     const store = useStore();
@@ -57,10 +58,20 @@ export default function Cart({ handleRedirect }) {
 
     //REMOVE PRODUCT
     const handleRemoveProduct = (id) => {
+        let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
         console.log(id, 'id');
-        let formRemove = removeProductCart(id);
-        dispatch(formRemove);
-        setCheckRemove(!checkRemove);
+        const fetchDeleteCartId = async () => {
+            try {
+                let data = await deleteCart(keyJwt, axiosJwt, id);
+                let formRemove = removeProductCart(id);
+                dispatch(formRemove);
+                setCheckRemove(!checkRemove);
+                console.log('delete success', data);
+            } catch (error) {
+                console.log('delete cart err 1');
+            }
+        }
+        fetchDeleteCartId();
     }
     //END REMOVE PRODUCT
 

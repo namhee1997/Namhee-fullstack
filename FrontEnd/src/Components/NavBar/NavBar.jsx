@@ -14,7 +14,7 @@ const NavBar = ({ userCurrent, refresh }) => {
   const isChangeCart = useSelector(e => e.cart.checkChange)
   const [user, setUSer] = useState(null);
   const [showItem, setShowItem] = useState(false);
-  const [totalCart, setTotalCart] = useState(0);
+  const [totalCart, setTotalCart] = useState([]);
 
   const refMenu = useRef();
 
@@ -25,8 +25,9 @@ const NavBar = ({ userCurrent, refresh }) => {
     }
   }, [userCurrent])
   useEffect(() => {
-    setTotalCart((store.getState().cart.data).length);
+    setTotalCart((store.getState().cart.data));
   }, [isChangeCart])
+
 
   const handleLogOut = (e) => {
     e.preventDefault();
@@ -47,6 +48,8 @@ const NavBar = ({ userCurrent, refresh }) => {
     }
     setShowMobile(true);
   }
+
+  console.log('store.getState().cart.data', store.getState().cart.data[0]);
 
 
   return (
@@ -96,7 +99,7 @@ const NavBar = ({ userCurrent, refresh }) => {
           <div className="cart">
             <Link to="/cart">
               <i className="fa-solid fa-cart-shopping"></i>
-              <span className="count_cart">{totalCart}</span>
+              <span className="count_cart">{totalCart.length}</span>
             </Link>
           </div>
 
@@ -170,7 +173,7 @@ const NavBar = ({ userCurrent, refresh }) => {
             <div className="cart">
               <Link to="/cart">
                 <i className="fa-solid fa-cart-shopping"></i>
-                <span className="count_cart">{totalCart}</span>
+                <span className="count_cart">{totalCart.length}</span>
               </Link>
             </div>
 
