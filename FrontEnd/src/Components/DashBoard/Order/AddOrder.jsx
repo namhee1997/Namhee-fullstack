@@ -3,6 +3,7 @@ import CreateForm from '../Other/CreateForm';
 import { useStore, useSelector, useDispatch } from 'react-redux';
 import { addOrder } from '../../../Action/Action';
 import { addNewOrderSuccess } from '../../api/ApiOrderSuccess';
+import { iconLoading } from '../../svg/svg';
 
 export default function AddOrder({ handleRedirect }) {
     useEffect(() => {
@@ -15,6 +16,7 @@ export default function AddOrder({ handleRedirect }) {
     const data = useSelector(e => e.companyPhone.list)
     const dataPromotion = useSelector(e => e.promotionList.data)
     const dispatch = useDispatch();
+    const [isLoading, setIsLoading] = useState(false);
 
     const [stateForm, setStateForm] = useState([
         { name: 'title', type: 'text', placeholder: 'Enter your title' },
@@ -44,14 +46,17 @@ export default function AddOrder({ handleRedirect }) {
     useEffect(() => {
 
         if (Object.keys(dataForm).length > 0 && eventSubmit) {
+            setIsLoading(true);
             const fetchOrderSuccessList = async () => {
                 try {
                     let data = await addNewOrderSuccess(dataForm);
                     console.log('add new success', data);
                     setEventSubmit(false);
+                    setIsLoading(false);
                 } catch (error) {
                     setEventSubmit(false);
                     console.log('Failed to fetch company list: ', error);
+                    setIsLoading(false);
                 }
             }
 
@@ -74,6 +79,11 @@ export default function AddOrder({ handleRedirect }) {
 
     return (
         <div className="container_user_dashboard">
+            {
+                isLoading ? <div className="overlay_load">
+                    <span>{iconLoading}</span>
+                </div> : ''
+            }
             <CreateForm titleForm='Add Order' thisPage="Order" stateForm={stateForm} dataHandle={dataHandle} />
         </div>
     );

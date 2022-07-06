@@ -4,11 +4,13 @@ import { getAllUser } from "../../api/ApiUser";
 import { loginSuccess, setAllUser } from "../../../Action/Action";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { axiosJWT } from "../../../AxiosJWT";
+import { iconLoading } from "../../svg/svg";
 
 export default function Users({ handleRedirect }) {
     const dispatch = useDispatch();
     const keyJwt = localStorage.getItem('token');
     const user = handleRedirect.userCurrentByToken;
+    const [isLoading, setIsLoading] = useState(true);
 
 
     useEffect(() => {
@@ -28,8 +30,10 @@ export default function Users({ handleRedirect }) {
             try {
                 let data = await getAllUser(keyJwt, axiosJwt);
                 setDataCurrent(data);
+                setIsLoading(false);
             } catch (e) {
                 console.log(e, 'err get all un user.jsx');
+                setIsLoading(false);
             }
         }
         fetchAllUser();
@@ -38,6 +42,11 @@ export default function Users({ handleRedirect }) {
     let handleReRender = { setReRender };
     return (
         <div className="container_user_dashboard">
+            {
+                isLoading ? <div className="overlay_load">
+                    <span>{iconLoading}</span>
+                </div> : ''
+            }
             <Table dataTitle={titleCurrent} dataCurrent={dataCurrent} thisPage='User'
                 title='User' linkCreate="/dashboard/user/create" handleReRender={handleReRender}
             />

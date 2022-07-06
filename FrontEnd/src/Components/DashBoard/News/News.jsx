@@ -5,12 +5,14 @@ import { axiosJWT } from "../../../AxiosJWT";
 import { loginSuccess } from "../../../Action/Action";
 import { useDispatch } from "react-redux";
 import { getAllNews } from "../../api/ApiNews";
+import { iconLoading } from "../../svg/svg";
 
 export default function News({ handleRedirect }) {
 
     const dispatch = useDispatch();
     const keyJwt = localStorage.getItem('token');
     const user = handleRedirect.userCurrentByToken;
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         handleRedirect.setCheckDirect(e => {
@@ -30,8 +32,10 @@ export default function News({ handleRedirect }) {
                 let data = await getAllNews(keyJwt, axiosJwt);
                 console.log('get all news success', data);
                 setDataCurrent(data);
+                setIsLoading(false);
             } catch (error) {
                 console.log('get all news err 1');
+                setIsLoading(false);
             }
         }
         fetchGetAllNews();
@@ -40,6 +44,11 @@ export default function News({ handleRedirect }) {
     let handleReRender = { setReRender };
     return (
         <div className="container_user_dashboard">
+            {
+                isLoading ? <div className="overlay_load">
+                    <span>{iconLoading}</span>
+                </div> : ''
+            }
             <Table dataTitle={titleCurrent} dataCurrent={dataCurrent} thisPage='News' title='News'
                 linkCreate="/dashboard/news/create"
                 handleReRender={handleReRender}

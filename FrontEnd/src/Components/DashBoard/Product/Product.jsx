@@ -4,11 +4,13 @@ import { getAllProduct } from "../../api/ApiProduct";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { loginSuccess } from "../../../Action/Action";
 import { axiosJWT } from "../../../AxiosJWT";
+import { iconLoading } from "../../svg/svg";
 
 export default function Product({ handleRedirect }) {
     const dispatch = useDispatch();
     const keyJwt = localStorage.getItem('token');
     const user = handleRedirect.userCurrentByToken;
+    const [isLoading, setIsLoading] = useState(true);
 
 
     useEffect(() => {
@@ -29,8 +31,10 @@ export default function Product({ handleRedirect }) {
                 let data = await getAllProduct(keyJwt, axiosJwt);
                 console.log('get all product success 1', data);
                 setDataCurrent(data);
+                setIsLoading(false);
             } catch (error) {
                 console.log('get all product err 1');
+                setIsLoading(false);
             }
         }
         fetchGetAllProduct();
@@ -41,6 +45,11 @@ export default function Product({ handleRedirect }) {
 
     return (
         <div className="container_user_dashboard">
+            {
+                isLoading ? <div className="overlay_load">
+                    <span>{iconLoading}</span>
+                </div> : ''
+            }
             <Table dataTitle={titleCurrent} dataCurrent={dataCurrent} thisPage='Product'
                 title='Product'
                 linkCreate="/dashboard/product/create"

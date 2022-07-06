@@ -19,6 +19,7 @@ import { addToCart } from "../../Action/Action";
 import { getAllProduct } from "../api/ApiProduct";
 import { getAllSlidesCustom } from "../api/ApiSlidesCustom";
 import { getAllNews } from "../api/ApiNews";
+import { iconLoading } from "../svg/svg";
 
 
 const HomePage = ({ handleRedirect }) => {
@@ -27,6 +28,7 @@ const HomePage = ({ handleRedirect }) => {
   const keyJwt = localStorage.getItem('token');
   const user = handleRedirect.userCurrentByToken;
 
+  const [isLoading, setIsLoading] = useState(true);
   const [listBannerSlides, setListBannerSlides] = useState([{ thumb: Banner1, link: '' }, { thumb: Banner2, link: '' }, { thumb: Banner2, link: '' }]);
   const [listPromotion, setListPromotion] = useState([
     { src: Samsung, title: 'Samsung', url: 'samsung' },
@@ -60,9 +62,11 @@ const HomePage = ({ handleRedirect }) => {
         console.log('get all slides success', data);
         setListBannerSlides(data[0].slidesmain);
         setListBanner(data[0].bannermain);
+        setIsLoading(false);
 
       } catch (error) {
         console.log('err get all slides 1');
+        setIsLoading(false);
       }
     }
     fetchGetAllSlides();
@@ -133,6 +137,12 @@ const HomePage = ({ handleRedirect }) => {
 
   return (
     <main className="home-container">
+      {
+        isLoading ? <div className="overlay_load">
+          <span>{iconLoading}</span>
+        </div> : ''
+      }
+
       <div className="banner">
         <div className="container_main">
           <div className="container_banner box_shadow">

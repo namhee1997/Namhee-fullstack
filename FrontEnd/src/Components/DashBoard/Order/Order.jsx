@@ -8,11 +8,13 @@ import { axiosJWT } from "../../../AxiosJWT";
 import { getAllOrderSuccess } from "../../api/ApiOrderSuccess";
 import { getAllOrderUser } from "../../api/ApiOrderUser";
 import { getUserById } from "../../api/ApiUser";
+import { iconLoading } from "../../svg/svg";
 
 export default function Order({ handleRedirect }) {
 
     const keyJwt = localStorage.getItem('token');
     const user = handleRedirect.userCurrentByToken;
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         handleRedirect.setCheckDirect(e => {
@@ -42,8 +44,10 @@ export default function Order({ handleRedirect }) {
                 let data = await getAllOrderSuccess(keyJwt, axiosJwt);
                 console.log('get all order success ', data);
                 setDataCustoms(data);
+                setIsLoading(false);
             } catch (error) {
                 console.log('get all order success err 1');
+                setIsLoading(false);
             }
         }
         const fetchGetAllOrderUser = async () => {
@@ -82,13 +86,16 @@ export default function Order({ handleRedirect }) {
     useEffect(() => {
         if (viewBox.view) {
             let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
+            setIsLoading(true);
             const fetchUserByid = async () => {
                 try {
                     let data = await getUserById(keyJwt, axiosJwt, viewBox.userID);
                     console.log('get user by id success', data);
                     setDataUserCurrent(data[0]);
+                    setIsLoading(false);
                 } catch (error) {
                     console.log('err by id');
+                    setIsLoading(false);
                 }
             }
             fetchUserByid();
@@ -102,6 +109,11 @@ export default function Order({ handleRedirect }) {
 
     return (
         <div className="container_user_dashboard">
+            {
+                isLoading ? <div className="overlay_load">
+                    <span>{iconLoading}</span>
+                </div> : ''
+            }
             <Table dataTitle={titleCurrent} dataCurrent={dataCurrent} thisPage='Order' create='false' title='Order'
                 linkCreate="/dashboard/order/create" dataHandle={dataHandle}
             />

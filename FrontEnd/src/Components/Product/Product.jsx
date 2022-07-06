@@ -14,6 +14,7 @@ import { addNewCart } from "../api/ApiCart";
 import { addNewRatesProduct, getAllRatesProduct, getRatesProductById } from "../api/ApiRateProduct";
 import jwtDecode from 'jwt-decode';
 import { addNewCommentProduct, updateCommentProduct, getCommentProductById } from "../api/ApiCommentProduct";
+import { iconLoading } from "../svg/svg";
 
 moment().format();
 
@@ -26,6 +27,7 @@ export default function Product({ handleRedirect }) {
     const keyJwt = localStorage.getItem('token');
     const user = jwtDecode(keyJwt);
 
+    const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
         handleRedirect.setCheckDirect(e => {
             let data = { ...e }
@@ -53,8 +55,10 @@ export default function Product({ handleRedirect }) {
                 let data = await getProductById(keyJwt, axiosJwt, param.slug);
                 console.log('get product success', data);
                 setInfoSinglePhone(data[0]);
+                setIsLoading(false);
             } catch (error) {
                 console.log('get product err1');
+                setIsLoading(false);
             }
         }
 
@@ -105,7 +109,7 @@ export default function Product({ handleRedirect }) {
         status: false,
         start: 0,
         title: '',
-        user: user.fullname,
+        user: user.username,
         avt: user.avatar
 
     });
@@ -195,14 +199,17 @@ export default function Product({ handleRedirect }) {
     const handleSendRate = () => {
         let dataCustomsRates = { ...boxSendRate };
         dataCustomsRates.idPhone = infoSinglePhone.idPhone;
+        setIsLoading(true);
         const fechAddRatesProduct = async () => {
             try {
                 let data = await addNewRatesProduct(dataCustomsRates);
                 console.log('add rates product success', data);
                 setRerenderRate(true);
+                setIsLoading(false);
             } catch (error) {
                 console.log('add rates product err 1');
                 setRerenderRate(true);
+                setIsLoading(false);
             }
         };
         fechAddRatesProduct();
@@ -222,7 +229,7 @@ export default function Product({ handleRedirect }) {
     const [handleReply, setHandleReply] = useState({
         status: false,
         title: '',
-        user: user.fullname,
+        user: user.username,
         avt: user.avatar,
         idUser: user.userId,
         isAdmin: user.role == 'admin' ? true : false,
@@ -231,7 +238,7 @@ export default function Product({ handleRedirect }) {
     })
     const [handleComment, setHandleComment] = useState({
         title: '',
-        user: user.fullname,
+        user: user.username,
         avt: user.avatar,
         idUser: user.userId,
         isAdmin: user.role == 'admin' ? true : false,
@@ -296,16 +303,19 @@ export default function Product({ handleRedirect }) {
 
     const handleSendComment = () => {
         console.log('handleSendComment', handleComment); //api
+        setIsLoading(true);
         const fetchAddComment = async () => {
             try {
                 let data = addNewCommentProduct(handleComment);
                 console.log('add comment success', data);
                 setRerenderComment(true);
                 setHandleComment({ ...handleComment, title: '' })
+                setIsLoading(false);
 
             } catch (error) {
                 console.log('add comment err 1');
                 setRerenderComment(true);
+                setIsLoading(false);
             }
         }
         fetchAddComment();
@@ -313,6 +323,7 @@ export default function Product({ handleRedirect }) {
 
     const handleReplyComment = (id_comment, idUser) => {
         console.log('handleReply', handleReply);//api
+        setIsLoading(true);
 
         const fetchUpdateComment = async () => {
             try {
@@ -320,10 +331,12 @@ export default function Product({ handleRedirect }) {
                 console.log('update comment success', data);
                 setRerenderComment(true);
                 setHandleReply({ ...handleReply, title: '' });
+                setIsLoading(false);
 
             } catch (error) {
                 console.log('update comment err 1');
                 setRerenderComment(true);
+                setIsLoading(false);
             }
         }
         fetchUpdateComment();
@@ -430,6 +443,7 @@ export default function Product({ handleRedirect }) {
         if (buy == 'buy') {
             e.preventDefault();
         }
+        setIsLoading(true);
         setClickAddCart(!clickAddCart);
         setTimeout(() => {
             const fetchAddNewCart = async () => {
@@ -439,6 +453,7 @@ export default function Product({ handleRedirect }) {
                     // dataTotal._id = data?._id;
                     let addToCartRedux = addToCart(dataTotal);
                     dispatch(addToCartRedux);
+                    setIsLoading(false);
                     if (buy == 'buy') {
                         setTimeout(() => {
                             navigate('/cart');
@@ -456,6 +471,11 @@ export default function Product({ handleRedirect }) {
     //END DATA SEND
     return (
         <div className="product_phone">
+            {
+                isLoading ? <div className="overlay_load">
+                    <span>{iconLoading}</span>
+                </div> : ''
+            }
             <div className="title_phone">
                 <h1>{infoSinglePhone?.title}</h1>
                 <div className="evaluate">
@@ -909,7 +929,7 @@ export default function Product({ handleRedirect }) {
                                     <li key={i}>
                                         <div className="thumb_user_rate">
                                             <div className="box_avata">
-                                                <img src={e.avt} alt="" />
+                                                <img src={e.avt == "" ? "https://www.maxpixel.net/static/photo/640/Avatar-Blank-Profile-Picture-Display-Pic-Mystery-Man-973460.png" : e.avt} alt="" />
                                             </div>
                                         </div>
                                         <div className="info_user_rate">
@@ -971,7 +991,7 @@ export default function Product({ handleRedirect }) {
                                         <li key={i}>
                                             <div className="thumb_user_rate">
                                                 <div className="box_avata">
-                                                    <img src={e.avt} alt="" />
+                                                    <img src={e.avt == "" ? "https://www.maxpixel.net/static/photo/640/Avatar-Blank-Profile-Picture-Display-Pic-Mystery-Man-973460.png" : e.avt} alt="" />
                                                 </div>
                                             </div>
                                             <div className="info_user_comment">

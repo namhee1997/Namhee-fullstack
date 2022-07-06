@@ -5,6 +5,7 @@ import { getAllSlidesCustom, addNewSlidesCustom, updateSlidesCustom } from "../.
 import { axiosJWT } from "../../../AxiosJWT";
 import { loginSuccess } from "../../../Action/Action";
 import $ from 'jquery';
+import { iconLoading } from "../../svg/svg";
 
 export default function SlidesMain({ handleRedirect }) {
 
@@ -25,6 +26,7 @@ export default function SlidesMain({ handleRedirect }) {
     // useEffect(() => {
     //     setBannerMain(bannerMainRedux);
     // }, [])
+    const [isLoading, setIsLoading] = useState(true);
 
     const [totalSlidesMain, setTotalSlidesMain] = useState([]);
     const [totalSlidesPage, setTotalSlidesPage] = useState([]);
@@ -59,7 +61,9 @@ export default function SlidesMain({ handleRedirect }) {
                 setSlidesPage(data[0].slidespage);
                 setSlidesMain(data[0].slidesmain);
                 setIdSlide(data[0]._id);
+                setIsLoading(false);
             } catch (error) {
+                setIsLoading(false);
                 console.log('get all slide err 1');
             }
         }
@@ -145,13 +149,17 @@ export default function SlidesMain({ handleRedirect }) {
 
     useEffect(() => {
         if (Object.keys(resultSlides).length > 0) {
+            setIsLoading(true);
+
             const fetchAddSlides = async () => {
                 try {
                     // let data = await addNewSlidesCustom(resultSlides);
                     let data = await updateSlidesCustom(resultSlides);
                     console.log('add slide success', data);
+                    setIsLoading(false);
 
                 } catch (error) {
+                    setIsLoading(false);
                     console.log('add slides err 1');
                 }
             };
@@ -213,6 +221,11 @@ export default function SlidesMain({ handleRedirect }) {
 
     return (
         <div className="container_user_dashboard slides">
+            {
+                isLoading ? <div className="overlay_load">
+                    <span>{iconLoading}</span>
+                </div> : ''
+            }
             <div className="slides_main only box_shadow">
                 <h2>Slides main</h2>
                 <ul>

@@ -17,6 +17,7 @@ import { axiosJWT } from '../../AxiosJWT';
 import { loginSuccess } from '../../Action/Action';
 import { getAllProduct } from '../api/ApiProduct';
 import { getAllSlidesCustom } from '../api/ApiSlidesCustom';
+import { iconLoading } from '../svg/svg';
 
 
 export default function ListPhone({ handleRedirect }) {
@@ -27,7 +28,7 @@ export default function ListPhone({ handleRedirect }) {
     const keyJwt = localStorage.getItem('token');
     const user = jwtDecode(keyJwt);
 
-
+    const [isLoading, setIsLoading] = useState(true);
     const [listBanner, setListBanner] = useState([{ thumb: Banner1, link: '' }, { thumb: Banner2, link: '' }, { thumb: Banner2, link: '' }]);
     useEffect(() => {
         handleRedirect.setCheckDirect(e => {
@@ -85,10 +86,12 @@ export default function ListPhone({ handleRedirect }) {
         const fetchGetAllProduct = async () => {
             try {
                 let data = await getAllProduct(keyJwt, axiosJwt);
+                setIsLoading(false);
                 console.log('get all product success', data);
                 setDataPhone(data);
             } catch (error) {
                 console.log('err get all product 1');
+                setIsLoading(false);
             }
         }
         fetchGetAllProduct();
@@ -258,6 +261,11 @@ export default function ListPhone({ handleRedirect }) {
 
     return (
         <div className="container_phone">
+            {
+                isLoading ? <div className="overlay_load">
+                    <span>{iconLoading}</span>
+                </div> : ''
+            }
             <div className="banner_phone">
                 <Banner dataBanner={listBanner} listBannerSlides />
             </div>
@@ -275,10 +283,13 @@ export default function ListPhone({ handleRedirect }) {
                                                     <input type="checkbox" id={e.slug}
                                                         checked={change.company == e.slug}
                                                         name='company'
-                                                        onChange={() => setChange({
-                                                            ...change,
-                                                            company: e.slug
-                                                        })}
+                                                        onChange={() => {
+                                                            setChange({
+                                                                ...change,
+                                                                company: e.slug
+                                                            });
+                                                            setOffsetPagingProduct(0);
+                                                        }}
                                                     />
                                                     <label htmlFor={e.slug}>{e.name}</label>
                                                 </div>
@@ -300,10 +311,13 @@ export default function ListPhone({ handleRedirect }) {
                                                 <div className="content_search">
                                                     <input type="checkbox" id={e.slug}
                                                         checked={change.price == e.slug}
-                                                        onChange={() => setChange({
-                                                            ...change,
-                                                            price: e.slug
-                                                        })}
+                                                        onChange={() => {
+                                                            setChange({
+                                                                ...change,
+                                                                price: e.slug
+                                                            });
+                                                            setOffsetPagingProduct(0);
+                                                        }}
                                                     />
                                                     <label htmlFor={e.slug}>{e.name}</label>
                                                 </div>

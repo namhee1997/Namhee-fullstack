@@ -7,12 +7,14 @@ import { axiosJWT } from "../../../AxiosJWT";
 import { loginSuccess } from "../../../Action/Action";
 import { useDispatch } from "react-redux";
 import jwtDecode from 'jwt-decode';
+import { iconLoading } from '../../svg/svg';
 
 export default function EditNews({ handleRedirect }) {
 
     const dispatch = useDispatch();
     const keyJwt = localStorage.getItem('token');
     const user = jwtDecode(keyJwt);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         handleRedirect.setCheckDirect(e => {
@@ -35,8 +37,10 @@ export default function EditNews({ handleRedirect }) {
                 let data = await getNewsById(keyJwt, axiosJwt, param.slug);
                 console.log('get by id success news', data);
                 setDataCurrent(data[0]);
+                setIsLoading(false);
             } catch (error) {
                 console.log('get by id news err 1');
+                setIsLoading(false);
             }
         }
         fechGetByIdNews();
@@ -44,13 +48,16 @@ export default function EditNews({ handleRedirect }) {
 
     useEffect(() => {
         if (Object.keys(dataChangeNew).length > 0 && eventSubmit) {
+            setIsLoading(true);
 
             const fetchEditNews = async () => {
                 try {
                     let data = await updateNews(dataChangeNew);
                     console.log('update news success ', data);
+                    setIsLoading(false);
                 } catch (error) {
                     console.log('update news err 1');
+                    setIsLoading(false);
                 }
             };
             fetchEditNews();
@@ -62,6 +69,11 @@ export default function EditNews({ handleRedirect }) {
 
     return (
         <div className="container_user_dashboard">
+            {
+                isLoading ? <div className="overlay_load">
+                    <span>{iconLoading}</span>
+                </div> : ''
+            }
             <EditForm stateForm={dataCurrent} titleForm='Edit News' thisPage='News' dataHandle={dataHandle} />
         </div>
     );

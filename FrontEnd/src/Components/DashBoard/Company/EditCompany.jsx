@@ -6,6 +6,7 @@ import { getCompanyById, updateCompany } from '../../api/ApiCompany';
 import { loginSuccess } from '../../../Action/Action';
 import { axiosJWT } from '../../../AxiosJWT';
 import jwtDecode from 'jwt-decode';
+import { iconLoading } from '../../svg/svg';
 import { useDispatch } from 'react-redux';
 
 export default function EditCompany({ handleRedirect }) {
@@ -25,6 +26,7 @@ export default function EditCompany({ handleRedirect }) {
     const [dataChangeNew, setDataChangeNew] = useState({});
     const [checkSubmit, setCheckSubmit] = useState(false);
     let dataHandle = { setDataChangeNew, setCheckSubmit };
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
@@ -33,8 +35,10 @@ export default function EditCompany({ handleRedirect }) {
                 let data = await getCompanyById(keyJwt, axiosJwt, param.slug);
                 console.log('get by id company success', data);
                 setDataCurrent(data[0]);
+                setIsLoading(false);
             } catch (error) {
                 console.log('get by id company err1');
+                setIsLoading(false);
             }
         };
         fetchGetById();
@@ -62,6 +66,11 @@ export default function EditCompany({ handleRedirect }) {
 
     return (
         <div className="container_user_dashboard">
+            {
+                isLoading ? <div className="overlay_load">
+                    <span>{iconLoading}</span>
+                </div> : ''
+            }
             <EditForm stateForm={dataCurrent} titleForm='Edit Company' dataHandle={dataHandle} />
         </div>
     );

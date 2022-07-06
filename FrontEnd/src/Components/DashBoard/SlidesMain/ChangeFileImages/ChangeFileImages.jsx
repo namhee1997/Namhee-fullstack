@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { bannerMain } from "../../../../Action/Action";
 import { sendImageToCloud } from '../../../api/ApiUploadImage';
+import { iconLoading } from "../../../svg/svg";
 
 export default function ChangeFileImages({ section = '', url = '', changFile = false, data, dataState }) {
 
@@ -18,17 +19,20 @@ export default function ChangeFileImages({ section = '', url = '', changFile = f
     }, [data.removeBannerRerender])
     const listAcceptTypeImg = ['image/png', 'image/jpeg'];
     const dispatch = useDispatch();
+    const [isLoading, setIsLoading] = useState(false);
 
     const onFilePicked = async (e, check) => {
         //check == true -> add
 
         let files = e.target.files;
         let fileType = (files[0]?.type);
+        setIsLoading(true);
 
         if (listAcceptTypeImg.includes(fileType)) {
             let fd = new FormData();
             fd.append('file', files[0]);
             let res = await sendImageToCloud(fd);
+            setIsLoading(false);
             console.log(res, 'set update img');
             console.log('this check', check, section);
             if (check) {
@@ -120,6 +124,7 @@ export default function ChangeFileImages({ section = '', url = '', changFile = f
                 }
             }
         } else {
+            setIsLoading(false);
             alert('img not support');
         }
 
@@ -135,6 +140,11 @@ export default function ChangeFileImages({ section = '', url = '', changFile = f
 
     return (
         <div className="change_banner">
+            {
+                isLoading ? <div className="overlay_load">
+                    <span>{iconLoading}</span>
+                </div> : ''
+            }
             <div className="file_input">
                 <div className="fileUploadInput">
                     <label>✨ Choose Images</label>

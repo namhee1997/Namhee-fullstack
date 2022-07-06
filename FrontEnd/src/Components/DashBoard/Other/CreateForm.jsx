@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import $ from 'jquery';
 import { sendImageToCloud } from "../../api/ApiUploadImage";
+import { iconLoading } from "../../svg/svg";
 
 export default function CreateForm({ titleForm = '', thisPage = '', stateForm = [], dataHandle }) {
     const navigate = useNavigate();
@@ -10,6 +11,7 @@ export default function CreateForm({ titleForm = '', thisPage = '', stateForm = 
     const [fileImg, setFileImg] = useState('');
     const [dataTotal, setDataTotal] = useState({});
     const [checkSubmit, setCheckSubmit] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [number, setNumber] = useState(1);
     // let data = {};
 
@@ -29,12 +31,14 @@ export default function CreateForm({ titleForm = '', thisPage = '', stateForm = 
 
         let files = e.target.files;
         let fileType = (files[0]?.type);
+        setIsLoading(true);
         // 
         if (files[0]) {
             let fd = new FormData();
             fd.append('file', files[0]);
             let data = await sendImageToCloud(fd);
             setFileImg(data.data.data.fileUrl);
+            setIsLoading(false);
         }
         // let fileReader = new FileReader();
         // fileReader.addEventListener('load', () => {
@@ -66,6 +70,11 @@ export default function CreateForm({ titleForm = '', thisPage = '', stateForm = 
 
     return (
         <div className="container-fluid px-4">
+            {
+                isLoading ? <div className="overlay_load">
+                    <span>{iconLoading}</span>
+                </div> : ''
+            }
             <h1 className="mt-4">{titleForm}</h1>
 
             <div className="card mb-4">

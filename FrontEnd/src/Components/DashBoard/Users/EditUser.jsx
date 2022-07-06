@@ -5,6 +5,7 @@ import { axiosJWT } from '../../../AxiosJWT';
 import { getUserById, updateUser } from '../../api/ApiUser';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../../../Action/Action';
+import { iconLoading } from '../../svg/svg';
 
 export default function EditUser({ handleRedirect }) {
     const keyJwt = localStorage.getItem('token');
@@ -23,14 +24,17 @@ export default function EditUser({ handleRedirect }) {
     const [dataChangeNew, setDataChangeNew] = useState({});
     const [handleSubmit, setHandleSubmit] = useState(false);
     let dataHandle = { setDataChangeNew, setHandleSubmit };
+    const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
         let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
         const fetchUserByid = async () => {
             try {
                 let data = await getUserById(keyJwt, axiosJwt, param.id);
                 setDataCurrent(data);
+                setIsLoading(false);
             } catch (error) {
                 console.log('err by id');
+                setIsLoading(false);
             }
         }
         fetchUserByid();
@@ -38,14 +42,18 @@ export default function EditUser({ handleRedirect }) {
 
     useEffect(() => {
         if (handleSubmit) {
+            setIsLoading(true);
+
             const fetchUpdateUser = async () => {
                 try {
                     console.log('update user');
                     let data = await updateUser(dataChangeNew);
                     setHandleSubmit(false);
+                    setIsLoading(false);
                     console.log('sau fetch update', data);
                 } catch (error) {
                     console.log('update user err');
+                    setIsLoading(false);
                     setHandleSubmit(false);
                 }
             }
@@ -58,6 +66,11 @@ export default function EditUser({ handleRedirect }) {
 
     return (
         <div className="container_user_dashboard edit_user">
+            {
+                isLoading ? <div className="overlay_load">
+                    <span>{iconLoading}</span>
+                </div> : ''
+            }
             <EditForm stateForm={dataCurrent[0]} titleForm='Edit User' thisPage='User' dataHandle={dataHandle} />
         </div>
     );

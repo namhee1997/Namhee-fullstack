@@ -8,6 +8,7 @@ import { getAllCart } from "../api/ApiCart";
 import { addToCart } from "../../Action/Action";
 import { addNewOrderUser } from "../api/ApiOrderUser";
 import { deleteAllCart } from "../api/ApiCart";
+import { iconLoading } from "../svg/svg";
 
 export default function Cart({ handleRedirect }) {
     const store = useStore();
@@ -23,6 +24,7 @@ export default function Cart({ handleRedirect }) {
             return data;
         })
     }, [])
+    const [isLoading, setIsLoading] = useState(true);
     const [listProduct, setListProduct] = useState([]);
     const [checkRemove, setCheckRemove] = useState(false);
 
@@ -33,10 +35,12 @@ export default function Cart({ handleRedirect }) {
                 let data = await getAllCart(keyJwt, axiosJwt);
                 console.log('get all cart SUCCESS', data);
                 setListProduct(data);
+                setIsLoading(false);
                 let addToCartRedux = addToCart(data);
                 dispatch(addToCartRedux);
             } catch (error) {
                 console.log('get all cart err 1');
+                setIsLoading(false);
             }
         };
         fetchGetAllCart();
@@ -182,6 +186,11 @@ export default function Cart({ handleRedirect }) {
 
     return (
         <div className="cart_box">
+            {
+                isLoading ? <div className="overlay_load">
+                    <span>{iconLoading}</span>
+                </div> : ''
+            }
             <div className="container_cart box_shadow">
                 <h2>Có {listProduct?.length} sản phẩm trong giỏ hàng</h2>
                 {

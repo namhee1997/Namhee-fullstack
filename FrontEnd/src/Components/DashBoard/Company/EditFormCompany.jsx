@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { sendImageToCloud } from "../../api/ApiUploadImage";
 import $ from 'jquery';
+import { iconLoading } from "../../svg/svg";
 
 export default function EditForm({ titleForm = '', thisPage = '', stateForm = {}, dataHandle }) {
     const navigate = useNavigate();
@@ -9,10 +10,11 @@ export default function EditForm({ titleForm = '', thisPage = '', stateForm = {}
 
     const [checkSubmit, setCheckSubmit] = useState(false);
     const listAcceptTypeImg = ['image/png', 'image/jpeg'];
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleChangeNew = async (e, name, file = '', id) => {
-
         if (file == 'file') {
+            setIsLoading(true);
             let files = e.target.files;
             let fileType = (files[0]?.type);
             if (files[0]) {
@@ -27,7 +29,9 @@ export default function EditForm({ titleForm = '', thisPage = '', stateForm = {}
                         _id: id
                     });
 
+                    setIsLoading(false);
                 } else {
+                    setIsLoading(false);
                     alert('img not support');
                 }
             }
@@ -79,6 +83,11 @@ export default function EditForm({ titleForm = '', thisPage = '', stateForm = {}
 
     return (
         <div className="container-fluid px-4">
+            {
+                isLoading ? <div className="overlay_load">
+                    <span>{iconLoading}</span>
+                </div> : ''
+            }
             <h1 className="mt-4">{titleForm}</h1>
 
             <div className="card mb-4">

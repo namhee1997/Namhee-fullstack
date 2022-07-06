@@ -1074,6 +1074,11 @@ i.fa-solid.fa-question {
 
 .thumb_relater {
   margin-bottom: 10px;
+  height: 250px;
+}
+
+.thumb_relater img {
+  object-fit: cover;
 }
 
 .text_1 {
@@ -2457,6 +2462,23 @@ ul.list_img_product li {
   width: auto;
 }
 
+a:hover {
+  text-decoration: none;
+}
+
+.overlay_load {
+  position: fixed;
+  z-index: 999;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .add_variable {
   margin-bottom: 20px;
   width: 100%;
@@ -2910,6 +2932,7 @@ ul.list_img_product li {
   .box_total_rate {
     flex-direction: column;
   }
+
 
   .rate_1 {
     width: 100%;

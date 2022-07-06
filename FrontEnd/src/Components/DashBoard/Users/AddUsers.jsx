@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import CreateForm from '../Other/CreateForm';
 import { useStore, useSelector } from 'react-redux';
 import { addNewUser } from '../../api/ApiUser';
+import { iconLoading } from '../../svg/svg';
 
 export default function AddUsers({ handleRedirect }) {
     useEffect(() => {
@@ -23,6 +24,7 @@ export default function AddUsers({ handleRedirect }) {
     ]);
 
     const [dataForm, setDataForm] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
     const [dataAvatar, setDataAvatar] = useState('');
     const [eventSubmit, setEventSubmit] = useState(false);
 
@@ -35,12 +37,15 @@ export default function AddUsers({ handleRedirect }) {
     useEffect(() => {
 
         if (Object.keys(dataForm).length > 0 && eventSubmit) {
+            setIsLoading(true);
             const fetchUserList = async () => {
                 try {
                     let data = await addNewUser(dataForm);
                     setEventSubmit(false);
+                    setIsLoading(false);
                 } catch (error) {
                     setEventSubmit(false);
+                    setIsLoading(false);
                     console.log('Failed to fetch product list: ', error);
                 }
             }
@@ -54,6 +59,11 @@ export default function AddUsers({ handleRedirect }) {
 
     return (
         <div className="container_user_dashboard">
+            {
+                isLoading ? <div className="overlay_load">
+                    <span>{iconLoading}</span>
+                </div> : ''
+            }
             <CreateForm titleForm='Add User' thisPage="User" stateForm={stateForm} dataHandle={dataHandle} />
         </div>
     );

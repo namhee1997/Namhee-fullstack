@@ -3,7 +3,8 @@ import CreateFormProduct from './CreateFormProduct/CreateFormProduct';
 import { useStore, useSelector } from 'react-redux';
 import { Link, useNavigate } from "react-router-dom";
 import { addNewProduct } from '../../api/ApiProduct';
-import $ from 'jquery'
+import $ from 'jquery';
+import { iconLoading } from '../../svg/svg';
 
 export default function AddProduct({ handleRedirect }) {
     useEffect(() => {
@@ -14,6 +15,7 @@ export default function AddProduct({ handleRedirect }) {
         })
     }, [])
     const data = useSelector(e => e.companyPhone.list)
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     const [dataForm, setDataForm] = useState([]);
@@ -28,14 +30,17 @@ export default function AddProduct({ handleRedirect }) {
 
     useEffect(() => {
         if (checkSubmit) {
+            setIsLoading(true);
             const fetchAddProduct = async () => {
                 try {
 
                     let data = await addNewProduct(dataForm);
                     console.log('add data product success', data);
 
+                    setIsLoading(false);
                 } catch (error) {
                     console.log('add product err 1');
+                    setIsLoading(false);
                 }
             }
             fetchAddProduct();
@@ -89,6 +94,11 @@ export default function AddProduct({ handleRedirect }) {
 
     return (
         <div className="container_user_dashboard">
+            {
+                isLoading ? <div className="overlay_load">
+                    <span>{iconLoading}</span>
+                </div> : ''
+            }
             <div className="container-fluid px-4">
                 <h1 className="mt-4">Add Product</h1>
 

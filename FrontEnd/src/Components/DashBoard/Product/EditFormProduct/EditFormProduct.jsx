@@ -7,6 +7,7 @@ import { axiosJWT } from "../../../../AxiosJWT";
 import { sendImageToCloud } from '../../../api/ApiUploadImage';
 import jwtDecode from 'jwt-decode';
 import $ from 'jquery';
+import { iconLoading } from "../../../svg/svg";
 
 export default function EditForm({ titleForm = 'Edit Product', stateForm = [], dataHandle }) {
     const navigate = useNavigate();
@@ -19,6 +20,7 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
     const user = jwtDecode(keyJwt);
 
     //end
+    const [isLoading, setIsLoading] = useState(true);
 
     const [dataChangeCurrent, setDataChangeCurrent] = useState([]);
     const [dataChangeNew, setDataChangeNew] = useState({});
@@ -54,6 +56,7 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
     const handleAddIMG = async (e, m, obj, add = '', nPosition) => {
         let files = e.target.files;
         let fileType = (files[0]?.type);
+        setIsLoading(true);
 
         if (m == 'listimg') {
             if (listAcceptTypeImg.includes(fileType)) {
@@ -76,7 +79,9 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
                         return data;
                     });
                 }
+                setIsLoading(false);
             } else {
+                setIsLoading(false);
                 alert('not type support!');
             }
         } else { //avt
@@ -91,7 +96,9 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
                     return data;
                 });
 
+                setIsLoading(false);
             } else {
+                setIsLoading(false);
                 alert('not type support!');
             }
         }
@@ -204,9 +211,11 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
                 console.log('data success product by id', data);
                 setDataChangeCurrent(data);
                 setTotalImg((data[0]?.variable).length);
+                setIsLoading(false);
 
             } catch (error) {
                 console.log('get product by id err 1');
+                setIsLoading(false);
             }
         }
         fetchByIdProduct();
@@ -218,6 +227,7 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
     // SUBMIT
     useEffect(() => {
         if (checkSubmit) {
+            setIsLoading(true);
 
             setTimeout(() => {
                 const fetchUpdateProduct = async () => {
@@ -225,9 +235,11 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
                         let data = await updateProduct(dataChangeNew);
                         console.log('update success', data);
 
+                        setIsLoading(false);
                         return data;
                     } catch (error) {
                         console.log('update fail 1');
+                        setIsLoading(false);
                     }
                 }
 
@@ -299,6 +311,11 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
     // console.log('dataChangeCurrent', dataChangeNew);
     return (
         <div className="container-fluid px-4">
+            {
+                isLoading ? <div className="overlay_load">
+                    <span>{iconLoading}</span>
+                </div> : ''
+            }
             <h1 className="mt-4">{titleForm}</h1>
 
             <div className="card mb-4">
