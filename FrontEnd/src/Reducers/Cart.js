@@ -1,5 +1,5 @@
 import * as ActionTypes from '../ActionTypes';
-import { updateCart } from '../Components/api/ApiCart';
+import { updateCart } from '../Pages/api/ApiCart';
 
 const init = {
     data: [

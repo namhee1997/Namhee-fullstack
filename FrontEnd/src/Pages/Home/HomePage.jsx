@@ -238,7 +238,7 @@ const HomePage = ({ handleRedirect }) => {
             <ProductList list={listHotPromotion} company='samsung' />
           </div>
         </div>
-        <div className="section_2 product_selling">
+        <div className="section_2 product_selling ma_bot_2">
           <div className="container_1 box_shadow">
             <div className="title_1">
               <h2>Vivo</h2>

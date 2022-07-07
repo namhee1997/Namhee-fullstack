@@ -1,5 +1,5 @@
 import "./App.scss";
-import Router from "./Components/routes/Routes";
+import Router from "./Pages/routes/Routes";
 import { BrowserRouter } from 'react-router-dom';
 
 function App() {
