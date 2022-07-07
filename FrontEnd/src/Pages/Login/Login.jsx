@@ -42,18 +42,19 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         let data = await loginUser(dataLogin, dispatch, navigate).then((e) => {
-            console.log(e, 'date');
             if (e == '' && e == undefined && e == 'undefined') {
                 localStorage.setItem('token', '');
             } else {
-                localStorage.setItem('token', e);
                 let obj = jwtDecode(e);
                 if (obj.isDashBoard == false) {
                     let date = new Date();
                     if (obj.exp < date.getTime() / 1000) {
                         navigate('/login');
                     } else {
-                        navigate('/');
+                        console.log(e, 'token');
+                        localStorage.setItem('token', String(e));
+                        window.location.reload(1);
+                        // navigate('/');
                     }
                 }
             }

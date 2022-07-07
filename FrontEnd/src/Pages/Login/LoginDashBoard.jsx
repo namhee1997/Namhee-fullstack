@@ -45,7 +45,8 @@ const LoginDashBoard = () => {
                 localStorage.setItem('token', e);
                 let obj = jwtDecode(e);
                 if (obj.isDashBoard == true) {
-                    navigate('/dashboard');
+                    window.location.reload(1);
+                    // navigate('/dashboard');
                 }
             }
         }).catch((err) => {

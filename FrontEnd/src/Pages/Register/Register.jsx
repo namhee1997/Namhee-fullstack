@@ -17,6 +17,8 @@ const Register = () => {
         phone: '',
     });
 
+    const [requireUsername, setRequireUsername] = useState(false);
+
     // check logger
     const tokenUserCurrent = (localStorage.getItem('token') || '');
     const [userCurrentByToken, setUserCurrentByToken] = useState({});
@@ -38,12 +40,18 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        let data = await registerUserApi(dataLogin, dispatch, navigate).then((e) => {
-            if (e == 'success') {
-                navigate('/login');
-            }
-        }).catch((err) => {
-        });
+        if (/^[a-zA-Z!@#\$%\^\&*\)\(+=._-]{2,}$/g.test(dataLogin.username)) {
+            let data = await registerUserApi(dataLogin, dispatch, navigate).then((e) => {
+                if (e == 'success') {
+                    navigate('/login');
+                }
+            }).catch((err) => {
+            });
+        } else {
+            setRequireUsername(true);
+
+        }
+
     }
 
     return (
@@ -61,6 +69,9 @@ const Register = () => {
                     <input type="text" placeholder="Enter your username"
                         onChange={(e) => setDataLogin({ ...dataLogin, username: e.target.value })}
                     />
+                    {
+                        requireUsername ? <p className="err">malformed data(data must be unsigned, no spaces)</p> : ''
+                    }
                 </div>
                 <div className="box_login">
                     <label>PASSWORD</label>

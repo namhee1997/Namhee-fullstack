@@ -2440,6 +2440,11 @@ ul.list_img_product li {
   gap: 10px;
 }
 
+
+.err_login p {
+  color: #ca0101;
+}
+
 .btn_menu_mobile {
   cursor: pointer;
 }
@@ -3017,4 +3022,13 @@ a:hover {
     padding: 0 20px;
   }
 
+}
+
+p.err {
+  font-size: 9px;
+  color: #ca0101;
+  text-align: left;
+  line-height: 1;
+  margin: 5px 0 0 0;
+  font-weight: 300;
 }
