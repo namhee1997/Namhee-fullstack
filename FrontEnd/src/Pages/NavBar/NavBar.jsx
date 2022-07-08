@@ -6,17 +6,41 @@ import { logOutApi } from "../api/ApiLoginUser";
 import "./navbar.css";
 import avatar from '../../assets/img/chelseadfhzdfzhzdrha_vomy.jpg'
 import $ from 'jquery';
+import { getAllCart } from "../api/ApiCart";
+import { loginSuccess } from "../../Action/Action";
+import { axiosJWT } from "../../AxiosJWT";
+import { addToCart } from "../../Action/Action";
 
-const NavBar = ({ userCurrent, refresh }) => {
+const NavBar = ({ userCurrent, refresh, handleRedirect }) => {
   const store = useStore();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isChangeCart = useSelector(e => e.cart.checkChange)
+  const keyJwt = localStorage.getItem('token');
+  const users = handleRedirect.userCurrentByToken;
+  let location = window.location.pathname.split('/');
+
+  const isChangeCart = useSelector(e => e.cart.checkChange);
+  const isCart = useSelector(e => e.cart.data);
   const [user, setUSer] = useState(null);
   const [showItem, setShowItem] = useState(false);
   const [totalCart, setTotalCart] = useState([]);
 
   const refMenu = useRef();
+
+  useEffect(() => {
+    let axiosJwt = axiosJWT(users, dispatch, loginSuccess, keyJwt);
+    const fetchGetAllCart = async () => {
+      try {
+        let data = await getAllCart(keyJwt, axiosJwt);
+        console.log('get all cart SUCCESS', data);
+        let addToCartRedux = addToCart(data);
+        dispatch(addToCartRedux);
+      } catch (error) {
+        console.log('get all cart err 1');
+      }
+    };
+    fetchGetAllCart();
+  }, [])
 
 
   useEffect(() => {
@@ -27,7 +51,6 @@ const NavBar = ({ userCurrent, refresh }) => {
   useEffect(() => {
     setTotalCart((store.getState().cart.data));
   }, [isChangeCart])
-
 
   const handleLogOut = (e) => {
     e.preventDefault();
@@ -48,9 +71,6 @@ const NavBar = ({ userCurrent, refresh }) => {
     }
     setShowMobile(true);
   }
-
-  console.log('store.getState().cart.data', store.getState().cart.data[0]);
-
 
   return (
     <nav className="navbar-container">

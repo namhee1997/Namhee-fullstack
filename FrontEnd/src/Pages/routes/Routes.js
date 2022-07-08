@@ -31,11 +31,14 @@ import jwtDecode from 'jwt-decode';
 import OderCreate from '../DashBoard/Order/AddOrder';
 import { setJWT } from "../../Action/Action";
 
+
 export default function Router() {
     let location = window.location.pathname.split('/');
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const tokenUserCurrent = (localStorage.getItem('token') || '');
+
+
     const [userCurrentByToken, setUserCurrentByToken] = useState({});
     const [checkLogOut, setCheckLogOut] = useState(false);
     const [checkDirect, setCheckDirect] = useState({
@@ -46,6 +49,7 @@ export default function Router() {
         let getJwt = setJWT(localStorage.getItem('token'));
         dispatch(getJwt);
     }, [localStorage.getItem('token')]);
+
     useEffect(() => {
         if (location[1] != 'dashboard') {
             if (tokenUserCurrent == '' && checkDirect.user) {
@@ -105,7 +109,7 @@ export default function Router() {
                 location[1] != 'dashboard' ?
                     <>
                         {
-                            location[1] != "login" ? <NavBar userCurrent={userCurrentByToken} refresh={handleRefresh} /> : ''
+                            location[1] != "login" ? <NavBar userCurrent={userCurrentByToken} handleRedirect={handleRedirect} refresh={handleRefresh} /> : ''
                         }
 
                         <div className="App">
@@ -124,7 +128,7 @@ export default function Router() {
                     : <>
                         <div className="DashBoard">
                             {
-                                location[2] != "login" ? <HeaderDashBoard userCurrent={userCurrentByToken} /> : ''
+                                location[2] != "login" ? <HeaderDashBoard handleRedirect={handleRedirect} userCurrent={userCurrentByToken} /> : ''
                             }
 
                             <Routes>
