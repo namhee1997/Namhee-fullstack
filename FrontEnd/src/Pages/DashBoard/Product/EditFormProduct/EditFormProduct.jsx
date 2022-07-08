@@ -427,7 +427,7 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
                         {
                             dataChangeCurrent[0]?.variable?.map((z, x) => {
                                 return (
-                                    <div className="break_div_edit" key={x} idVariable={z.idVariable}>
+                                    <div className="break_div_edit" key={x} {...{ "idvariable": `${z.idVariable}` }} >
                                         <div className="row mb-3">
                                             <div className="col-md-6 mb-4">
                                                 <div className="form-floating mb-3 mb-md-0">
