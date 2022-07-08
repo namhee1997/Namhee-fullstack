@@ -18,6 +18,7 @@ const Register = () => {
     });
 
     const [requireUsername, setRequireUsername] = useState(false);
+    const [requirePhone, setRequirePhone] = useState(false);
 
     // check logger
     const tokenUserCurrent = (localStorage.getItem('token') || '');
@@ -40,17 +41,21 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (/^[a-zA-Z!@#\$%\^\&*\)\(+=._-]{2,}$/g.test(dataLogin.username)) {
-            let data = await registerUserApi(dataLogin, dispatch, navigate).then((e) => {
-                if (e == 'success') {
-                    navigate('/login');
-                }
-            }).catch((err) => {
-            });
-        } else {
+        if (!(/^[a-zA-Z!@#\$%\^\&*\)\(+=._-]{2,}$/g.test(dataLogin.username))) {
             setRequireUsername(true);
-
+            return;
         }
+        if (!(/(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/.test(dataLogin.phone))) {
+            setRequirePhone(true);
+            return;
+        }
+        let data = await registerUserApi(dataLogin, dispatch, navigate).then((e) => {
+            if (e == 'success') {
+                navigate('/login');
+            }
+        }).catch((err) => {
+            console.log(err, 'err register');
+        });
 
     }
 
@@ -67,7 +72,7 @@ const Register = () => {
                 <div className="box_login n1">
                     <label>USERNAME</label>
                     <input type="text" placeholder="Enter your username"
-                        onChange={(e) => setDataLogin({ ...dataLogin, username: e.target.value })}
+                        onChange={(e) => { setDataLogin({ ...dataLogin, username: e.target.value }); setRequireUsername(false); }}
                     />
                     {
                         requireUsername ? <p className="err">malformed data(data must be unsigned, no spaces)</p> : ''
@@ -88,8 +93,11 @@ const Register = () => {
                 <div className="box_login">
                     <label>PHONE</label>
                     <input type="phone" placeholder="Enter your phone"
-                        onChange={(e) => setDataLogin({ ...dataLogin, phone: e.target.value })}
+                        onChange={(e) => { setDataLogin({ ...dataLogin, phone: e.target.value }); setRequirePhone(false); }}
                     />
+                    {
+                        requirePhone ? <p className="err">Invalid phone number</p> : ''
+                    }
                 </div>
 
                 <button type="submit" onClick={(e) => handleSubmit(e)}> Create account </button>
