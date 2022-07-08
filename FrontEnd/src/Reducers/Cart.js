@@ -19,17 +19,9 @@ const cart = (state = init, action) => {
             console.log(action.payload, 'action.payload');
 
             if (indexState) {
+                console.log('indexState');
                 dataStateAdd[indexPosition].totalCurrent = dataStateAdd[indexPosition].totalCurrent + 1;
                 let dataUpdate = dataStateAdd[indexPosition];
-                const fetchUpdateCart = async () => {
-                    try {
-                        let data = await updateCart(dataUpdate);
-                        console.log('update cart success', data);
-                    } catch (error) {
-                        console.log('update cart err 1');
-                    }
-                }
-                // fetchUpdateCart();
 
                 return {
                     ...state,
@@ -37,6 +29,7 @@ const cart = (state = init, action) => {
                     data: dataStateAdd,
                 }
             } else {
+                console.log('not indexState');
                 return {
                     ...state,
                     checkChange: !state.checkChange,
@@ -52,11 +45,19 @@ const cart = (state = init, action) => {
                 return z.idPhone != action.payload;
             });
 
-            console.log(dataState, 'action');
             return {
                 ...state,
                 checkChange: !state.checkChange,
                 data: dataState
+            }
+
+
+        case ActionTypes.EMPTY_CART:
+
+            return {
+                ...state,
+                checkChange: !state.checkChange,
+                data: []
             }
 
         default:

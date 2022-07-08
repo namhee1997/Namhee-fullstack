@@ -129,7 +129,7 @@ export default function DashBoard({ handleRedirect }) {
 
                     <div className="box_chart box_shadow">
                         <div className="transaction_total">
-                            <h2>Tổng số giao dịch người dùng</h2>
+                            <h2>Tổng số giao dịch người dùng(đang cập nhật)</h2>
                             <div className="select_time">
                                 <select name="" id="" onChange={() => { }}>
                                     <option value="day">Theo ngày</option>

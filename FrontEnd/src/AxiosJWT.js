@@ -3,8 +3,8 @@ import jwtDecode from 'jwt-decode';
 
 
 const instance = axios.create({
-    // baseURL: "http://localhost:8080",
-    baseURL: "https://app-shop-namhee.herokuapp.com",
+    baseURL: "http://localhost:8080",
+    // baseURL: "https://app-shop-namhee.herokuapp.com",
 });
 
 const refreshToken = async () => {

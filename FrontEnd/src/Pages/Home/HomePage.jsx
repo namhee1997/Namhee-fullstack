@@ -115,8 +115,10 @@ const HomePage = ({ handleRedirect }) => {
     const fetchGetAllCart = async () => {
       try {
         let data = await getAllCart(keyJwt, axiosJwt);
-        let addToCartRedux = addToCart(data);
-        dispatch(addToCartRedux);
+        if (data.length > 0) {
+          let addToCartRedux = addToCart(data);
+          dispatch(addToCartRedux);
+        }
         console.log('get all cart success 1', data);
       } catch (error) {
         console.log('get all cart err 1');

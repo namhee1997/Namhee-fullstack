@@ -64,6 +64,7 @@ nav.navbar-container .menu_desktop {
   display: flex;
   align-items: center;
   gap: 30px;
+  margin: 0;
 }
 
 ul.list_select_user {
@@ -133,6 +134,9 @@ ul.list_select_user {
 .list_menu a {
   color: #333;
   transition: .5s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .list_menu a:hover {
@@ -1604,6 +1608,7 @@ select.select_variable_cart,
   justify-content: center;
   gap: 5px;
   margin-top: 10px;
+  cursor: pointer;
 }
 
 .remove_product i:before {
@@ -1970,6 +1975,19 @@ select.select_variable_cart,
 .container_header ul li a {
   color: #fff;
   font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user_login {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user_login a i::before {
+  color: #ffbaba;
 }
 
 .user_login h2 {
@@ -2575,15 +2593,7 @@ a:hover {
     font-size: 24px;
   }
 
-  .user_login {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
 
-  .user_login a i::before {
-    color: #ffbaba;
-  }
 
   .list_dashboard h4 {
     font-size: 22px;
@@ -2666,6 +2676,7 @@ a:hover {
   .list_menu ul {
     flex-direction: column;
     gap: 10px;
+    margin: 0;
   }
 
   .menu_mobile .list_menu ul li a {

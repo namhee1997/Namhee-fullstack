@@ -79,5 +79,12 @@ export const setJWT = (hobby) => {
     }
 }
 
+export const emptyCart = (hobby) => {
+    return {
+        type: ActionTypes.EMPTY_CART,
+        payload: hobby
+    }
+}
+
 
 //END LOGIN

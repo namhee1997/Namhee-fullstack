@@ -5,7 +5,7 @@ import { removeProductCart, loginSuccess } from "../../Action/Action";
 import $ from 'jquery';
 import { axiosJWT } from "../../AxiosJWT";
 import { getAllCart } from "../api/ApiCart";
-import { addToCart } from "../../Action/Action";
+import { addToCart, emptyCart } from "../../Action/Action";
 import { addNewOrderUser } from "../api/ApiOrderUser";
 import { deleteAllCart } from "../api/ApiCart";
 import { iconLoading } from "../svg/svg";
@@ -37,8 +37,10 @@ export default function Cart({ handleRedirect }) {
                 console.log('get all cart SUCCESS', data);
                 setListProduct(data);
                 setIsLoading(false);
-                let addToCartRedux = addToCart(data);
-                dispatch(addToCartRedux);
+                if (data.length > 0) {
+                    // let addToCartRedux = addToCart(data);
+                    // dispatch(addToCartRedux);
+                }
             } catch (error) {
                 console.log('get all cart err 1');
                 setIsLoading(false);
@@ -171,7 +173,7 @@ export default function Cart({ handleRedirect }) {
     useEffect(() => {
 
         if (checkOrder) {
-
+            setIsLoading(true);
             let axiosJwt = axiosJWT(user, dispatch, loginSuccess, keyJwt);
             const fetchAddNewOrderUser = async () => {
                 try {
@@ -181,8 +183,11 @@ export default function Cart({ handleRedirect }) {
                     console.log('remove all cart success', removeAllCart);
                     setCheckRemove(!checkRemove);
                     setCheckOrder(false);
+                    setIsLoading(false);
+                    dispatch(emptyCart());
 
                 } catch (error) {
+                    setIsLoading(false);
                     setCheckOrder(false);
                     console.log('add news order user err');
                 }

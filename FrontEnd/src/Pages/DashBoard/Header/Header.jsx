@@ -12,36 +12,43 @@ export default function HeaderDashBoard({ userCurrent }) {
                 <ul>
                     <li>
                         <Link to={`/dashboard`}>
+                            <i className="fa-solid fa-gauge"></i>
                             DashBoard
                         </Link>
                     </li>
                     <li>
                         <Link to={`/dashboard/user`}>
+                            <i className="fa-solid fa-user-group"></i>
                             User
                         </Link>
                     </li>
                     <li>
                         <Link to={`/dashboard/product`}>
+                            <i className="fa-brands fa-product-hunt"></i>
                             Product
                         </Link>
                     </li>
                     <li>
                         <Link to={`/dashboard/company`}>
+                            <i className="fa-solid fa-building"></i>
                             Company
                         </Link>
                     </li>
                     <li>
                         <Link to={`/dashboard/slides`}>
+                            <i className="fa-solid fa-sliders"></i>
                             Slides
                         </Link>
                     </li>
                     <li>
                         <Link to={`/dashboard/news`}>
+                            <i className="fa-solid fa-newspaper"></i>
                             News
                         </Link>
                     </li>
                     <li>
                         <Link to={`/dashboard/order`}>
+                            <i className="fa-solid fa-truck-fast"></i>
                             Oder
                         </Link>
                     </li>

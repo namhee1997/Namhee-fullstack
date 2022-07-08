@@ -33,14 +33,19 @@ const NavBar = ({ userCurrent, refresh, handleRedirect }) => {
       try {
         let data = await getAllCart(keyJwt, axiosJwt);
         console.log('get all cart SUCCESS', data);
-        let addToCartRedux = addToCart(data);
-        dispatch(addToCartRedux);
+        if (data.length > 0) {
+          let addToCartRedux = addToCart(data);
+          dispatch(addToCartRedux);
+          setTotalCart(data);
+        }
       } catch (error) {
         console.log('get all cart err 1');
       }
     };
     fetchGetAllCart();
   }, [])
+
+  console.log(isCart, 'isCart');
 
 
   useEffect(() => {
@@ -81,16 +86,16 @@ const NavBar = ({ userCurrent, refresh, handleRedirect }) => {
         <div className="list_menu">
           <ul>
             <li>
-              <Link to="/phone/apple"> APPLE </Link>
+              <Link to="/phone/apple"><i className="fa-brands fa-apple"></i> APPLE </Link>
             </li>
             <li>
-              <Link to="/phone/samsung"> SAMSUNG </Link>
+              <Link to="/phone/samsung"> <i className="fa-solid fa-mobile"></i> SAMSUNG </Link>
             </li>
             <li>
-              <Link to="/phone/vivo"> VIVO </Link>
+              <Link to="/phone/vivo"><i className="fa-solid fa-mobile-button"></i> VIVO </Link>
             </li>
             <li>
-              <Link to="/phone/nokia"> NOKIA </Link>
+              <Link to="/phone/nokia"><i className="fa-solid fa-mobile-retro"></i> NOKIA </Link>
             </li>
           </ul>
         </div>
