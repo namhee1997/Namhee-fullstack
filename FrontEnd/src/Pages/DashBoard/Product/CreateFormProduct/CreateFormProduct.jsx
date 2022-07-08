@@ -52,9 +52,6 @@ export default function CreateFormProduct({ listCompany = [], dataHandle }) {
             }
         }
 
-
-
-
     }
 
     const handleRemoveImgs = (id) => {
