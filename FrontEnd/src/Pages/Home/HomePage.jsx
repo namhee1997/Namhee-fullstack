@@ -36,16 +36,7 @@ const HomePage = ({ handleRedirect }) => {
     { src: Apple, title: 'Apple', url: 'apple' },
     { src: Nokia, title: 'Nokia', url: 'nokia' }
   ]);
-  const [listNews, setListNews] = useState([
-    {
-      img: 'https://images.fpt.shop/unsafe/fit-in/70x40/filters:quality(90):fill(white)/https://fptshop.com.vn/Uploads/images/2015/CTKM-Voucher/sieu%20sale/70x40(1).png',
-      title: 'Tuần lễ Xiaomi giảm sốc đến 40%'
-    },
-    {
-      img: 'https://images.fpt.shop/unsafe/fit-in/70x40/filters:quality(90):fill(white)/https://fptshop.com.vn/Uploads/images/2015/PhuongMT5/FPT-0.png',
-      title: 'Nhận ngay Voucher 50.000Đ'
-    }
-  ]);
+  const [listNews, setListNews] = useState([]);
   const [listBanner, setListBanner] = useState([
     { thumb: 'https://images.fpt.shop/unsafe/fit-in/385x100/filters:quality(90):fill(white)/fptshop.com.vn/Uploads/Originals/2022/5/10/637877861412853482_F-H2_385x100.png' },
     { thumb: 'https://images.fpt.shop/unsafe/fit-in/385x100/filters:quality(90):fill(white)/fptshop.com.vn/Uploads/Originals/2022/5/1/637869969726431249_F-H2_385x100.png' },
