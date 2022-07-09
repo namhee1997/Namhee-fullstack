@@ -8,7 +8,7 @@ export default function ListHotPromotion({ list }) {
         speed: 500,
         slidesToShow: 4,
         slidesToScroll: 4,
-        arrows: false,
+        arrows: true,
         className: 'list_hot_promotion product',
         centerPadding: 20,
         responsive: [

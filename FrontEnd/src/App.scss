@@ -3043,3 +3043,35 @@ p.err {
   margin: 5px 0 0 0;
   font-weight: 300;
 }
+
+button.slick-arrow.slick-prev:before {
+  content: "\f138";
+  font-family: "FontAwesome";
+  background: #1694d6;
+  font-size: 26px;
+  color: #fff;
+  border-radius: 50%;
+  box-shadow: 0px 0px 3px #3d3d3d;
+}
+
+button.slick-arrow.slick-prev {
+  transform: rotate(180deg);
+  left: 10px;
+  z-index: 999;
+}
+
+
+button.slick-arrow.slick-next:before {
+  content: "\f138";
+  font-family: "FontAwesome";
+  background: #1694d6;
+  font-size: 26px;
+  color: #fff;
+  border-radius: 50%;
+  box-shadow: 0px 0px 3px #3d3d3d;
+}
+
+button.slick-arrow.slick-next {
+  right: 10px;
+  z-index: 999;
+}

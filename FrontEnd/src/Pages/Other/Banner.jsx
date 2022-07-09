@@ -10,7 +10,7 @@ export default function Banner({ dataBanner, thisPage = '', listBannerSlides }) 
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
-        arrows: false,
+        arrows: true,
         className: 'left_content_banner',
         // slide: "ul"
     };
