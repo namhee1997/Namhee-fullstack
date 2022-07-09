@@ -176,12 +176,10 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
                 return data;
             });
         } else {
-
             if (nPosition !== undefined) {
-
                 setNewDataVariable(m => {
                     let data = { ...m };
-                    let obj = {};
+                    let obj = { ...data[nPosition] };
                     obj[name] = e.target.value;
 
                     data[`${nPosition}`] = obj;
@@ -355,7 +353,7 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
                         <div className="col-md-6 mb-4 ">
                             <div className="form-floating mb-3 mb-md-0 form_input">
                                 <select className="form-select promotion" id=""
-                                    value={newsData.slug != '' ? newsData.promotion == 'true' ? 'true' : 'false' : dataChangeCurrent[0]?.promotion ? 'true' : 'false' || ''} name="role"
+                                    value={newsData.promotion != '' ? newsData.promotion == 'true' ? 'true' : 'false' : dataChangeCurrent[0]?.promotion ? 'true' : 'false' || ''} name="role"
                                     onChange={(v) => handleChangeNew(v, 'promotion')} >
                                     <option value="true">true</option>
                                     <option value='false'>false</option>
