@@ -144,7 +144,9 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
                 },
 
             };
-            let data = [...m, m[0].variable = [...m[0].variable, objectNew]];
+            let data = [...m];
+
+            data[0].variable = [...data[0].variable, objectNew]
 
             return data;
         });
@@ -284,7 +286,9 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
                 title: $($('input.variable')[i]).val(),
                 idVariable: $($('.break_div_edit')[i]).attr('idvariable'),
             };
-            arrVariable.push(obj);
+            if ($($('input.variable')[i]).val() != '') {
+                arrVariable.push(obj);
+            }
         }
 
         let data = {
@@ -306,7 +310,6 @@ export default function EditForm({ titleForm = 'Edit Product', stateForm = [], d
         setCheckSubmit(true);
     }
     //END SUBMIT
-    // console.log('dataChangeCurrent', dataChangeNew);
     return (
         <div className="container-fluid px-4">
             {
